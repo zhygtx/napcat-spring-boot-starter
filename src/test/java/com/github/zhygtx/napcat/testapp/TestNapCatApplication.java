@@ -1,7 +1,9 @@
 package com.github.zhygtx.napcat.testapp;
 
+import com.github.zhygtx.napcat.auth.BotRegistrar;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * 模拟主项目的启动类。
@@ -13,7 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * 或者在命令行执行：mvn spring-boot:run
  *
  * 启动后让 NapCat 反向连接到：
- *   ws://localhost:8080/ws/bot/你的BotQQ/任意密钥
+ *   ws://localhost:8080/ws/bot/{QQ号}
  *
  * 停止服务：在 IDEA 运行面板点击停止按钮，或按 Ctrl+C。
  */
@@ -21,12 +23,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TestNapCatApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TestNapCatApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(TestNapCatApplication.class, args);
+        // 从 Spring 容器中获取 BotRegistrar 实例（而不是 new）
+        BotRegistrar botRegistrar = context.getBean(BotRegistrar.class);
+        botRegistrar.register("3304372782", "33");
         System.out.println();
         System.out.println("==================================================");
         System.out.println("  NapCat SDK 测试服务已启动!");
         System.out.println("  监听端口  : 8080");
-        System.out.println("  WebSocket : ws://localhost:8080/ws/bot/[botQQ]/[secretKey]");
+        System.out.println("  WebSocket : ws://localhost:8080/ws/bot/3304372782");
         System.out.println("  测试连接  : 让 NapCat 反向连接到上面的地址");
         System.out.println("  停止服务  : Ctrl+C 或 IDEA 停止按钮");
         System.out.println("==================================================");

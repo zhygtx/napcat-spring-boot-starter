@@ -16,13 +16,13 @@ spring:
 # ============================================================
 napcat:
   ws:
-    # WebSocket 接入路径，NapCat 应该连接到 ws://<host>:8080${path}/{botQQ}/{secretKey}
+    # WebSocket 接入路径，NapCat 应该连接到 ws://<host>:8080${path}
     # 连接超时时间（毫秒）
     timeout: 30000
     # 心跳间隔（毫秒）
     url: /ws/bot
     heartbeat-timeout: 60000
-    token: false
+    enable-token: true
 
 # ============================================================
 # 日志配置 —— 让 WebSocket 相关日志打印更清晰
