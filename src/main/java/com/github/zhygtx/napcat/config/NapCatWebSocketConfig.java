@@ -12,15 +12,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-/**
- * NapCat WebSocket 配置
- *
- * <p>负责将 {@link NapCatWebSocketHandler} 注册到路径 "/ws/bot/{botQQ}/{secretKey}" 上。
- *
- * <p>注意：Spring WebSocket 原生不支持像 {@code @PathVariable} 那样自动提取路径模板变量，
- * 所以我们用通配符路径 "{botQQ}" 和 "{secretKey}" 作为占位符，实际解析在 Handler 中
- * 通过 {@code session.getUri().getPath()} 手动提取。
- */
 @Configuration
 @EnableWebSocket
 public class NapCatWebSocketConfig implements WebSocketConfigurer {
@@ -38,13 +29,6 @@ public class NapCatWebSocketConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         NapCatProperties.Ws wsConfig = properties.getWs();
         String basePath = wsConfig.getUrl();
-        
-        if (wsConfig.isSecretKeyIsolation()) {
-            basePath += "/*";  // /ws/bot/{secretKey}
-        } 
-        if (wsConfig.isAccountIsolation()) {
-            basePath += "/*";  // /ws/bot/{botQQ}
-        }
         
         registry.addHandler(handler, basePath)
                 .setAllowedOrigins("*");

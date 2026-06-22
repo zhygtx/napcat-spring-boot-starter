@@ -22,8 +22,7 @@ napcat:
     # 心跳间隔（毫秒）
     url: /ws/bot
     heartbeat-timeout: 60000
-    account-isolation: true
-    secretKeyIsolation: true
+    token: false
 
 # ============================================================
 # 日志配置 —— 让 WebSocket 相关日志打印更清晰

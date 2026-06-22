@@ -30,7 +30,7 @@ public class BotSession {
     /**
      * 连接时提供的密钥（如果启用了密钥鉴权）
      */
-    private String secretKey;
+    private String token;
     
     /**
      * 最后收到消息的时间（用于心跳超时检测）
