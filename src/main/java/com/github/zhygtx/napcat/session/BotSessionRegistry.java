@@ -1,10 +1,12 @@
 package com.github.zhygtx.napcat.session;
 
+import com.github.zhygtx.napcat.event.BotEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -28,11 +30,18 @@ public class BotSessionRegistry {
     /** 以 BotQQ 为 key 的在线 Bot 映射表 */
     private final ConcurrentHashMap<Long, Bot> onlineBots = new ConcurrentHashMap<>();
 
+    /** 用户注册的事件监听器列表（Spring 自动收集所有 BotEventListener Bean） */
+    private final List<BotEventListener> listeners;
+
+    public BotSessionRegistry(List<BotEventListener> listeners) {
+        this.listeners = listeners;
+    }
+
     /**
      * 注册一个 Bot 会话到在线列表。
      * <p>
      * 如果该 BotQQ 已有旧会话，会先关闭旧会话再替换。
-     *
+     * 注册成功后触发 {@link BotEventListener#botOnline} 事件。
      * @param bot 要注册的 Bot 会话对象
      */
     public void register(Bot bot) {
@@ -43,11 +52,13 @@ public class BotSessionRegistry {
             closeSessionSilently(oldBot);
         }
         log.info("Bot [{}] 已注册，当前在线数量: {}", botQQ, onlineBots.size());
+        // 触发上线事件
+        listeners.forEach(listener -> listener.botOnline(botQQ));
     }
 
     /**
      * 从在线列表中移除指定 BotQQ 的会话。
-     *
+     * 移除成功后触发 {@link BotEventListener#botOffline} 事件。
      * @param botQQ 要移除的 Bot QQ 号
      * @return 被移除的 Bot 会话，如果不存在则返回 null
      */
@@ -55,6 +66,8 @@ public class BotSessionRegistry {
         Bot removed = onlineBots.remove(botQQ);
         if (removed != null) {
             log.info("Bot [{}] 已移除，当前在线数量: {}", botQQ, onlineBots.size());
+            // 触发离线事件
+            listeners.forEach(listener -> listener.botOffline(botQQ));
         }
         return removed;
     }
