@@ -9,13 +9,12 @@ import java.time.Instant;
 
 /**
  * Bot 会话封装
- *
  * 存储单个 Bot 的连接信息和状态
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BotSession {
+public class Bot {
     
     /**
      * Bot QQ 号
@@ -31,6 +30,11 @@ public class BotSession {
      * 连接时提供的密钥（如果启用了密钥鉴权）
      */
     private String token;
+
+    /**
+     * 连接时提供的路径后缀
+     */
+    private String pathSuffix;
     
     /**
      * 最后收到消息的时间（用于心跳超时检测）

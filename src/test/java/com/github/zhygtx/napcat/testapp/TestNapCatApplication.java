@@ -26,7 +26,8 @@ public class TestNapCatApplication {
         ConfigurableApplicationContext context = SpringApplication.run(TestNapCatApplication.class, args);
         // 从 Spring 容器中获取 BotRegistrar 实例（而不是 new）
         BotRegistrar botRegistrar = context.getBean(BotRegistrar.class);
-        botRegistrar.register("3304372782", "33");
+        botRegistrar.register("3304372782", "44");
+        botRegistrar.register("3304372783", "11");
         System.out.println();
         System.out.println("==================================================");
         System.out.println("  NapCat SDK 测试服务已启动!");

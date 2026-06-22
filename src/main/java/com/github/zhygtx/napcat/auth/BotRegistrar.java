@@ -27,6 +27,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class BotRegistrar {
 
+    /**
+     * 存储已注册的 bot 连接路径后缀和 token 的并发映射表。
+     */
     private final ConcurrentHashMap<String, String> registrations = new ConcurrentHashMap<>();
 
     /**

@@ -1,6 +1,7 @@
 package com.github.zhygtx.napcat.auth;
 
 import com.github.zhygtx.napcat.config.NapCatProperties;
+import com.github.zhygtx.napcat.session.BotSessionRegistry;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,16 +17,24 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * WebSocket 握手拦截器，负责 Token 鉴权。
+ * WebSocket 握手拦截器，负责提取 Bot 身份信息并进行 Token 鉴权。
  * <p>
  * 工作流程：
  * <ol>
+ *   <li>提取请求头 {@code x-self-id} 作为 BotQQ，存入 session attributes</li>
+ *   <li>提取请求头 {@code Authorization: Bearer <token>} 存入 session attributes</li>
  *   <li>{@code enableToken=false} → 直接放行</li>
- *   <li>提取 {@code Authorization: Bearer <token>} 请求头，缺失或格式错误 → 401</li>
  *   <li>静态模式（配置了 {@code token-value}）→ 比对 token，不匹配 → 401</li>
  *   <li>动态模式（{@link BotRegistrar} 有注册记录）→ 通过路径后缀查找对应 bot，校验 token</li>
  *   <li>前述均不满足 → 401</li>
  * </ol>
+ * <p>
+ * 提取的 attributes：
+ * <ul>
+ *   <li>{@code bot_qq} — Bot QQ 号 (Long)</li>
+ *   <li>{@code bot_path_suffix} — 路径后缀 (String)</li>
+ *   <li>{@code bot_token} — 请求携带的 token 值 (String)，未开启鉴权时为 null</li>
+ * </ul>
  */
 @Component
 public class TokenAuthInterceptor implements HandshakeInterceptor {
@@ -41,24 +50,29 @@ public class TokenAuthInterceptor implements HandshakeInterceptor {
     }
 
     /**
-     * 在握手之前执行，用于进行 Token 鉴权。
-     * @param request  HTTP 请求
-     * @param response HTTP 响应
+     * 在握手之前执行，提取 Bot 身份信息并进行 Token 鉴权。
+     *
+     * @param request   HTTP 请求
+     * @param response  HTTP 响应
      * @param wsHandler WebSocket 处理器
-     * @param attributes 握手属性
-     * @return 如果返回 {@code true}，则继续握手过程；如果返回 {@code false}，则中断握手过程。
+     * @param attributes 握手属性，会存入 bot_qq / bot_path_suffix / bot_token
+     * @return true 继续握手，false 中断握手
      */
     @Override
     public boolean beforeHandshake(@NonNull ServerHttpRequest request, @NonNull ServerHttpResponse response,
                                    @NonNull WebSocketHandler wsHandler, @NonNull Map<String, Object> attributes) {
-        // 1. 未启用 token 校验，直接放行
+        String basePath = properties.getWs().getUrl();
+
+        // 1. 提取 Bot 身份信息，存入 session attributes
+        extractXSelfId(request, attributes);
+        extractAndPutPathSuffix(request.getURI(), basePath, attributes);
+
+        // 2. 未启用 token 校验，直接放行
         if (!properties.getWs().isEnableToken()) {
             return true;
         }
 
-        String basePath = properties.getWs().getUrl();
-
-        // 2. 提取 Authorization 请求头
+        // 3. 提取 Authorization 请求头
         List<String> authHeaders = request.getHeaders().get("Authorization");
         if (authHeaders == null || authHeaders.isEmpty()) {
             log.warn("握手拒绝：缺少 Authorization 请求头");
@@ -74,13 +88,12 @@ public class TokenAuthInterceptor implements HandshakeInterceptor {
         }
 
         String token = authValue.substring(7);
+        attributes.put("bot_token", token);
 
-        // 3. 静态模式：比对 token-value
+        // 4. 静态模式：比对 token-value
         String staticToken = properties.getWs().getTokenValue();
         if (staticToken != null && !staticToken.isEmpty()) {
             if (staticToken.equals(token)) {
-                // 放行，并将路径后缀存入 session 属性
-                extractAndPutPathSuffix(request.getURI(), basePath, attributes);
                 return true;
             }
             log.warn("握手拒绝：静态 token 不匹配");
@@ -88,12 +101,11 @@ public class TokenAuthInterceptor implements HandshakeInterceptor {
             return false;
         }
 
-        // 4. 动态模式：查询 BotRegistrar 注册表
-        String pathSuffix = extractPathSuffix(request.getURI(), basePath);
+        // 5. 动态模式：查询 BotRegistrar 注册表
+        String pathSuffix = (String) attributes.get("bot_path_suffix");
         if (pathSuffix != null && botRegistrar.hasRegistration(pathSuffix)) {
             String expectedToken = botRegistrar.getToken(pathSuffix);
             if (expectedToken == null || expectedToken.equals(token)) {
-                attributes.put("bot_path_suffix", pathSuffix);
                 return true;
             }
             log.warn("握手拒绝：bot [{}] token 不匹配", pathSuffix);
@@ -101,7 +113,7 @@ public class TokenAuthInterceptor implements HandshakeInterceptor {
             return false;
         }
 
-        // 5. 无法通过任何方式验证
+        // 6. 无法通过任何方式验证
         log.warn("握手拒绝：未找到 bot [{}] 的注册信息，且未配置静态 token", pathSuffix);
         reject(response, "Unauthorized: no matching bot registration or static token");
         return false;
@@ -160,6 +172,27 @@ public class TokenAuthInterceptor implements HandshakeInterceptor {
         String suffix = extractPathSuffix(uri, basePath);
         if (suffix != null) {
             attributes.put("bot_path_suffix", suffix);
+        }
+    }
+
+    /**
+     * 从请求头中提取 x-self-id（BotQQ），存入 session attributes。
+     * <p>
+     * NapCat 客户端在 WebSocket 握手时会携带 {@code x-self-id} 请求头，
+     * 其值为 Bot 的 QQ 号。该信息后续会用于 {@link BotSessionRegistry} 的会话管理。
+     *
+     * @param request    HTTP 请求
+     * @param attributes session attributes，会存入 key "bot_qq"
+     */
+    private void extractXSelfId(ServerHttpRequest request, Map<String, Object> attributes) {
+        List<String> values = request.getHeaders().get("x-self-id");
+        if (values != null && !values.isEmpty()) {
+            try {
+                Long botQQ = Long.parseLong(values.getFirst());
+                attributes.put("bot_qq", botQQ);
+            } catch (NumberFormatException e) {
+                log.warn("x-self-id 格式错误: {}", values.getFirst());
+            }
         }
     }
 }
