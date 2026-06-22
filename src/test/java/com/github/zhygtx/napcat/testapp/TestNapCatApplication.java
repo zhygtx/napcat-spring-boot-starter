@@ -7,16 +7,12 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * 模拟主项目的启动类。
- *
  * 这个类模拟一个真实的 Spring Boot 应用（比如你的 demo 项目），它通过引入
  * napcat-spring-boot-starter 依赖来获得 NapCat WebSocket 接入能力。
- *
  * 运行方式：直接在 IDEA 中右键 -> Run 'TestNapCatApplication'，
  * 或者在命令行执行：mvn spring-boot:run
- *
  * 启动后让 NapCat 反向连接到：
  *   ws://localhost:8080/ws/bot/{QQ号}
- *
  * 停止服务：在 IDEA 运行面板点击停止按钮，或按 Ctrl+C。
  */
 @SpringBootApplication
