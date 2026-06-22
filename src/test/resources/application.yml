@@ -1,0 +1,35 @@
+# ============================================================
+# 模拟主项目的配置文件（测试用）
+# 真实的主项目（比如 demo）应该有类似这样的 application.yml
+# ============================================================
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: napcat-test-app
+
+# ============================================================
+# NapCat SDK 配置
+# 这些配置对应 NapCatProperties 类
+# ============================================================
+napcat:
+  ws:
+    # WebSocket 接入路径，NapCat 应该连接到 ws://<host>:8080${path}/{botQQ}/{secretKey}
+    # 连接超时时间（毫秒）
+    timeout: 30000
+    # 心跳间隔（毫秒）
+    url: /ws/bot
+    heartbeat-timeout: 60000
+    account-isolation: true
+    secretKeyIsolation: true
+
+# ============================================================
+# 日志配置 —— 让 WebSocket 相关日志打印更清晰
+# ============================================================
+logging:
+  level:
+    root: INFO
+    com.github.zhygtx.napcat: DEBUG
+    org.springframework.web.socket: DEBUG
