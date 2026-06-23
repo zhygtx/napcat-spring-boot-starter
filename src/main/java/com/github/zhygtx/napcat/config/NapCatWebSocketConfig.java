@@ -4,18 +4,28 @@ import com.github.zhygtx.napcat.auth.TokenAuthInterceptor;
 import com.github.zhygtx.napcat.ws.NapCatWebSocketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 /**
  * WebSocket 配置。
  * <p>
- * 注册 WebSocket 处理器与鉴权拦截器，并在启用 Token 鉴权但未配置静态 token 时输出警告。
+ * 注册 WebSocket 处理器与鉴权拦截器，并配置传输层参数：
+ * <ul>
+ *   <li>{@code maxSessionIdleTimeout} — 会话空闲超时（napcat.ws.timeout）</li>
+ *   <li>{@code maxTextMessageBufferSize} — 文本消息最大缓冲（napcat.ws.max-text-buffer-size）</li>
+ *   <li>{@code maxBinaryMessageBufferSize} — 二进制消息最大缓冲（napcat.ws.max-binary-buffer-size）</li>
+ * </ul>
+ * 仅当 {@code napcat.ws.server.enable=true}（默认值）时生效。
  */
 @Configuration
 @EnableWebSocket
+@ConditionalOnProperty(prefix = "napcat.ws.server", name = "enable", havingValue = "true", matchIfMissing = true)
 public class NapCatWebSocketConfig implements WebSocketConfigurer {
 
     private static final Logger log = LoggerFactory.getLogger(NapCatWebSocketConfig.class);
@@ -53,8 +63,37 @@ public class NapCatWebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         NapCatProperties.Ws wsConfig = properties.getWs();
-        registry.addHandler(handler, wsConfig.getUrl() + "/**")
+        String path = wsConfig.getServer().getUrl() + "/**";
+
+        registry.addHandler(handler, path)
                 .addInterceptors(tokenAuthInterceptor)
                 .setAllowedOrigins("*");
+
+        log.info("WebSocket 注册完成, path={}", path);
+    }
+
+    /**
+     * 配置 WebSocket 容器级别的传输参数。
+     * <p>
+     * 这些参数影响所有通过本容器建立的 WebSocket 连接：
+     * <ul>
+     *   <li>会话空闲超时 — 对应配置 napcat.ws.timeout</li>
+     *   <li>文本消息缓冲上限 — 对应配置 napcat.ws.max-text-buffer-size</li>
+     *   <li>二进制消息缓冲上限 — 对应配置 napcat.ws.max-binary-buffer-size</li>
+     * </ul>
+     */
+    @Bean
+    public ServletServerContainerFactoryBean createWebSocketContainer() {
+        NapCatProperties.Ws ws = properties.getWs();
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+
+        container.setMaxSessionIdleTimeout((long) ws.getTimeout() * 1000);
+        container.setMaxTextMessageBufferSize(ws.getMaxTextBufferSize());
+        container.setMaxBinaryMessageBufferSize(ws.getMaxBinaryBufferSize());
+
+        log.info("WebSocket 容器配置: idleTimeout={}s, textBuffer={}, binaryBuffer={}",
+                ws.getTimeout(), ws.getMaxTextBufferSize(), ws.getMaxBinaryBufferSize());
+
+        return container;
     }
 }

@@ -78,7 +78,7 @@ public class TokenAuthInterceptor implements HandshakeInterceptor {
      */
     private void extractIdentity(ServerHttpRequest request, Map<String, Object> attributes) {
         extractXSelfId(request, attributes);
-        extractPathSuffix(request.getURI(), properties.getWs().getUrl(), attributes);
+        extractPathSuffix(request.getURI(), properties.getWs().getServer().getUrl(), attributes);
     }
 
     /**

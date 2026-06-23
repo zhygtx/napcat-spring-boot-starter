@@ -1,4 +1,4 @@
-package com.github.zhygtx.napcat.testapp;
+package com.github.zhygtx.napcat;
 
 import com.github.zhygtx.napcat.auth.BotRegistrar;
 import org.springframework.boot.SpringApplication;

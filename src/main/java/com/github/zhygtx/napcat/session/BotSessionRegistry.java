@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -108,6 +109,20 @@ public class BotSessionRegistry {
      */
     public boolean isOnline(Long botQQ) {
         return onlineBots.containsKey(botQQ);
+    }
+
+    /**
+     * 更新指定 Bot 的最后消息时间为当前时间。
+     * <p>
+     * 每次收到消息时调用，用于心跳超时检测作为"心跳"信号。
+     *
+     * @param botQQ Bot QQ 号
+     */
+    public void updateLastMessageTime(Long botQQ) {
+        Bot bot = onlineBots.get(botQQ);
+        if (bot != null) {
+            bot.setLastMessageTime(Instant.now());
+        }
     }
 
     /**
