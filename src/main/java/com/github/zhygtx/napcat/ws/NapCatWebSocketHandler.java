@@ -143,7 +143,21 @@ public class NapCatWebSocketHandler extends AbstractWebSocketHandler {
      */
     @Override
     public void handleTransportError(WebSocketSession session, @NonNull Throwable exception) {
-        log.error("传输错误 | 会话: {} | 错误: {}", session.getId(), exception.getMessage(), exception);
+        if (isClosedChannel(exception)) {
+            log.warn("连接通道已关闭 | 会话: {} | {}", session.getId(), exception.getMessage());
+        } else {
+            log.error("传输错误 | 会话: {} | 错误: {}", session.getId(), exception.getMessage(), exception);
+        }
+    }
+
+    private boolean isClosedChannel(Throwable exception) {
+        Throwable cause = exception;
+        while (cause != null) {
+            String name = cause.getClass().getSimpleName();
+            if ("ClosedChannelException".equals(name)) return true;
+            cause = cause.getCause();
+        }
+        return false;
     }
 
     /**

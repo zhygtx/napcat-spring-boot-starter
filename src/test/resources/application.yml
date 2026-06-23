@@ -39,3 +39,5 @@ logging:
     root: INFO
     com.github.zhygtx.napcat: DEBUG
     org.springframework.web.socket: DEBUG
+    # 屏蔽 Spring WebSocket 装饰器的传输错误堆栈（关闭时的 ClosedChannelException 是正常的）
+    org.springframework.web.socket.handler.LoggingWebSocketHandlerDecorator: WARN
