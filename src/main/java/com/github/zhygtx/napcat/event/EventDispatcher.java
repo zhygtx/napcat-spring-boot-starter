@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.github.zhygtx.napcat.config.NapCatProperties;
 import com.github.zhygtx.napcat.event.message.*;
 import com.github.zhygtx.napcat.event.meta.HeartbeatMetaEvent;
+import com.github.zhygtx.napcat.util.EventLogger;
 import com.github.zhygtx.napcat.event.meta.LifecycleConnectMetaEvent;
 import com.github.zhygtx.napcat.event.meta.LifecycleMetaEvent;
 import com.github.zhygtx.napcat.event.notice.*;
@@ -58,6 +59,7 @@ public class EventDispatcher {
     private final ApplicationContext context;
     private final EventExecutor eventExecutor;
     private final NapCatProperties properties;
+    private final EventLogger eventLogger;
 
     /** 已注册的 OneBotEventListener Bean 列表 */
     private List<OneBotEventListener> listeners;
@@ -74,10 +76,12 @@ public class EventDispatcher {
     /** {@code @OnEvent} 注解方法是否已扫描完成 */
     private volatile boolean onEventScanned = false;
 
-    public EventDispatcher(ApplicationContext context, EventExecutor eventExecutor, NapCatProperties properties) {
+    public EventDispatcher(ApplicationContext context, EventExecutor eventExecutor,
+                           NapCatProperties properties, EventLogger eventLogger) {
         this.context = context;
         this.eventExecutor = eventExecutor;
         this.properties = properties;
+        this.eventLogger = eventLogger;
     }
 
     /**
@@ -97,58 +101,67 @@ public class EventDispatcher {
     // ==================== 公开方法 ====================
 
     /**
-     * 分发一条事件。
+     * 分发一条事件（字符串入口）。
      * <p>
-     * 在 WebSocket I/O 线程上被调用，执行 JSON 解析和心跳限流检测，
-     * 然后将实际的事件处理逻辑提交到 {@link EventExecutor} 线程池异步执行，
-     * 避免 I/O 线程被用户 Handler 阻塞。
-     *
-     * @param botQQ   Bot QQ 号
-     * @param rawJson 原始 JSON 字符串
+     * 内部进行一次 JSON 解析后调用 {@link #dispatch(Long, String, JsonNode)}。
+     * 建议在可获取到 JsonNode 的场景下直接使用后者以跳过重复解析。
      */
     public void dispatch(Long botQQ, String rawJson) {
-        // 首次调用时执行 @OnEvent 扫描，避免循环依赖
-        ensureOnEventScanned();
-
         try {
-            JsonNode json = mapper.readTree(rawJson);
-
-            // 构建三级和二级 Key
-            String exactKey = buildExactKey(json);
-            String parentKey = buildParentKey(json);
-            if (exactKey == null && parentKey == null) {
-                log.warn("无法识别的事件类型，原始数据: {}", rawJson);
-                return;
-            }
-
-            // 先尝试 exactKey，再回退 parentKey
-            BaseEvent event = resolve(json, exactKey);
-            if (event == null && parentKey != null && !parentKey.equals(exactKey)) {
-                event = resolve(json, parentKey);
-            }
-            if (event == null) {
-                log.warn("事件反序列化失败, exactKey: {}, parentKey: {}, raw: {}", exactKey, parentKey, rawJson);
-                return;
-            }
-
-            // 心跳限流：丢弃 < minHeartbeatInterval 的高频心跳
-            if (event instanceof HeartbeatMetaEvent) {
-                if (botQQ != null && !shouldPassHeartbeat(botQQ)) {
-                    log.trace("心跳限流: bot [{}] 心跳被丢弃", botQQ);
-                    return;
-                }
-            }
-
-            // 提交到线程池异步执行，避免阻塞 WS I/O 线程
-            BaseEvent finalEvent = event;
-             eventExecutor.submit(() -> {
-                 dispatchToOneBotEventListener(botQQ, finalEvent);
-                 dispatchToOnEventHandlers(botQQ, finalEvent);
-             });
-
+            dispatch(botQQ, rawJson, mapper.readTree(rawJson));
         } catch (Exception e) {
             log.error("事件分发异常: {}", e.getMessage(), e);
         }
+    }
+
+    /**
+     * 分发一条事件（JsonNode 入口）。
+     * <p>
+     * 在 WebSocket I/O 线程上被调用，执行心跳限流检测，
+     * 然后将日志输出 + 事件处理逻辑提交到 {@link EventExecutor} 线程池异步执行，
+     * 避免 I/O 线程被用户 Handler 阻塞。
+     *
+     * @param botQQ   Bot QQ 号
+     * @param sessionId WebSocket 会话 ID（用于日志）
+     * @param json    已解析的 JsonNode
+     */
+    public void dispatch(Long botQQ, String sessionId, JsonNode json) {
+        ensureOnEventScanned();
+
+        // 构建三级和二级 Key
+        String exactKey = buildExactKey(json);
+        String parentKey = buildParentKey(json);
+        if (exactKey == null && parentKey == null) {
+            log.warn("无法识别的事件类型");
+            return;
+        }
+
+        // 先尝试 exactKey，再回退 parentKey
+        BaseEvent event = resolve(json, exactKey);
+        if (event == null && parentKey != null && !parentKey.equals(exactKey)) {
+            event = resolve(json, parentKey);
+        }
+        if (event == null) {
+            log.warn("事件反序列化失败, exactKey: {}, parentKey: {}", exactKey, parentKey);
+            return;
+        }
+
+        // 心跳限流：丢弃 < minHeartbeatInterval 的高频心跳
+        if (event instanceof HeartbeatMetaEvent) {
+            if (botQQ != null && !shouldPassHeartbeat(botQQ)) {
+                log.trace("心跳限流: bot [{}] 心跳被丢弃", botQQ);
+                return;
+            }
+        }
+
+        // 提交到线程池异步执行：日志 + 事件分发
+        Long finalBotQQ = botQQ;
+        BaseEvent finalEvent = event;
+        eventExecutor.submit(() -> {
+            eventLogger.logEvent(sessionId, json);
+            dispatchToOneBotEventListener(finalBotQQ, finalEvent);
+            dispatchToOnEventHandlers(finalBotQQ, finalEvent);
+        });
     }
 
     /**

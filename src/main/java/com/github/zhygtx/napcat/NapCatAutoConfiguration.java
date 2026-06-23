@@ -7,6 +7,7 @@ import com.github.zhygtx.napcat.config.NapCatWebSocketConfig;
 import com.github.zhygtx.napcat.event.EventDispatcher;
 import com.github.zhygtx.napcat.event.EventExecutor;
 import com.github.zhygtx.napcat.session.BotSessionRegistry;
+import com.github.zhygtx.napcat.util.LogSanitizer;
 import com.github.zhygtx.napcat.ws.HeartbeatMonitor;
 import com.github.zhygtx.napcat.ws.NapCatWebSocketHandler;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -25,7 +26,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         BotRegistrar.class,
         BotSessionRegistry.class,
         EventDispatcher.class,
-        EventExecutor.class
+        EventExecutor.class,
+        LogSanitizer.class
 })
 public class NapCatAutoConfiguration {
 }

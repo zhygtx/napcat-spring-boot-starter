@@ -30,6 +30,10 @@ napcat:
     keep-alive-time: 60
     thread-name-prefix: "NapCatTaskPool-"
 
+  log:
+    ignore-heartbeat-log: false
+    log-max-length: 500
+
 logging:
   level:
     root: INFO

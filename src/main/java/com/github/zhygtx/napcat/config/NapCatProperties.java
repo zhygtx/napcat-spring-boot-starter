@@ -41,6 +41,8 @@ public class NapCatProperties {
     /** 任务线程池配置 */
     private TaskPool taskPool = new TaskPool();
 
+    private Log log = new Log();
+
     // ============================================================
     // WebSocket 配置
     // ============================================================
@@ -108,5 +110,14 @@ public class NapCatProperties {
 
         /** 线程名称前缀 */
         private String threadNamePrefix = "NapCatTaskPool-";
+    }
+
+    @Data
+    public static class Log{
+        /** 是否忽略心跳日志（默认 true，心跳消息不输出到日志） */
+        private boolean ignoreHeartbeatLog = true;
+
+        /** 日志中消息内容最大长度，超过此长度截断，默认 500 */
+        private int logMaxLength = 500;
     }
 }
