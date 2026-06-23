@@ -3,6 +3,7 @@ package com.github.zhygtx.napcat.ws;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.zhygtx.napcat.NapCatConstants;
+import com.github.zhygtx.napcat.api.NapCatApiClient;
 import com.github.zhygtx.napcat.event.EventDispatcher;
 import com.github.zhygtx.napcat.session.Bot;
 import com.github.zhygtx.napcat.session.BotSessionRegistry;
@@ -36,10 +37,14 @@ public class NapCatWebSocketHandler extends AbstractWebSocketHandler {
 
     private final BotSessionRegistry botRegistry;
     private final EventDispatcher eventDispatcher;
+    private final NapCatApiClient apiClient;
 
-    public NapCatWebSocketHandler(BotSessionRegistry botRegistry, EventDispatcher eventDispatcher) {
+    public NapCatWebSocketHandler(BotSessionRegistry botRegistry,
+                                  EventDispatcher eventDispatcher,
+                                  NapCatApiClient apiClient) {
         this.botRegistry = botRegistry;
         this.eventDispatcher = eventDispatcher;
+        this.apiClient = apiClient;
     }
 
     /**
@@ -61,8 +66,12 @@ public class NapCatWebSocketHandler extends AbstractWebSocketHandler {
     /**
      * 处理文本消息。
      * <p>
-     * 一次 JSON 解析后共享给 Dispatcher（内部分发到线程池执行日志 + 事件分发），
-     * 避免重复解析。更新该 Bot 的最后消息时间后提交到 Dispatcher。
+     * 一次 JSON 解析后根据消息类型分流：
+     * <ul>
+     *   <li>含有 {@code echo} 字段 → API 响应 → {@link NapCatApiClient#handleResponse(JsonNode)}</li>
+     *   <li>含有 {@code post_type} 字段 → 事件上报 → {@link EventDispatcher#dispatch(Long, String, JsonNode)}</li>
+     * </ul>
+     * 更新该 Bot 的最后消息时间后执行分流处理。
      */
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) {
@@ -77,8 +86,17 @@ public class NapCatWebSocketHandler extends AbstractWebSocketHandler {
                 botRegistry.updateLastMessageTime(botQQ);
             }
 
-            // Dispatcher 内部会提交到线程池：先日志输出，再事件分发
-            eventDispatcher.dispatch(botQQ, sessionId, json);
+            // 消息分流：API 响应 or 事件上报
+            if (json.has("echo") && json.has("status")) {
+                // API 响应
+                apiClient.handleResponse(json);
+            } else if (json.has("post_type")) {
+                // 事件上报：Dispatcher 内部提交到线程池异步执行
+                eventDispatcher.dispatch(botQQ, sessionId, json);
+            } else {
+                log.warn("无法识别的消息类型 | 会话: {} | 内容前200字符: {}", sessionId,
+                        payload.substring(0, Math.min(payload.length(), 200)));
+            }
 
         } catch (Exception e) {
             log.error("消息处理异常 | 会话: {}", sessionId, e);
@@ -105,12 +123,16 @@ public class NapCatWebSocketHandler extends AbstractWebSocketHandler {
 
     /**
      * 处理连接关闭。
+     * <p>
+     * 从注册中心移除 Bot，并取消该 Bot 的所有待处理 API 请求。
      */
     @Override
     public void afterConnectionClosed(WebSocketSession session, @NonNull CloseStatus status) {
         Long botQQ = (Long) session.getAttributes().get(NapCatConstants.ATTR_BOT_QQ);
         if (botQQ != null) {
             botRegistry.remove(botQQ);
+            // 取消该 Bot 所有待处理的 API 请求
+            apiClient.cancelPendingRequestsForBot(botQQ);
         }
         log.info("连接关闭 | BotQQ: {} | 会话: {} | 状态码: {} | 关闭原因: {}",
                 botQQ, session.getId(), status.getCode(), status.getReason());

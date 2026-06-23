@@ -1,5 +1,6 @@
 package com.github.zhygtx.napcat.session;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.zhygtx.napcat.NapCatConstants;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,6 +37,15 @@ public class Bot {
 
     /** 连接建立时间 */
     private Instant connectTime;
+
+    /**
+     * session 发送专用锁。
+     * <p>
+     * WebSocketSession 本身不是线程安全的，多个线程并发调用 sendMessage 会导致
+     * 帧数据交错或 IllegalStateException。API 客户端发送请求前需持有此锁。
+     */
+    @JsonIgnore
+    private final transient Object sendLock = new Object();
 
     /**
      * 从 WebSocket 握手 attributes 创建 Bot 实例。

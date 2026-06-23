@@ -41,6 +41,10 @@ public class NapCatProperties {
     /** 任务线程池配置 */
     private TaskPool taskPool = new TaskPool();
 
+    /** API 调用配置 */
+    private Api api = new Api();
+
+    /** 日志配置 */
     private Log log = new Log();
 
     // ============================================================
@@ -111,6 +115,24 @@ public class NapCatProperties {
         /** 线程名称前缀 */
         private String threadNamePrefix = "NapCatTaskPool-";
     }
+
+    // ============================================================
+    // API 配置
+    // ============================================================
+
+    @Data
+    public static class Api {
+
+        /** API 调用超时时间（秒），默认 30 */
+        private int timeout = 30;
+
+        /** 最大待处理请求数，超过时新请求会被拒绝，默认 500 */
+        private int maxPending = 500;
+    }
+
+    // ============================================================
+    // 日志配置
+    // ============================================================
 
     @Data
     public static class Log{

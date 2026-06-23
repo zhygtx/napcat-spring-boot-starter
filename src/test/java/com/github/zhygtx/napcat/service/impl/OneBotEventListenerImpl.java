@@ -1,5 +1,6 @@
 package com.github.zhygtx.napcat.service.impl;
 
+import com.github.zhygtx.napcat.api.NapCat;
 import com.github.zhygtx.napcat.event.OneBotEventListener;
 import com.github.zhygtx.napcat.event.message.*;
 import com.github.zhygtx.napcat.event.meta.HeartbeatMetaEvent;
@@ -10,10 +11,16 @@ import com.github.zhygtx.napcat.event.request.FriendRequestEvent;
 import com.github.zhygtx.napcat.event.request.GroupAddRequestEvent;
 import com.github.zhygtx.napcat.event.request.GroupInviteRequestEvent;
 import com.github.zhygtx.napcat.event.request.GroupRequestEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@SuppressWarnings("JavadocDeclaration")
 @Service
 public class OneBotEventListenerImpl implements OneBotEventListener {
+
+    @Autowired
+    private NapCat napCat;
+
     /**
      * 收到生命周期事件时调用。
      * @param botQQ
@@ -265,6 +272,7 @@ public class OneBotEventListenerImpl implements OneBotEventListener {
     public void onGroupMessage(Long botQQ, GroupMessageEvent event) {
         System.out.println(botQQ);
         System.out.println(event.toString());
+        napCat.sendGroupMsg(botQQ,event.getGroupId(),event.getRawMessage(),true);
     }
 
     /**
@@ -275,7 +283,7 @@ public class OneBotEventListenerImpl implements OneBotEventListener {
      */
     @Override
     public void onGroupMessageSent(Long botQQ, GroupMessageSentEvent event) {
-        OneBotEventListener.super.onGroupMessageSent(botQQ, event);
+        System.out.println("Bot发送了群消息:"+event.toString());
     }
 
     /**

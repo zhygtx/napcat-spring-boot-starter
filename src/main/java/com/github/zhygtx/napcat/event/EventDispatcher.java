@@ -86,9 +86,6 @@ public class EventDispatcher {
 
     /**
      * 初始化：构建解析器映射、扫描监听器。
-     * <p>
-     * {@code @OnEvent} 方法的扫描推迟到首次 {@link #dispatch(Long, String)} 调用时执行，
-     * 以此避免与 {@code NapCatWebSocketConfig} 之间的循环依赖。
      */
     @PostConstruct
     public void init() {
@@ -99,20 +96,6 @@ public class EventDispatcher {
     }
 
     // ==================== 公开方法 ====================
-
-    /**
-     * 分发一条事件（字符串入口）。
-     * <p>
-     * 内部进行一次 JSON 解析后调用 {@link #dispatch(Long, String, JsonNode)}。
-     * 建议在可获取到 JsonNode 的场景下直接使用后者以跳过重复解析。
-     */
-    public void dispatch(Long botQQ, String rawJson) {
-        try {
-            dispatch(botQQ, rawJson, mapper.readTree(rawJson));
-        } catch (Exception e) {
-            log.error("事件分发异常: {}", e.getMessage(), e);
-        }
-    }
 
     /**
      * 分发一条事件（JsonNode 入口）。
@@ -155,12 +138,11 @@ public class EventDispatcher {
         }
 
         // 提交到线程池异步执行：日志 + 事件分发
-        Long finalBotQQ = botQQ;
         BaseEvent finalEvent = event;
         eventExecutor.submit(() -> {
             eventLogger.logEvent(sessionId, json);
-            dispatchToOneBotEventListener(finalBotQQ, finalEvent);
-            dispatchToOnEventHandlers(finalBotQQ, finalEvent);
+            dispatchToOneBotEventListener(botQQ, finalEvent);
+            dispatchToOnEventHandlers(botQQ, finalEvent);
         });
     }
 
@@ -188,7 +170,6 @@ public class EventDispatcher {
      * 确保 {@code @OnEvent} 注解方法已被扫描。
      * <p>
      * 懒加载策略：不在 {@code @PostConstruct} 中执行（避免循环依赖），
-     * 而是在首次 {@link #dispatch(Long, String)} 时执行，且只执行一次。
      */
     private void ensureOnEventScanned() {
         if (onEventScanned) return;
