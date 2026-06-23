@@ -21,6 +21,11 @@ public class OneBotEventListenerImpl implements OneBotEventListener {
     @Autowired
     private NapCat napCat;
 
+//    @Bean
+//    public EventFilter bot(){
+//        return ((botQQ, event) -> !(event instanceof MessageEvent && botQQ == ((MessageEvent) event).getUserId()) || event instanceof MessageSentEvent);
+//    }
+
     /**
      * 收到生命周期事件时调用。
      * @param botQQ

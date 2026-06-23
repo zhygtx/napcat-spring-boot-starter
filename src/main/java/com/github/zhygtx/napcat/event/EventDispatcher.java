@@ -64,6 +64,9 @@ public class EventDispatcher {
     /** 已注册的 OneBotEventListener Bean 列表 */
     private List<OneBotEventListener> listeners;
 
+    /** 事件过滤器链，按 Spring 注册顺序执行，全部通过才放行 */
+    private final List<EventFilter> filters;
+
     /** {@code dispatchKey → 事件解析器} 映射表 */
     private final Map<String, Function<JsonNode, BaseEvent>> resolverMap = new HashMap<>();
 
@@ -77,11 +80,13 @@ public class EventDispatcher {
     private volatile boolean onEventScanned = false;
 
     public EventDispatcher(ApplicationContext context, EventExecutor eventExecutor,
-                           NapCatProperties properties, EventLogger eventLogger) {
+                           NapCatProperties properties, EventLogger eventLogger,
+                           List<EventFilter> filters) {
         this.context = context;
         this.eventExecutor = eventExecutor;
         this.properties = properties;
         this.eventLogger = eventLogger;
+        this.filters = filters;
     }
 
     /**
@@ -91,8 +96,8 @@ public class EventDispatcher {
     public void init() {
         buildResolvers();
         scanListeners();
-        log.info("EventDispatcher 初始化完成，已注册 {} 个事件解析器, {} 个监听器",
-                resolverMap.size(), listeners.size());
+        log.info("EventDispatcher 初始化完成，已注册 {} 个事件解析器, {} 个监听器, {} 个过滤器",
+                resolverMap.size(), listeners.size(), filters.size());
     }
 
     // ==================== 公开方法 ====================
@@ -137,6 +142,12 @@ public class EventDispatcher {
             }
         }
 
+        // 过滤器链：任意 Filter 返回 false 则丢弃事件
+        if (!passFilterChain(botQQ, event)) {
+            log.debug("事件被过滤器拦截, bot: {}, type: {}", botQQ, event.getClass().getSimpleName());
+            return;
+        }
+
         // 提交到线程池异步执行：日志 + 事件分发
         BaseEvent finalEvent = event;
         eventExecutor.submit(() -> {
@@ -163,6 +174,27 @@ public class EventDispatcher {
             return false;
         }
         heartbeatPassedMap.put(botQQ, now);
+        return true;
+    }
+
+    /**
+     * 执行过滤器链，全部通过才返回 true（AND 逻辑）。
+     *
+     * @param botQQ Bot QQ 号
+     * @param event 待过滤的事件
+     * @return true 放行，false 拦截
+     */
+    private boolean passFilterChain(Long botQQ, BaseEvent event) {
+        if (filters.isEmpty()) return true;
+        for (EventFilter filter : filters) {
+            try {
+                if (!filter.filter(botQQ, event)) {
+                    return false;
+                }
+            } catch (Exception e) {
+                log.error("EventFilter 执行异常, filter: {}", filter.getClass().getSimpleName(), e);
+            }
+        }
         return true;
     }
 
