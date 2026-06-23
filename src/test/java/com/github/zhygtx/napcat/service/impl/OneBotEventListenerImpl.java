@@ -1,6 +1,7 @@
 package com.github.zhygtx.napcat.service.impl;
 
 import com.github.zhygtx.napcat.api.NapCat;
+import com.github.zhygtx.napcat.event.EventFilter;
 import com.github.zhygtx.napcat.event.OneBotEventListener;
 import com.github.zhygtx.napcat.event.message.*;
 import com.github.zhygtx.napcat.event.meta.HeartbeatMetaEvent;
@@ -12,6 +13,7 @@ import com.github.zhygtx.napcat.event.request.GroupAddRequestEvent;
 import com.github.zhygtx.napcat.event.request.GroupInviteRequestEvent;
 import com.github.zhygtx.napcat.event.request.GroupRequestEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 @SuppressWarnings("JavadocDeclaration")
@@ -21,10 +23,10 @@ public class OneBotEventListenerImpl implements OneBotEventListener {
     @Autowired
     private NapCat napCat;
 
-//    @Bean
-//    public EventFilter bot(){
-//        return ((botQQ, event) -> !(event instanceof MessageEvent && botQQ == ((MessageEvent) event).getUserId()) || event instanceof MessageSentEvent);
-//    }
+    @Bean
+    public EventFilter bot(){
+        return ((botQQ, event) -> !(event instanceof MessageEvent && botQQ == ((MessageEvent) event).getUserId()) || event instanceof MessageSentEvent);
+    }
 
     /**
      * 收到生命周期事件时调用。

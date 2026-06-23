@@ -26,9 +26,7 @@ public interface BotEventListener {
      *
      * @param botQQ 上线的 Bot QQ 号
      */
-    default void botOnline(Long botQQ) {
-        // 默认空实现，用户按需覆写
-    }
+    void botOnline(Long botQQ);
 
     /**
      * Bot 离线时调用。
@@ -37,7 +35,5 @@ public interface BotEventListener {
      *
      * @param botQQ 离线的 Bot QQ 号
      */
-    default void botOffline(Long botQQ) {
-        // 默认空实现，用户按需覆写
-    }
+    void botOffline(Long botQQ);
 }

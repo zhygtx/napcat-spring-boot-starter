@@ -39,6 +39,15 @@ public class Bot {
     private Instant connectTime;
 
     /**
+     * QQ 账号是否在线。
+     * <p>
+     * 区别于 WebSocket 连接状态。当收到 {@code notice:bot_offline} 或心跳变为
+     * {@code online=false} 时设为 false；当心跳恢复或 WebSocket 重连时恢复为 true。
+     * 用于防止重复触发 {@code BotEventListener.botOffline()} / {@code botOnline()}。
+     */
+    private boolean accountOnline = true;
+
+    /**
      * session 发送专用锁。
      * <p>
      * WebSocketSession 本身不是线程安全的，多个线程并发调用 sendMessage 会导致

@@ -59,7 +59,11 @@ public class BotSessionRegistry {
 
     /**
      * 从在线列表中移除指定 BotQQ 的会话。
-     * 移除成功后触发 {@link BotEventListener#botOffline} 事件。
+     * <p>
+     * 如果该 Bot 的 {@link Bot#isAccountOnline()} 仍为 true（即之前未被
+     * {@link #markAccountOffline} 标记过），则触发 {@link BotEventListener#botOffline} 事件。
+     * 如果已因账号离线事件标记过，则跳过事件通知，避免重复触发。
+     *
      * @param botQQ 要移除的 Bot QQ 号
      * @return 被移除的 Bot 会话，如果不存在则返回 null
      */
@@ -67,8 +71,10 @@ public class BotSessionRegistry {
         Bot removed = onlineBots.remove(botQQ);
         if (removed != null) {
             log.info("Bot [{}] 已移除，当前在线数量: {}", botQQ, onlineBots.size());
-            // 触发离线事件
-            listeners.forEach(listener -> listener.botOffline(botQQ));
+            // 仅当账号仍显示在线时才触发离线事件（避免重复通知）
+            if (removed.isAccountOnline()) {
+                listeners.forEach(listener -> listener.botOffline(botQQ));
+            }
         }
         return removed;
     }
@@ -122,6 +128,43 @@ public class BotSessionRegistry {
         Bot bot = onlineBots.get(botQQ);
         if (bot != null) {
             bot.setLastMessageTime(Instant.now());
+        }
+    }
+
+    /**
+     * 标记 Bot 的 QQ 账号为离线状态。
+     * <p>
+     * 如果当前 {@link Bot#isAccountOnline()} 为 true，则设为 false 并触发
+     * {@link BotEventListener#botOffline} 事件。如果已为 false 则跳过，避免重复通知。
+     * <p>
+     * 此方法不会关闭 WebSocket 连接或从注册表中移除 Bot，
+     * NapCat 可在账号恢复后继续使用同一条连接。
+     *
+     * @param botQQ Bot QQ 号
+     */
+    public void markAccountOffline(Long botQQ) {
+        Bot bot = onlineBots.get(botQQ);
+        if (bot != null && bot.isAccountOnline()) {
+            bot.setAccountOnline(false);
+            log.warn("Bot [{}] QQ 账号已离线（WebSocket 连接仍保持）", botQQ);
+            listeners.forEach(listener -> listener.botOffline(botQQ));
+        }
+    }
+
+    /**
+     * 标记 Bot 的 QQ 账号恢复在线。
+     * <p>
+     * 如果当前 {@link Bot#isAccountOnline()} 为 false，则设为 true 并触发
+     * {@link BotEventListener#botOnline} 事件。如果已为 true 则跳过，避免重复通知。
+     *
+     * @param botQQ Bot QQ 号
+     */
+    public void markAccountOnline(Long botQQ) {
+        Bot bot = onlineBots.get(botQQ);
+        if (bot != null && !bot.isAccountOnline()) {
+            bot.setAccountOnline(true);
+            log.info("Bot [{}] QQ 账号已恢复在线", botQQ);
+            listeners.forEach(listener -> listener.botOnline(botQQ));
         }
     }
 

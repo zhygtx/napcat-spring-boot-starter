@@ -264,6 +264,17 @@ public interface OneBotEventListener {
      */
     default void onProfileLike(Long botQQ, ProfileLikeNoticeEvent event) {}
 
+    /**
+     * Bot QQ 账号离线时调用。
+     * <p>
+     * 对应 {@code notice:bot_offline} 事件，当 Bot 的 QQ 账号因被踢下线、
+     * 风控等原因离线（但 WebSocket 连接仍保持）时触发。
+     * <p>
+     * SDK 已自动处理 {@code BotEventListener.botOffline()} 回调，
+     * 本方法用于需要获取离线详情（tag、message）的场景。
+     */
+    default void onBotOffline(Long botQQ, BotOfflineNoticeEvent event) {}
+
     // ====================================================
     //  请求事件 (Request Event)
     // ====================================================

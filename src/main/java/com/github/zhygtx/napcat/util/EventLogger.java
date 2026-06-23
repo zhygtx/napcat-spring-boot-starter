@@ -104,7 +104,7 @@ public class EventLogger {
             boolean online = json.path("status").path("online").asBoolean(false);
             boolean good = json.path("status").path("good").asBoolean(false);
             long interval = json.has("interval") ? json.get("interval").asLong() : 0;
-            return sj("心跳", selfId, "在线:" + online, "良好:" + good, "间隔:" + interval + "s");
+            return sj("心跳", selfId, "在线:" + online, "良好:" + good, "间隔:" + interval + "ms");
         }
         if ("lifecycle".equals(metaType)) {
             String sub = json.has("sub_type") ? json.get("sub_type").asText() : "";

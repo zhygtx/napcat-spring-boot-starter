@@ -14,6 +14,8 @@ import com.github.zhygtx.napcat.event.request.FriendRequestEvent;
 import com.github.zhygtx.napcat.event.request.GroupAddRequestEvent;
 import com.github.zhygtx.napcat.event.request.GroupInviteRequestEvent;
 import com.github.zhygtx.napcat.event.request.GroupRequestEvent;
+import com.github.zhygtx.napcat.session.Bot;
+import com.github.zhygtx.napcat.session.BotSessionRegistry;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +62,7 @@ public class EventDispatcher {
     private final EventExecutor eventExecutor;
     private final NapCatProperties properties;
     private final EventLogger eventLogger;
+    private final BotSessionRegistry botRegistry;
 
     /** 已注册的 OneBotEventListener Bean 列表 */
     private List<OneBotEventListener> listeners;
@@ -81,12 +84,13 @@ public class EventDispatcher {
 
     public EventDispatcher(ApplicationContext context, EventExecutor eventExecutor,
                            NapCatProperties properties, EventLogger eventLogger,
-                           List<EventFilter> filters) {
+                           List<EventFilter> filters, BotSessionRegistry botRegistry) {
         this.context = context;
         this.eventExecutor = eventExecutor;
         this.properties = properties;
         this.eventLogger = eventLogger;
         this.filters = filters;
+        this.botRegistry = botRegistry;
     }
 
     /**
@@ -146,6 +150,26 @@ public class EventDispatcher {
         if (!passFilterChain(botQQ, event)) {
             log.debug("事件被过滤器拦截, bot: {}, type: {}", botQQ, event.getClass().getSimpleName());
             return;
+        }
+
+        // ===== 账号离线/恢复检测（在提交线程池之前同步执行） =====
+        // 触发点 1：账号离线事件 → 标记离线
+        if (event instanceof BotOfflineNoticeEvent && botQQ != null) {
+            botRegistry.markAccountOffline(botQQ);
+        }
+
+        // 触发点 2：心跳在线状态转变检测
+        if (event instanceof HeartbeatMetaEvent hb && botQQ != null) {
+            Bot bot = botRegistry.getBot(botQQ);
+            if (bot != null) {
+                if (hb.isOnline() && !bot.isAccountOnline()) {
+                    // false → true：账号恢复在线
+                    botRegistry.markAccountOnline(botQQ);
+                } else if (!hb.isOnline() && bot.isAccountOnline()) {
+                    // true → false：账号变为离线
+                    botRegistry.markAccountOffline(botQQ);
+                }
+            }
         }
 
         // 提交到线程池异步执行：日志 + 事件分发
@@ -345,6 +369,7 @@ public class EventDispatcher {
         register("notice:notify:poke", PokeNoticeEvent.class);
         register("notice:notify:input_status", InputStatusNoticeEvent.class);
         register("notice:notify:profile_like", ProfileLikeNoticeEvent.class);
+        register("notice:bot_offline", BotOfflineNoticeEvent.class);
 
         // ---- 请求事件 ----
         register("request:friend", FriendRequestEvent.class);
@@ -499,6 +524,8 @@ public class EventDispatcher {
                     listener.onInputStatus(botQQ, (InputStatusNoticeEvent) event);
                 } else if (event instanceof ProfileLikeNoticeEvent) {
                     listener.onProfileLike(botQQ, (ProfileLikeNoticeEvent) event);
+                } else if (event instanceof BotOfflineNoticeEvent) {
+                    listener.onBotOffline(botQQ, (BotOfflineNoticeEvent) event);
                 }
 
                 // ===== 请求事件 =====
