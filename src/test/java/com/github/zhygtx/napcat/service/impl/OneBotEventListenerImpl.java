@@ -279,7 +279,6 @@ public class OneBotEventListenerImpl implements OneBotEventListener {
     public void onGroupMessage(Long botQQ, GroupMessageEvent event) {
         System.out.println(botQQ);
         System.out.println(event.toString());
-        napCat.sendGroupMsg(botQQ,event.getGroupId(),event.getRawMessage(),true);
     }
 
     /**
