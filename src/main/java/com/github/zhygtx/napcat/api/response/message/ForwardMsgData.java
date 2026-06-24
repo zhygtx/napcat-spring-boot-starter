@@ -12,5 +12,5 @@ import lombok.Data;
 public class ForwardMsgData {
 
     /** 消息内容（数组形式的转发消息节点列表） */
-    private JsonNode message;
+    private JsonNode messages;
 }

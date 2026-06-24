@@ -21,4 +21,7 @@ public class FileData {
 
     /** URL（可选） */
     private String url;
+
+    /** Base64 编码内容（可选） */
+    private String base64;
 }

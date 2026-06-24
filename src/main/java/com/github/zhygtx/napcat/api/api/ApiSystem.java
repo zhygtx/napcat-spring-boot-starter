@@ -1,6 +1,8 @@
 package com.github.zhygtx.napcat.api.api;
 
 import com.github.zhygtx.napcat.api.response.*;
+import com.github.zhygtx.napcat.api.response.system.UrlSafetyData;
+import com.github.zhygtx.napcat.api.response.system.UserStatusData;
 import com.github.zhygtx.napcat.api.response.system.*;
 
 import java.util.List;
@@ -95,9 +97,9 @@ public interface ApiSystem {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param url   要检查的 URL 地址
-     * @return 异步响应，无业务数据（可通过 retcode 判断结果）
+     * @return 异步响应，data 包含 URL 安全检测结果
      */
-    CompletableFuture<ApiResponse<VoidData>> checkUrlSafely(long botQQ, String url);
+    CompletableFuture<ApiResponse<UrlSafetyData>> checkUrlSafely(long botQQ, String url);
 
     /**
      * 获取 Cookies。
@@ -167,11 +169,13 @@ public interface ApiSystem {
 
     /**
      * 获取 NC RKey（NapCat 自定义）。
+     * <p>
+     * 获取 NapCat 自定义的 RKey 列表。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @return 异步响应，无业务数据
+     * @return 异步响应，data 为 RKey 列表
      */
-    CompletableFuture<ApiResponse<VoidData>> ncGetRkey(long botQQ);
+    CompletableFuture<ApiResponse<List<RKeyData>>> ncGetRkey(long botQQ);
 
     /**
      * 获取 NC 用户状态。
@@ -182,7 +186,7 @@ public interface ApiSystem {
      * @param userId 目标用户 QQ
      * @return 异步响应，包含用户状态信息
      */
-    CompletableFuture<ApiResponse<VoidData>> ncGetUserStatus(long botQQ, String userId);
+    CompletableFuture<ApiResponse<UserStatusData>> ncGetUserStatus(long botQQ, String userId);
 
     /**
      * 获取 NC 发包状态。
@@ -219,22 +223,26 @@ public interface ApiSystem {
      * <p>
      * 修改机器人的在线状态（如在线、离开、隐身等）。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param status 状态值（具体数值对应 OneBot 协议定义）
+     * @param botQQ         目标 Bot 的 QQ 号
+     * @param status        在线状态值（具体数值对应 OneBot 协议定义）
+     * @param extStatus     扩展在线状态值
+     * @param batteryStatus 电池状态值
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setOnlineStatus(long botQQ, long status);
+    CompletableFuture<ApiResponse<VoidData>> setOnlineStatus(long botQQ, long status, long extStatus, long batteryStatus);
 
     /**
      * 设置自定义在线状态。
      * <p>
      * 使用预定义的 DIY 在线状态模板（NapCat 扩展功能）。
      *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @param diyId 自定义状态 ID
+     * @param botQQ    目标 Bot 的 QQ 号
+     * @param faceId   自定义表情 ID
+     * @param faceType 表情类型
+     * @param wording  自定义状态文本
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setDiyOnlineStatus(long botQQ, String diyId);
+    CompletableFuture<ApiResponse<VoidData>> setDiyOnlineStatus(long botQQ, String faceId, String faceType, String wording);
 
     /**
      * 获取在线客户端列表。
@@ -249,13 +257,13 @@ public interface ApiSystem {
     /**
      * 获取分享链接。
      * <p>
-     * 生成一个短链接或分享形式的链接。
+     * 根据文件集 ID 生成分享链接。
      *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @param url   要处理的原始 URL
+     * @param botQQ     目标 Bot 的 QQ 号
+     * @param filesetId 文件集 ID
      * @return 异步响应，data 包含分享链接、标题、内容等信息
      */
-    CompletableFuture<ApiResponse<ShareLinkData>> getShareLink(long botQQ, String url);
+    CompletableFuture<ApiResponse<ShareLinkData>> getShareLink(long botQQ, String filesetId);
 
     /**
      * 发送数据包。

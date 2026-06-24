@@ -12,4 +12,7 @@ public class CookiesData {
 
     /** Cookies 字符串 */
     private String cookies;
+
+    /** bkn（CSRF Token 衍生值） */
+    private int bkn;
 }

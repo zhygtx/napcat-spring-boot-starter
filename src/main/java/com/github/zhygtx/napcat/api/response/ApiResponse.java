@@ -12,7 +12,8 @@ import lombok.Data;
  *   "retcode": 0,
  *   "data": { ... },
  *   "message": "",
- *   "wording": ""
+ *   "wording": "",
+ *   "stream": "normal-action"
  * }
  * </pre>
  *
@@ -35,6 +36,9 @@ public class ApiResponse<T> {
 
     /** 提示 */
     private String wording;
+
+    /** 流式响应类型（如 "normal-action"） */
+    private String stream;
 
     /**
      * 判断 API 调用是否成功。

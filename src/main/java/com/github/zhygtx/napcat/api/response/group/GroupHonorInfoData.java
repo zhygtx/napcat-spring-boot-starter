@@ -17,6 +17,21 @@ public class GroupHonorInfoData {
     /** 当前龙王信息 */
     private JsonNode currentTalkative;
 
-    /** 荣誉列表（talkative/performer/emotion 等各类型的榜单） */
+    /** 龙王榜单列表 */
+    private JsonNode talkativeList;
+
+    /** 群聊之火/达人榜单列表 */
+    private JsonNode performerList;
+
+    /** 传说榜单列表 */
+    private JsonNode legendList;
+
+    /** 快乐源泉/表情榜单列表 */
+    private JsonNode emotionList;
+
+    /** 新兴群友榜单列表 */
+    private JsonNode strongNewbieList;
+
+    /** 荣誉列表（保留兼容，与上述各榜单对应） */
     private JsonNode honorList;
 }

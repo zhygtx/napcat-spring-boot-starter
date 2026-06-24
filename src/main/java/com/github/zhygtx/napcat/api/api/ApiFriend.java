@@ -101,9 +101,9 @@ public interface ApiFriend {
      * 获取被系统标记为可疑的好友申请列表，用于审核处理。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @return 异步响应，包含可疑好友申请信息
+     * @return 异步响应，data 为可疑好友申请列表，每项含 uin/nickname/flag 等
      */
-    CompletableFuture<ApiResponse<VoidData>> getDoubFriendsAddRequest(long botQQ);
+    CompletableFuture<ApiResponse<List<DoubtFriendAddRequestData>>> getDoubtFriendsAddRequest(long botQQ);
 
     /**
      * 处理可疑好友申请。
@@ -116,17 +116,20 @@ public interface ApiFriend {
      * @param message 操作附言（可选）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setDoubFriendsAddRequest(long botQQ, String uin, boolean operate, String message);
+    CompletableFuture<ApiResponse<VoidData>> setDoubtFriendsAddRequest(long botQQ, String uin, boolean operate, String message);
 
     /**
      * 获取资料点赞列表。
      * <p>
-     * 获取机器人账号收到的点赞（赞）总数和近期点赞列表。
+     * 获取指定用户的点赞（赞）总数和近期点赞列表。
      *
-     * @param botQQ 目标 Bot 的 QQ 号
+     * @param userId 目标用户 QQ
+     * @param start  分页起始位置
+     * @param count  每页数量
+     * @param botQQ  目标 Bot 的 QQ 号
      * @return 异步响应，data 包含点赞总数和近期列表
      */
-    CompletableFuture<ApiResponse<ProfileLikeData>> getProfileLike(long botQQ);
+    CompletableFuture<ApiResponse<ProfileLikeData>> getProfileLike(String userId, int start, int count, long botQQ);
 
     /**
      * 设置 QQ 头像。

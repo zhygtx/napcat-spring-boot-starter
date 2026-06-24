@@ -23,7 +23,7 @@ import org.springframework.web.socket.handler.AbstractWebSocketHandler;
  * 负责处理 NapCat 客户端的 WebSocket 连接生命周期：
  * <ul>
  *   <li>连接建立 → 从 attributes 创建 {@link Bot} 并注册到 {@link BotSessionRegistry}</li>
- *   <li>消息收发 → 每条消息到达时更新 {@link Bot#lastMessageTime} 用于心跳检测</li>
+ *   <li>消息收发 → 每条消息到达时更新 {@link Bot #lastMessageTime} 用于心跳检测</li>
  *   <li>连接关闭 → 从 {@link BotSessionRegistry} 中移除 Bot</li>
  *   <li>传输错误 → 记录错误日志</li>
  * </ul>
@@ -142,7 +142,7 @@ public class NapCatWebSocketHandler extends AbstractWebSocketHandler {
      * 处理传输错误。
      */
     @Override
-    public void handleTransportError(WebSocketSession session, @NonNull Throwable exception) {
+    public void handleTransportError(@NonNull WebSocketSession session, @NonNull Throwable exception) {
         if (isClosedChannel(exception)) {
             log.warn("连接通道已关闭 | 会话: {} | {}", session.getId(), exception.getMessage());
         } else {

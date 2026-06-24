@@ -85,6 +85,7 @@ public class NapCatApiClient {
             response.setRetcode(json.has("retcode") ? json.get("retcode").asInt() : -1);
             response.setMessage(json.has("message") ? json.get("message").asText() : null);
             response.setWording(json.has("wording") ? json.get("wording").asText() : null);
+            response.setStream(json.has("stream") ? json.get("stream").asText() : null);
 
             JsonNode dataNode = json.get("data");
             if (dataNode != null && !dataNode.isNull()) {

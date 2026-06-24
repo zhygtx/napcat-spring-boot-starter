@@ -240,26 +240,30 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> setGroupAddOption(long botQQ, long groupQQ, String option) {
+    public CompletableFuture<ApiResponse<VoidData>> setGroupAddOption(long botQQ, long groupQQ, String addType, String groupQuestion, String groupAnswer) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupQQ));
-        p.put("option", option);
+        p.put("add_type", addType);
+        if (groupQuestion != null) p.put("group_question", groupQuestion);
+        if (groupAnswer != null) p.put("group_answer", groupAnswer);
         return req(botQQ, "set_group_add_option", p, VoidData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> setGroupRobotAddOption(long botQQ, long groupQQ, String option) {
+    public CompletableFuture<ApiResponse<VoidData>> setGroupRobotAddOption(long botQQ, long groupQQ, String robotMemberSwitch, String robotMemberExamine) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupQQ));
-        p.put("option", option);
+        p.put("robot_member_switch", robotMemberSwitch);
+        if (robotMemberExamine != null) p.put("robot_member_examine", robotMemberExamine);
         return req(botQQ, "set_group_robot_add_option", p, VoidData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> setGroupSearch(long botQQ, long groupQQ, boolean enable) {
+    public CompletableFuture<ApiResponse<VoidData>> setGroupSearch(long botQQ, long groupQQ, String noCodeFingerOpen, String noFingerOpen) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupQQ));
-        p.put("enable", enable);
+        p.put("no_code_finger_open", noCodeFingerOpen);
+        if (noFingerOpen != null) p.put("no_finger_open", noFingerOpen);
         return req(botQQ, "set_group_search", p, VoidData.class);
     }
 
@@ -341,17 +345,17 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getGroupIgnoredNotifies(long botQQ, long groupQQ) {
+    public CompletableFuture<ApiResponse<GroupIgnoredNotifiesData>> getGroupIgnoredNotifies(long botQQ, long groupQQ) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupQQ));
-        return req(botQQ, "get_group_ignored_notifies", p, VoidData.class);
+        return req(botQQ, "get_group_ignored_notifies", p, GroupIgnoredNotifiesData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getGroupIgnoreAddRequest(long botQQ, long groupQQ) {
+    public CompletableFuture<ApiResponse<List<GroupIgnoreAddRequestData>>> getGroupIgnoreAddRequest(long botQQ, long groupQQ) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupQQ));
-        return req(botQQ, "get_group_ignore_add_request", p, VoidData.class);
+        return reqList(botQQ, "get_group_ignore_add_request", p, GroupIgnoreAddRequestData.class);
     }
 
     @Override
@@ -393,6 +397,30 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupQQ));
         return req(botQQ, "send_group_sign", p, VoidData.class);
+    }
+
+    @Override
+    public CompletableFuture<ApiResponse<VoidData>> cancelGroupTodo(long botQQ, long groupQQ, long messageId) {
+        ObjectNode p = mapper.createObjectNode();
+        p.put("group_id", Long.toString(groupQQ));
+        p.put("message_id", messageId);
+        return req(botQQ, "cancel_group_todo", p, VoidData.class);
+    }
+
+    @Override
+    public CompletableFuture<ApiResponse<VoidData>> completeGroupTodo(long botQQ, long groupQQ, long messageId) {
+        ObjectNode p = mapper.createObjectNode();
+        p.put("group_id", Long.toString(groupQQ));
+        p.put("message_id", messageId);
+        return req(botQQ, "complete_group_todo", p, VoidData.class);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public CompletableFuture<ApiResponse<List<?>>> getGroupSignedList(long botQQ, long groupQQ) {
+        ObjectNode p = mapper.createObjectNode();
+        p.put("group_id", Long.toString(groupQQ));
+        return (CompletableFuture<ApiResponse<List<?>>>) (CompletableFuture<?>) req(botQQ, "get_group_signed_list", p, Object.class);
     }
 
     // ================================================================
@@ -447,12 +475,12 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getDoubFriendsAddRequest(long botQQ) {
-        return req(botQQ, "get_doubt_friends_add_request", mapper.createObjectNode(), VoidData.class);
+    public CompletableFuture<ApiResponse<List<DoubtFriendAddRequestData>>> getDoubtFriendsAddRequest(long botQQ) {
+        return reqList(botQQ, "get_doubt_friends_add_request", mapper.createObjectNode(), DoubtFriendAddRequestData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> setDoubFriendsAddRequest(long botQQ, String uin, boolean operate, String message) {
+    public CompletableFuture<ApiResponse<VoidData>> setDoubtFriendsAddRequest(long botQQ, String uin, boolean operate, String message) {
         ObjectNode p = mapper.createObjectNode();
         p.put("uin", uin);
         p.put("operate", operate ? 1 : 0);
@@ -461,8 +489,12 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<ProfileLikeData>> getProfileLike(long botQQ) {
-        return req(botQQ, "get_profile_like", mapper.createObjectNode(), ProfileLikeData.class);
+    public CompletableFuture<ApiResponse<ProfileLikeData>> getProfileLike(String userId, int start, int count, long botQQ) {
+        ObjectNode p = mapper.createObjectNode();
+        p.put("user_id", userId);
+        p.put("start", start);
+        p.put("count", count);
+        return req(botQQ, "get_profile_like", p, ProfileLikeData.class);
     }
 
     @Override
@@ -530,10 +562,10 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> checkUrlSafely(long botQQ, String url) {
+    public CompletableFuture<ApiResponse<UrlSafetyData>> checkUrlSafely(long botQQ, String url) {
         ObjectNode p = mapper.createObjectNode();
         p.put("url", url);
-        return req(botQQ, "check_url_safely", p, VoidData.class);
+        return req(botQQ, "check_url_safely", p, UrlSafetyData.class);
     }
 
     @Override
@@ -576,15 +608,15 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> ncGetRkey(long botQQ) {
-        return req(botQQ, "nc_get_rkey", mapper.createObjectNode(), VoidData.class);
+    public CompletableFuture<ApiResponse<List<RKeyData>>> ncGetRkey(long botQQ) {
+        return reqList(botQQ, "nc_get_rkey", mapper.createObjectNode(), RKeyData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> ncGetUserStatus(long botQQ, String userId) {
+    public CompletableFuture<ApiResponse<UserStatusData>> ncGetUserStatus(long botQQ, String userId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("user_id", userId);
-        return req(botQQ, "nc_get_user_status", p, VoidData.class);
+        return req(botQQ, "nc_get_user_status", p, UserStatusData.class);
     }
 
     @Override
@@ -603,16 +635,20 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> setOnlineStatus(long botQQ, long status) {
+    public CompletableFuture<ApiResponse<VoidData>> setOnlineStatus(long botQQ, long status, long extStatus, long batteryStatus) {
         ObjectNode p = mapper.createObjectNode();
         p.put("status", status);
+        p.put("ext_status", extStatus);
+        p.put("battery_status", batteryStatus);
         return req(botQQ, "set_online_status", p, VoidData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> setDiyOnlineStatus(long botQQ, String diyId) {
+    public CompletableFuture<ApiResponse<VoidData>> setDiyOnlineStatus(long botQQ, String faceId, String faceType, String wording) {
         ObjectNode p = mapper.createObjectNode();
-        p.put("diy_id", diyId);
+        p.put("face_id", faceId);
+        p.put("face_type", faceType);
+        p.put("wording", wording);
         return req(botQQ, "set_diy_online_status", p, VoidData.class);
     }
 
@@ -622,9 +658,9 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<ShareLinkData>> getShareLink(long botQQ, String url) {
+    public CompletableFuture<ApiResponse<ShareLinkData>> getShareLink(long botQQ, String filesetId) {
         ObjectNode p = mapper.createObjectNode();
-        p.put("url", url);
+        p.put("fileset_id", filesetId);
         return req(botQQ, "get_share_link", p, ShareLinkData.class);
     }
 
@@ -662,12 +698,13 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<FileDownloadData>> downloadFile(long botQQ, String threadCount, String headers, String url, long retry) {
+    public CompletableFuture<ApiResponse<FileDownloadData>> downloadFile(long botQQ, int threadCount, String headers, String base64, String name, String url) {
         ObjectNode p = mapper.createObjectNode();
         p.put("thread_count", threadCount);
         if (headers != null) p.put("headers", headers);
+        if (base64 != null) p.put("base64", base64);
+        if (name != null) p.put("name", name);
         p.put("url", url);
-        p.put("retry", retry);
         return req(botQQ, "download_file", p, FileDownloadData.class);
     }
 
@@ -789,15 +826,17 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getFilesetInfo(long botQQ, String filesetId) {
+    public CompletableFuture<ApiResponse<FilesetInfoData>> getFilesetInfo(long botQQ, String filesetId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("fileset_id", filesetId);
-        return req(botQQ, "get_fileset_info", p, VoidData.class);
+        return req(botQQ, "get_fileset_info", p, FilesetInfoData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getFilesetId(long botQQ) {
-        return req(botQQ, "get_fileset_id", mapper.createObjectNode(), VoidData.class);
+    public CompletableFuture<ApiResponse<FilesetIdData>> getFilesetId(long botQQ, String shareCode) {
+        ObjectNode p = mapper.createObjectNode();
+        p.put("share_code", shareCode);
+        return req(botQQ, "get_fileset_id", p, FilesetIdData.class);
     }
 
     @Override
@@ -863,31 +902,32 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getGroupMsgHistory(long botQQ, long groupQQ, long messageSeq, int count, boolean reverseOrder) {
+    public CompletableFuture<ApiResponse<HistoryMsgData>> getGroupMsgHistory(long botQQ, long groupQQ, long messageSeq, int count, boolean reverseOrder) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupQQ));
         p.put("message_seq", messageSeq);
         p.put("count", count);
         if (reverseOrder) p.put("reverse_order", true);
-        return req(botQQ, "get_group_msg_history", p, VoidData.class);
+        return req(botQQ, "get_group_msg_history", p, HistoryMsgData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getFriendMsgHistory(long botQQ, String userId, long messageSeq, int count, boolean reverseOrder) {
+    public CompletableFuture<ApiResponse<HistoryMsgData>> getFriendMsgHistory(long botQQ, String userId, long messageSeq, int count, boolean reverseOrder) {
         ObjectNode p = mapper.createObjectNode();
         p.put("user_id", userId);
         p.put("message_seq", messageSeq);
         p.put("count", count);
         if (reverseOrder) p.put("reverse_order", true);
-        return req(botQQ, "get_friend_msg_history", p, VoidData.class);
+        return req(botQQ, "get_friend_msg_history", p, HistoryMsgData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> markMsgAsRead(long botQQ, String messageType, long groupQQ, String userId) {
+    public CompletableFuture<ApiResponse<VoidData>> markMsgAsRead(long botQQ, String messageType, long groupQQ, String userId, String messageId) {
         ObjectNode p = mapper.createObjectNode();
         if (messageType != null) p.put("message_type", messageType);
         if (groupQQ != 0) p.put("group_id", Long.toString(groupQQ));
         if (userId != null) p.put("user_id", userId);
+        if (messageId != null) p.put("message_id", messageId);
         return req(botQQ, "mark_msg_as_read", p, VoidData.class);
     }
 
@@ -934,21 +974,23 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> fetchEmojiLike(long botQQ, String messageId, String emojiId, String emojiType, long groupQQ, String userId) {
+    public CompletableFuture<ApiResponse<EmojiLikeDetailData>> fetchEmojiLike(long botQQ, String messageId, String emojiId, String emojiType, long groupQQ, String userId, String count, String cookie) {
         ObjectNode p = mapper.createObjectNode();
         p.put("message_id", messageId);
         p.put("emoji_id", emojiId);
         p.put("emoji_type", emojiType);
         if (groupQQ != 0) p.put("group_id", Long.toString(groupQQ));
         if (userId != null) p.put("user_id", userId);
-        return req(botQQ, "fetch_emoji_like", p, VoidData.class);
+        if (count != null) p.put("count", count);
+        if (cookie != null) p.put("cookie", cookie);
+        return req(botQQ, "fetch_emoji_like", p, EmojiLikeDetailData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getEmojiLikes(long botQQ, String messageId) {
+    public CompletableFuture<ApiResponse<EmojiLikesData>> getEmojiLikes(long botQQ, String messageId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("message_id", messageId);
-        return req(botQQ, "get_emoji_likes", p, VoidData.class);
+        return req(botQQ, "get_emoji_likes", p, EmojiLikesData.class);
     }
 
     @Override
@@ -961,10 +1003,10 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> fetchCustomFace(long botQQ, int count) {
+    public CompletableFuture<ApiResponse<List<CustomFaceData>>> fetchCustomFace(long botQQ, int count) {
         ObjectNode p = mapper.createObjectNode();
         p.put("count", count);
-        return req(botQQ, "fetch_custom_face", p, VoidData.class);
+        return reqList(botQQ, "fetch_custom_face", p, CustomFaceData.class);
     }
 
     @Override
@@ -976,18 +1018,18 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getQunAlbumList(long botQQ, long groupQQ) {
+    public CompletableFuture<ApiResponse<QunAlbumListData>> getQunAlbumList(long botQQ, long groupQQ) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupQQ));
-        return req(botQQ, "get_qun_album_list", p, VoidData.class);
+        return req(botQQ, "get_qun_album_list", p, QunAlbumListData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getGroupAlbumMediaList(long botQQ, long groupQQ, String albumId) {
+    public CompletableFuture<ApiResponse<GroupAlbumMediaListData>> getGroupAlbumMediaList(long botQQ, long groupQQ, String albumId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupQQ));
         p.put("album_id", albumId);
-        return req(botQQ, "get_group_album_media_list", p, VoidData.class);
+        return req(botQQ, "get_group_album_media_list", p, GroupAlbumMediaListData.class);
     }
 
     @Override
@@ -1098,41 +1140,41 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> createCollection(long botQQ, String rawData, int type) {
+    public CompletableFuture<ApiResponse<CreateCollectionData>> createCollection(long botQQ, String rawData, int type) {
         ObjectNode p = mapper.createObjectNode();
         p.put("raw_data", rawData);
         p.put("type", type);
-        return req(botQQ, "create_collection", p, VoidData.class);
+        return req(botQQ, "create_collection", p, CreateCollectionData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getCollectionList(long botQQ, int category, String startPos, int count) {
+    public CompletableFuture<ApiResponse<CollectionListData>> getCollectionList(long botQQ, int category, String startPos, int count) {
         ObjectNode p = mapper.createObjectNode();
         p.put("category", category);
         p.put("start_pos", startPos);
         p.put("count", count);
-        return req(botQQ, "get_collection_list", p, VoidData.class);
+        return req(botQQ, "get_collection_list", p, CollectionListData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getGuildList(long botQQ) {
-        return req(botQQ, "get_guild_list", mapper.createObjectNode(), VoidData.class);
+    public CompletableFuture<ApiResponse<List<GuildListData>>> getGuildList(long botQQ) {
+        return reqList(botQQ, "get_guild_list", mapper.createObjectNode(), GuildListData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getGuildServiceProfile(long botQQ, String guildId) {
+    public CompletableFuture<ApiResponse<GuildServiceProfileData>> getGuildServiceProfile(long botQQ, String guildId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("guild_id", guildId);
-        return req(botQQ, "get_guild_service_profile", p, VoidData.class);
+        return req(botQQ, "get_guild_service_profile", p, GuildServiceProfileData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getAiRecord(long botQQ, String character, String text, long groupQQ) {
+    public CompletableFuture<ApiResponse<AiRecordData>> getAiRecord(long botQQ, String character, String text, long groupQQ) {
         ObjectNode p = mapper.createObjectNode();
         p.put("character", character);
         p.put("text", text);
         if (groupQQ != 0) p.put("group_id", Long.toString(groupQQ));
-        return req(botQQ, "get_ai_record", p, VoidData.class);
+        return req(botQQ, "get_ai_record", p, AiRecordData.class);
     }
 
     @Override
@@ -1145,26 +1187,26 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getAiCharacters(long botQQ, long groupQQ, String chatType) {
+    public CompletableFuture<ApiResponse<List<AiCharactersData>>> getAiCharacters(long botQQ, long groupQQ, String chatType) {
         ObjectNode p = mapper.createObjectNode();
         if (groupQQ != 0) p.put("group_id", Long.toString(groupQQ));
         if (chatType != null) p.put("chat_type", chatType);
-        return req(botQQ, "get_ai_characters", p, VoidData.class);
+        return reqList(botQQ, "get_ai_characters", p, AiCharactersData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> createFlashTask(long botQQ, List<String> filePaths, boolean isPrivate) {
+    public CompletableFuture<ApiResponse<VoidData>> createFlashTask(long botQQ, String files, String name, String thumbPath) {
         ObjectNode p = mapper.createObjectNode();
-        ArrayNode arr = p.putArray("file_paths");
-        filePaths.forEach(arr::add);
-        p.put("is_private", isPrivate);
+        p.put("files", files);
+        if (name != null) p.put("name", name);
+        if (thumbPath != null) p.put("thumb_path", thumbPath);
         return req(botQQ, "create_flash_task", p, VoidData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getFlashFileList(long botQQ, String taskId) {
+    public CompletableFuture<ApiResponse<VoidData>> getFlashFileList(long botQQ, String filesetId) {
         ObjectNode p = mapper.createObjectNode();
-        p.put("task_id", taskId);
+        p.put("fileset_id", filesetId);
         return req(botQQ, "get_flash_file_list", p, VoidData.class);
     }
 
@@ -1177,20 +1219,20 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> sendFlashMsg(long botQQ, String userId, long groupQQ, String taskId) {
+    public CompletableFuture<ApiResponse<VoidData>> sendFlashMsg(long botQQ, String userId, long groupQQ, String filesetId) {
         ObjectNode p = mapper.createObjectNode();
         if (userId != null) p.put("user_id", userId);
         if (groupQQ != 0) p.put("group_id", Long.toString(groupQQ));
-        p.put("task_id", taskId);
+        p.put("fileset_id", filesetId);
         return req(botQQ, "send_flash_msg", p, VoidData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getOnlineFileMsg(long botQQ, String messageId, String selfId) {
+    public CompletableFuture<ApiResponse<OnlineFileMsgData>> getOnlineFileMsg(long botQQ, String messageId, String selfId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("message_id", messageId);
         p.put("self_id", selfId);
-        return req(botQQ, "get_online_file_msg", p, VoidData.class);
+        return req(botQQ, "get_online_file_msg", p, OnlineFileMsgData.class);
     }
 
     @Override
@@ -1236,25 +1278,26 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> setInputStatus(long botQQ, String userId, long groupQQ) {
+    public CompletableFuture<ApiResponse<VoidData>> setInputStatus(long botQQ, String userId, long groupQQ, int eventType) {
         ObjectNode p = mapper.createObjectNode();
         if (userId != null) p.put("user_id", userId);
         if (groupQQ != 0) p.put("group_id", Long.toString(groupQQ));
+        p.put("event_type", eventType);
         return req(botQQ, "set_input_status", p, VoidData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getRecentContact(long botQQ, int count) {
+    public CompletableFuture<ApiResponse<List<RecentContactData>>> getRecentContact(long botQQ, int count) {
         ObjectNode p = mapper.createObjectNode();
         p.put("count", count);
-        return req(botQQ, "get_recent_contact", p, VoidData.class);
+        return reqList(botQQ, "get_recent_contact", p, RecentContactData.class);
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getModelShow(long botQQ, String model) {
+    public CompletableFuture<ApiResponse<List<ModelShowData>>> getModelShow(long botQQ, String model) {
         ObjectNode p = mapper.createObjectNode();
         p.put("model", model);
-        return req(botQQ, "_get_model_show", p, VoidData.class);
+        return reqList(botQQ, "_get_model_show", p, ModelShowData.class);
     }
 
     @Override
@@ -1266,14 +1309,14 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
     }
 
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> getMiniAppArk(long botQQ, String appId, String appPath, String appVersion, String appQq, String appType) {
+    public CompletableFuture<ApiResponse<MiniAppArkData>> getMiniAppArk(long botQQ, String appId, String appPath, String appVersion, String appQq, String appType) {
         ObjectNode p = mapper.createObjectNode();
         p.put("app_id", appId);
         p.put("app_path", appPath);
         p.put("app_version", appVersion);
         if (appQq != null) p.put("app_qq", appQq);
         if (appType != null) p.put("app_type", appType);
-        return req(botQQ, "get_mini_app_ark", p, VoidData.class);
+        return req(botQQ, "get_mini_app_ark", p, MiniAppArkData.class);
     }
 
     @Override
@@ -1333,5 +1376,64 @@ public class NapCat implements ApiMessage, ApiGroup, ApiFriend, ApiSystem, ApiFi
         p.set("context", context);
         p.set("operation", operation);
         return req(botQQ, ".handle_quick_operation", p, VoidData.class);
+    }
+
+    // ==================== 新增缺失端点 ====================
+
+    @Override
+    public CompletableFuture<ApiResponse<VoidData>> cancelGroupAlbumMediaLike(long botQQ, long groupQQ, String albumId, String batchId, String lloc) {
+        ObjectNode p = mapper.createObjectNode();
+        p.put("group_id", Long.toString(groupQQ));
+        p.put("album_id", albumId);
+        p.put("batch_id", batchId);
+        p.put("lloc", lloc);
+        return req(botQQ, "cancel_group_album_media_like", p, VoidData.class);
+    }
+
+    @Override
+    public CompletableFuture<ApiResponse<PttTextData>> fetchPttText(long botQQ, long messageId) {
+        ObjectNode p = mapper.createObjectNode();
+        p.put("message_id", messageId);
+        return req(botQQ, "fetch_ptt_text", p, PttTextData.class);
+    }
+
+    @Override
+    public CompletableFuture<ApiResponse<VoidData>> addCustomFace(long botQQ, String file, String emojiId, String packageId, String fileName, long fileSize, String md5, boolean isMarkFace, boolean isOrigin) {
+        ObjectNode p = mapper.createObjectNode();
+        p.put("file", file);
+        if (emojiId != null) p.put("emoji_id", emojiId);
+        if (packageId != null) p.put("package_id", packageId);
+        if (fileName != null) p.put("file_name", fileName);
+        if (fileSize > 0) p.put("file_size", fileSize);
+        if (md5 != null) p.put("md5", md5);
+        if (isMarkFace) p.put("is_mark_face", true);
+        if (isOrigin) p.put("is_origin", true);
+        return req(botQQ, "add_custom_face", p, VoidData.class);
+    }
+
+    @Override
+    public CompletableFuture<ApiResponse<VoidData>> deleteCustomFace(long botQQ, String resId, String ids, String md5) {
+        ObjectNode p = mapper.createObjectNode();
+        if (resId != null) p.put("res_id", resId);
+        if (ids != null) p.put("ids", ids);
+        if (md5 != null) p.put("md5", md5);
+        return req(botQQ, "delete_custom_face", p, VoidData.class);
+    }
+
+    @Override
+    public CompletableFuture<ApiResponse<CustomFaceDetailData>> fetchCustomFaceDetail(long botQQ, int count) {
+        ObjectNode p = mapper.createObjectNode();
+        p.put("count", count);
+        return req(botQQ, "fetch_custom_face_detail", p, CustomFaceDetailData.class);
+    }
+
+    @Override
+    public CompletableFuture<ApiResponse<VoidData>> setCustomFaceDesc(long botQQ, String emojiId, String resId, String md5, String desc) {
+        ObjectNode p = mapper.createObjectNode();
+        p.put("emoji_id", emojiId);
+        p.put("res_id", resId);
+        p.put("md5", md5);
+        p.put("desc", desc);
+        return req(botQQ, "set_custom_face_desc", p, VoidData.class);
     }
 }

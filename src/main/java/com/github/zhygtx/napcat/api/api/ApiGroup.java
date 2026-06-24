@@ -214,36 +214,40 @@ public interface ApiGroup {
      * <p>
      * 修改群的加群验证方式（如需要验证消息、允许任何人加入等）。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
-     * @param option  加群选项值
+     * @param botQQ        目标 Bot 的 QQ 号
+     * @param groupQQ      目标群号
+     * @param addType      加群类型
+     * @param groupQuestion 加群问题
+     * @param groupAnswer  加群答案
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setGroupAddOption(long botQQ, long groupQQ, String option);
+    CompletableFuture<ApiResponse<VoidData>> setGroupAddOption(long botQQ, long groupQQ, String addType, String groupQuestion, String groupAnswer);
 
     /**
      * 设置群机器人加群选项。
      * <p>
      * 修改群聊是否允许机器人（第三方 Bot）加入。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
-     * @param option  选项值
+     * @param botQQ              目标 Bot 的 QQ 号
+     * @param groupQQ            目标群号
+     * @param robotMemberSwitch  机器人成员开关
+     * @param robotMemberExamine 机器人成员审核
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setGroupRobotAddOption(long botQQ, long groupQQ, String option);
+    CompletableFuture<ApiResponse<VoidData>> setGroupRobotAddOption(long botQQ, long groupQQ, String robotMemberSwitch, String robotMemberExamine);
 
     /**
      * 设置群搜索选项。
      * <p>
      * 修改群聊是否可通过搜索被找到。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
-     * @param enable  {@code true} 允许被搜索 / {@code false} 禁止
+     * @param botQQ           目标 Bot 的 QQ 号
+     * @param groupQQ         目标群号
+     * @param noCodeFingerOpen 免码指纹开关
+     * @param noFingerOpen    免指纹开关
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setGroupSearch(long botQQ, long groupQQ, boolean enable);
+    CompletableFuture<ApiResponse<VoidData>> setGroupSearch(long botQQ, long groupQQ, String noCodeFingerOpen, String noFingerOpen);
 
     /**
      * 设置群待办。
@@ -256,6 +260,30 @@ public interface ApiGroup {
      * @return 异步响应，无业务数据
      */
     CompletableFuture<ApiResponse<VoidData>> setGroupTodo(long botQQ, long groupQQ, long messageId);
+
+    /**
+     * 取消群待办。
+     * <p>
+     * 取消指定的群待办事项。
+     *
+     * @param botQQ    目标 Bot 的 QQ 号
+     * @param groupQQ  目标群号
+     * @param messageId 消息 ID
+     * @return 异步响应，无业务数据
+     */
+    CompletableFuture<ApiResponse<VoidData>> cancelGroupTodo(long botQQ, long groupQQ, long messageId);
+
+    /**
+     * 完成群待办。
+     * <p>
+     * 将指定的群待办事项标记为已完成。
+     *
+     * @param botQQ    目标 Bot 的 QQ 号
+     * @param groupQQ  目标群号
+     * @param messageId 消息 ID
+     * @return 异步响应，无业务数据
+     */
+    CompletableFuture<ApiResponse<VoidData>> completeGroupTodo(long botQQ, long groupQQ, long messageId);
 
     /**
      * 设置群专属头衔。
@@ -371,7 +399,7 @@ public interface ApiGroup {
      * @param groupQQ 目标群号
      * @return 异步响应，包含忽略通知信息
      */
-    CompletableFuture<ApiResponse<VoidData>> getGroupIgnoredNotifies(long botQQ, long groupQQ);
+    CompletableFuture<ApiResponse<GroupIgnoredNotifiesData>> getGroupIgnoredNotifies(long botQQ, long groupQQ);
 
     /**
      * 获取群忽略加群请求。
@@ -382,7 +410,7 @@ public interface ApiGroup {
      * @param groupQQ 目标群号
      * @return 异步响应，包含忽略的加群请求信息
      */
-    CompletableFuture<ApiResponse<VoidData>> getGroupIgnoreAddRequest(long botQQ, long groupQQ);
+    CompletableFuture<ApiResponse<List<GroupIgnoreAddRequestData>>> getGroupIgnoreAddRequest(long botQQ, long groupQQ);
 
     // ---- 群公告 ----
 
@@ -448,4 +476,15 @@ public interface ApiGroup {
      * @return 异步响应，无业务数据
      */
     CompletableFuture<ApiResponse<VoidData>> sendGroupSign(long botQQ, long groupQQ);
+
+    /**
+     * 获取群组今日打卡列表。
+     * <p>
+     * 获取指定群聊今日的打卡/签到列表。
+     *
+     * @param botQQ  目标 Bot 的 QQ 号
+     * @param groupQQ 目标群号
+     * @return 异步响应，data 为打卡列表
+     */
+    CompletableFuture<ApiResponse<List<?>>> getGroupSignedList(long botQQ, long groupQQ);
 }

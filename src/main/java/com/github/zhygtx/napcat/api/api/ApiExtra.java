@@ -2,6 +2,8 @@ package com.github.zhygtx.napcat.api.api;
 
 import com.github.zhygtx.napcat.api.response.*;
 import com.github.zhygtx.napcat.api.response.message.*;
+import com.github.zhygtx.napcat.api.response.system.*;
+import com.github.zhygtx.napcat.api.response.friend.*;
 import com.github.zhygtx.napcat.api.response.extra.*;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -51,6 +53,8 @@ public interface ApiExtra {
 
     /**
      * 发送群合并转发消息。
+     * <p>
+     * 在群聊中发送合并转发消息。
      *
      * @param botQQ   目标 Bot 的 QQ 号
      * @param groupQQ 目标群号
@@ -61,6 +65,8 @@ public interface ApiExtra {
 
     /**
      * 发送私聊合并转发消息。
+     * <p>
+     * 在私聊中发送合并转发消息。
      *
      * @param botQQ   目标 Bot 的 QQ 号
      * @param userId  目标用户 QQ
@@ -83,6 +89,8 @@ public interface ApiExtra {
 
     /**
      * 转发好友单条消息。
+     * <p>
+     * 将一条消息转发给指定好友。
      *
      * @param botQQ     目标 Bot 的 QQ 号
      * @param userId    目标用户 QQ
@@ -93,6 +101,8 @@ public interface ApiExtra {
 
     /**
      * 转发群单条消息。
+     * <p>
+     * 将一条消息转发到指定群聊。
      *
      * @param botQQ     目标 Bot 的 QQ 号
      * @param groupQQ   目标群号
@@ -115,10 +125,12 @@ public interface ApiExtra {
      * @param reverseOrder 是否反向排序（最新的在前）
      * @return 异步响应，包含消息列表
      */
-    CompletableFuture<ApiResponse<VoidData>> getGroupMsgHistory(long botQQ, long groupQQ, long messageSeq, int count, boolean reverseOrder);
+    CompletableFuture<ApiResponse<HistoryMsgData>> getGroupMsgHistory(long botQQ, long groupQQ, long messageSeq, int count, boolean reverseOrder);
 
     /**
      * 获取好友历史消息。
+     * <p>
+     * 获取与指定好友的私聊历史消息记录。
      *
      * @param botQQ       目标 Bot 的 QQ 号
      * @param userId      目标用户 QQ
@@ -127,20 +139,23 @@ public interface ApiExtra {
      * @param reverseOrder 是否反向排序
      * @return 异步响应，包含消息列表
      */
-    CompletableFuture<ApiResponse<VoidData>> getFriendMsgHistory(long botQQ, String userId, long messageSeq, int count, boolean reverseOrder);
+    CompletableFuture<ApiResponse<HistoryMsgData>> getFriendMsgHistory(long botQQ, String userId, long messageSeq, int count, boolean reverseOrder);
 
     // ==================== 标记已读 ====================
 
     /**
      * 标记消息已读（Go-CQHTTP 兼容）。
+     * <p>
+     * 将指定消息标记为已读。
      *
      * @param botQQ      目标 Bot 的 QQ 号
      * @param messageType 消息类型（"private" / "group"）
      * @param groupQQ    群号（群消息时必填）
      * @param userId     用户 QQ（私聊时必填）
+     * @param messageId  消息 ID
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> markMsgAsRead(long botQQ, String messageType, long groupQQ, String userId);
+    CompletableFuture<ApiResponse<VoidData>> markMsgAsRead(long botQQ, String messageType, long groupQQ, String userId, String messageId);
 
     /**
      * 标记群聊已读。
@@ -155,6 +170,8 @@ public interface ApiExtra {
 
     /**
      * 标记私聊已读。
+     * <p>
+     * 将指定私聊会话的未读消息标记为已读。
      *
      * @param botQQ  目标 Bot 的 QQ 号
      * @param userId 目标用户 QQ
@@ -199,9 +216,11 @@ public interface ApiExtra {
 
     /**
      * 发送戳一戳（通用接口）。
+     * <p>
+     * 向指定用户发送戳一戳，自动判断群聊或私聊。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param userId 目标用户 QQ
+     * @param botQQ   目标 Bot 的 QQ 号
+     * @param userId  目标用户 QQ
      * @param groupQQ 群号（群聊戳一戳时必填）
      * @return 异步响应，无业务数据
      */
@@ -211,6 +230,8 @@ public interface ApiExtra {
 
     /**
      * 获取表情点赞详情。
+     * <p>
+     * 获取指定消息的某个表情的点赞详细信息。
      *
      * @param botQQ     目标 Bot 的 QQ 号
      * @param messageId 消息 ID
@@ -218,18 +239,22 @@ public interface ApiExtra {
      * @param emojiType 表情类型
      * @param groupQQ   群号（群聊消息时需填）
      * @param userId    用户 QQ（私聊消息时需填）
+     * @param count     获取数量
+     * @param cookie    分页 cookie
      * @return 异步响应，包含点赞详情
      */
-    CompletableFuture<ApiResponse<VoidData>> fetchEmojiLike(long botQQ, String messageId, String emojiId, String emojiType, long groupQQ, String userId);
+    CompletableFuture<ApiResponse<EmojiLikeDetailData>> fetchEmojiLike(long botQQ, String messageId, String emojiId, String emojiType, long groupQQ, String userId, String count, String cookie);
 
     /**
      * 获取消息表情点赞列表。
+     * <p>
+     * 获取指定消息的所有表情点赞信息。
      *
      * @param botQQ     目标 Bot 的 QQ 号
      * @param messageId 消息 ID
      * @return 异步响应，包含点赞列表
      */
-    CompletableFuture<ApiResponse<VoidData>> getEmojiLikes(long botQQ, String messageId);
+    CompletableFuture<ApiResponse<EmojiLikesData>> getEmojiLikes(long botQQ, String messageId);
 
     /**
      * 设置消息表情点赞。
@@ -246,12 +271,14 @@ public interface ApiExtra {
 
     /**
      * 获取自定义表情。
+     * <p>
+     * 获取机器人的自定义表情列表。
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param count  获取数量
      * @return 异步响应，包含自定义表情列表
      */
-    CompletableFuture<ApiResponse<VoidData>> fetchCustomFace(long botQQ, int count);
+    CompletableFuture<ApiResponse<List<CustomFaceData>>> fetchCustomFace(long botQQ, int count);
 
     /**
      * 发送点赞。
@@ -269,25 +296,31 @@ public interface ApiExtra {
 
     /**
      * 获取群相册列表。
+     * <p>
+     * 获取指定群聊的所有相册列表。
      *
      * @param botQQ  目标 Bot 的 QQ 号
      * @param groupQQ 目标群号
      * @return 异步响应，包含群相册列表
      */
-    CompletableFuture<ApiResponse<VoidData>> getQunAlbumList(long botQQ, long groupQQ);
+    CompletableFuture<ApiResponse<QunAlbumListData>> getQunAlbumList(long botQQ, long groupQQ);
 
     /**
      * 获取群相册媒体列表。
+     * <p>
+     * 获取指定群相册中的媒体文件列表。
      *
      * @param botQQ   目标 Bot 的 QQ 号
      * @param groupQQ 目标群号
      * @param albumId 相册 ID
      * @return 异步响应，包含相册媒体列表
      */
-    CompletableFuture<ApiResponse<VoidData>> getGroupAlbumMediaList(long botQQ, long groupQQ, String albumId);
+    CompletableFuture<ApiResponse<GroupAlbumMediaListData>> getGroupAlbumMediaList(long botQQ, long groupQQ, String albumId);
 
     /**
      * 删除群相册媒体。
+     * <p>
+     * 删除群相册中的指定媒体文件。
      *
      * @param botQQ   目标 Bot 的 QQ 号
      * @param groupQQ 目标群号
@@ -299,6 +332,8 @@ public interface ApiExtra {
 
     /**
      * 点赞群相册媒体。
+     * <p>
+     * 对群相册中的媒体文件进行点赞或取消点赞。
      *
      * @param botQQ   目标 Bot 的 QQ 号
      * @param groupQQ 目标群号
@@ -312,6 +347,8 @@ public interface ApiExtra {
 
     /**
      * 发表群相册评论。
+     * <p>
+     * 对群相册中的媒体文件发表评论。
      *
      * @param botQQ    目标 Bot 的 QQ 号
      * @param groupQQ  目标群号
@@ -325,6 +362,8 @@ public interface ApiExtra {
 
     /**
      * 上传图片到群相册。
+     * <p>
+     * 将本地图片上传到指定群聊的相册中。
      *
      * @param botQQ  目标 Bot 的 QQ 号
      * @param groupQQ 目标群号
@@ -337,6 +376,8 @@ public interface ApiExtra {
 
     /**
      * 上传文件流（分块上传）。
+     * <p>
+     * 以分块方式上传文件流。
      *
      * @param botQQ       目标 Bot 的 QQ 号
      * @param streamId    流 ID
@@ -351,6 +392,8 @@ public interface ApiExtra {
 
     /**
      * 下载文件流（分块下载）。
+     * <p>
+     * 以分块方式下载文件流。
      *
      * @param botQQ    目标 Bot 的 QQ 号
      * @param file     文件路径或 URL（可选）
@@ -362,6 +405,8 @@ public interface ApiExtra {
 
     /**
      * 下载语音文件流。
+     * <p>
+     * 以分块方式下载语音文件流。
      *
      * @param botQQ     目标 Bot 的 QQ 号
      * @param file      文件路径或 URL（可选）
@@ -374,6 +419,8 @@ public interface ApiExtra {
 
     /**
      * 下载图片文件流。
+     * <p>
+     * 以分块方式下载图片文件流。
      *
      * @param botQQ     目标 Bot 的 QQ 号
      * @param file      文件路径或 URL（可选）
@@ -385,6 +432,8 @@ public interface ApiExtra {
 
     /**
      * 清理流式传输临时文件。
+     * <p>
+     * 清理流式传输过程中产生的临时文件。
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，无业务数据
@@ -393,6 +442,8 @@ public interface ApiExtra {
 
     /**
      * 测试下载流。
+     * <p>
+     * 测试流式下载功能是否正常。
      *
      * @param botQQ       目标 Bot 的 QQ 号
      * @param url         测试 URL
@@ -437,10 +488,12 @@ public interface ApiExtra {
      * @param type    收藏类型
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> createCollection(long botQQ, String rawData, int type);
+    CompletableFuture<ApiResponse<CreateCollectionData>> createCollection(long botQQ, String rawData, int type);
 
     /**
      * 获取收藏列表。
+     * <p>
+     * 获取机器人的收藏夹内容列表。
      *
      * @param botQQ    目标 Bot 的 QQ 号
      * @param category 分类
@@ -448,7 +501,7 @@ public interface ApiExtra {
      * @param count    获取数量
      * @return 异步响应，包含收藏列表
      */
-    CompletableFuture<ApiResponse<VoidData>> getCollectionList(long botQQ, int category, String startPos, int count);
+    CompletableFuture<ApiResponse<CollectionListData>> getCollectionList(long botQQ, int category, String startPos, int count);
 
     // ==================== 频道/公会 ====================
 
@@ -460,21 +513,25 @@ public interface ApiExtra {
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，包含频道列表
      */
-    CompletableFuture<ApiResponse<VoidData>> getGuildList(long botQQ);
+    CompletableFuture<ApiResponse<List<GuildListData>>> getGuildList(long botQQ);
 
     /**
      * 获取频道服务资料。
+     * <p>
+     * 获取指定频道的服务资料信息。
      *
      * @param botQQ   目标 Bot 的 QQ 号
      * @param guildId 频道 ID
      * @return 异步响应，包含频道服务资料
      */
-    CompletableFuture<ApiResponse<VoidData>> getGuildServiceProfile(long botQQ, String guildId);
+    CompletableFuture<ApiResponse<GuildServiceProfileData>> getGuildServiceProfile(long botQQ, String guildId);
 
     // ==================== AI ====================
 
     /**
      * 获取 AI 语音。
+     * <p>
+     * 将文本转换为 AI 语音并获取语音信息。
      *
      * @param botQQ     目标 Bot 的 QQ 号
      * @param character AI 角色名
@@ -482,7 +539,7 @@ public interface ApiExtra {
      * @param groupQQ   群号（可选）
      * @return 异步响应，包含 AI 语音信息
      */
-    CompletableFuture<ApiResponse<VoidData>> getAiRecord(long botQQ, String character, String text, long groupQQ);
+    CompletableFuture<ApiResponse<AiRecordData>> getAiRecord(long botQQ, String character, String text, long groupQQ);
 
     /**
      * 发送群 AI 语音。
@@ -499,13 +556,15 @@ public interface ApiExtra {
 
     /**
      * 获取 AI 角色列表。
+     * <p>
+     * 获取可用的 AI 语音角色列表。
      *
      * @param botQQ   目标 Bot 的 QQ 号
      * @param groupQQ 群号（可选）
      * @param chatType 聊天类型（可选）
      * @return 异步响应，包含 AI 角色列表
      */
-    CompletableFuture<ApiResponse<VoidData>> getAiCharacters(long botQQ, long groupQQ, String chatType);
+    CompletableFuture<ApiResponse<List<AiCharactersData>>> getAiCharacters(long botQQ, long groupQQ, String chatType);
 
     // ==================== 闪传 ====================
 
@@ -515,20 +574,21 @@ public interface ApiExtra {
      * 创建文件闪传任务，用于快速传输文件。
      *
      * @param botQQ     目标 Bot 的 QQ 号
-     * @param filePaths 要传输的文件路径列表
-     * @param isPrivate 是否私密传输
+     * @param files    要传输的文件
+     * @param name     任务名称
+     * @param thumbPath 缩略图路径
      * @return 异步响应，包含闪传任务信息
      */
-    CompletableFuture<ApiResponse<VoidData>> createFlashTask(long botQQ, List<String> filePaths, boolean isPrivate);
+    CompletableFuture<ApiResponse<VoidData>> createFlashTask(long botQQ, String files, String name, String thumbPath);
 
     /**
      * 获取闪传文件列表。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param taskId 任务 ID
+     * @param botQQ     目标 Bot 的 QQ 号
+     * @param filesetId 文件集 ID
      * @return 异步响应，包含文件列表
      */
-    CompletableFuture<ApiResponse<VoidData>> getFlashFileList(long botQQ, String taskId);
+    CompletableFuture<ApiResponse<VoidData>> getFlashFileList(long botQQ, String filesetId);
 
     /**
      * 获取闪传文件 URL。
@@ -543,13 +603,13 @@ public interface ApiExtra {
     /**
      * 发送闪传消息。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param userId 用户 QQ（私聊时填）
-     * @param groupQQ 群号（群聊时填）
-     * @param taskId 闪传任务 ID
+     * @param botQQ     目标 Bot 的 QQ 号
+     * @param userId    用户 QQ（私聊时填）
+     * @param groupQQ   群号（群聊时填）
+     * @param filesetId 文件集 ID
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> sendFlashMsg(long botQQ, String userId, long groupQQ, String taskId);
+    CompletableFuture<ApiResponse<VoidData>> sendFlashMsg(long botQQ, String userId, long groupQQ, String filesetId);
 
     // ==================== 在线文件 ====================
 
@@ -561,7 +621,7 @@ public interface ApiExtra {
      * @param selfId    机器人自身 QQ
      * @return 异步响应，包含在线文件信息
      */
-    CompletableFuture<ApiResponse<VoidData>> getOnlineFileMsg(long botQQ, String messageId, String selfId);
+    CompletableFuture<ApiResponse<OnlineFileMsgData>> getOnlineFileMsg(long botQQ, String messageId, String selfId);
 
     /**
      * 发送在线文件。
@@ -622,33 +682,40 @@ public interface ApiExtra {
      * <p>
      * 设置机器人正在输入的状态提示。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param userId 用户 QQ（私聊时填）
-     * @param groupQQ 群号（群聊时填）
+     * @param botQQ     目标 Bot 的 QQ 号
+     * @param userId    用户 QQ（私聊时填）
+     * @param groupQQ   群号（群聊时填）
+     * @param eventType 输入事件类型
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setInputStatus(long botQQ, String userId, long groupQQ);
+    CompletableFuture<ApiResponse<VoidData>> setInputStatus(long botQQ, String userId, long groupQQ, int eventType);
 
     /**
      * 获取最近联系人。
+     * <p>
+     * 获取机器人最近联系过的用户列表。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param count  获取数量
+     * @param count 获取数量
      * @return 异步响应，包含最近联系人列表
      */
-    CompletableFuture<ApiResponse<VoidData>> getRecentContact(long botQQ, int count);
+    CompletableFuture<ApiResponse<List<RecentContactData>>> getRecentContact(long botQQ, int count);
 
     /**
      * 获取模型展示。
+     * <p>
+     * 获取指定模型的展示信息。
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param model 模型名称
      * @return 异步响应，包含模型展示信息
      */
-    CompletableFuture<ApiResponse<VoidData>> getModelShow(long botQQ, String model);
+    CompletableFuture<ApiResponse<List<ModelShowData>>> getModelShow(long botQQ, String model);
 
     /**
      * 设置模型展示。
+     * <p>
+     * 设置指定模型的展示内容。
      *
      * @param botQQ     目标 Bot 的 QQ 号
      * @param model     模型名称
@@ -670,10 +737,12 @@ public interface ApiExtra {
      * @param appType    小程序类型（可选）
      * @return 异步响应，包含小程序 Ark 信息
      */
-    CompletableFuture<ApiResponse<VoidData>> getMiniAppArk(long botQQ, String appId, String appPath, String appVersion, String appQq, String appType);
+    CompletableFuture<ApiResponse<MiniAppArkData>> getMiniAppArk(long botQQ, String appId, String appPath, String appVersion, String appQq, String appType);
 
     /**
      * 分享群（Ark 卡片）。
+     * <p>
+     * 生成群的 Ark 分享卡片。
      *
      * @param botQQ  目标 Bot 的 QQ 号
      * @param groupQQ 目标群号
@@ -683,6 +752,8 @@ public interface ApiExtra {
 
     /**
      * 分享用户（Ark 卡片）。
+     * <p>
+     * 生成用户的 Ark 分享卡片。
      *
      * @param botQQ      目标 Bot 的 QQ 号
      * @param userId     用户 QQ（可选）
@@ -693,6 +764,8 @@ public interface ApiExtra {
 
     /**
      * 发送群 Ark 分享。
+     * <p>
+     * 在群聊中发送 Ark 分享卡片。
      *
      * @param botQQ   目标 Bot 的 QQ 号
      * @param groupQQ 目标群号
@@ -709,6 +782,8 @@ public interface ApiExtra {
 
     /**
      * 发送 Ark 分享（通用）。
+     * <p>
+     * 发送 Ark 分享卡片，自动判断群聊或私聊。
      *
      * @param botQQ   目标 Bot 的 QQ 号
      * @param userId  用户 QQ
@@ -746,4 +821,87 @@ public interface ApiExtra {
      * @return 异步响应，无业务数据
      */
     CompletableFuture<ApiResponse<VoidData>> handleQuickOperation(long botQQ, JsonNode context, JsonNode operation);
+
+    // ==================== 新增方法 ====================
+
+    /**
+     * 取消点赞群相册媒体。
+     * <p>
+     * 取消对群相册中媒体文件的点赞。
+     *
+     * @param botQQ   目标 Bot 的 QQ 号
+     * @param groupQQ 目标群号
+     * @param albumId 相册 ID
+     * @param batchId 批次 ID
+     * @param lloc    媒体 ID
+     * @return 异步响应，无业务数据
+     */
+    CompletableFuture<ApiResponse<VoidData>> cancelGroupAlbumMediaLike(long botQQ, long groupQQ, String albumId, String batchId, String lloc);
+
+    /**
+     * 获取语音转文字结果。
+     * <p>
+     * 获取指定语音消息的文字识别结果。
+     *
+     * @param botQQ     目标 Bot 的 QQ 号
+     * @param messageId 消息 ID
+     * @return 异步响应，包含语音转文字结果
+     */
+    CompletableFuture<ApiResponse<PttTextData>> fetchPttText(long botQQ, long messageId);
+
+    /**
+     * 添加自定义表情。
+     * <p>
+     * 向表情收藏中添加新的自定义表情。
+     *
+     * @param botQQ      目标 Bot 的 QQ 号
+     * @param file       表情文件路径
+     * @param emojiId    表情 ID
+     * @param packageId  表情包 ID
+     * @param fileName   文件名
+     * @param fileSize   文件大小
+     * @param md5        文件 MD5
+     * @param isMarkFace 是否为贴图表情
+     * @param isOrigin   是否为原图
+     * @return 异步响应，无业务数据
+     */
+    CompletableFuture<ApiResponse<VoidData>> addCustomFace(long botQQ, String file, String emojiId, String packageId, String fileName, long fileSize, String md5, boolean isMarkFace, boolean isOrigin);
+
+    /**
+     * 删除自定义表情。
+     * <p>
+     * 从表情收藏中删除自定义表情。
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param resId 资源 ID
+     * @param ids   表情 ID 列表
+     * @param md5   文件 MD5
+     * @return 异步响应，无业务数据
+     */
+    CompletableFuture<ApiResponse<VoidData>> deleteCustomFace(long botQQ, String resId, String ids, String md5);
+
+    /**
+     * 获取自定义表情详情。
+     * <p>
+     * 获取自定义表情的详细信息。
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param count 获取数量
+     * @return 异步响应，包含自定义表情详情
+     */
+    CompletableFuture<ApiResponse<CustomFaceDetailData>> fetchCustomFaceDetail(long botQQ, int count);
+
+    /**
+     * 修改自定义表情描述。
+     * <p>
+     * 修改指定自定义表情的描述信息。
+     *
+     * @param botQQ   目标 Bot 的 QQ 号
+     * @param emojiId 表情 ID
+     * @param resId   资源 ID
+     * @param md5     文件 MD5
+     * @param desc    描述内容
+     * @return 异步响应，无业务数据
+     */
+    CompletableFuture<ApiResponse<VoidData>> setCustomFaceDesc(long botQQ, String emojiId, String resId, String md5, String desc);
 }
