@@ -227,23 +227,26 @@ public interface ApiExtra {
      * <p>
      * 在群聊中戳一戳（@）指定成员。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
-     * @param userId  目标成员 QQ
+     * @param botQQ    目标 Bot 的 QQ 号
+     * @param groupQQ  目标群号
+     * @param userId   用户 QQ
+     * @param targetId 目标 QQ（被戳的用户）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> groupPoke(long botQQ, long groupQQ, String userId);
+    CompletableFuture<ApiResponse<VoidData>> groupPoke(long botQQ, long groupQQ, String userId, String targetId);
 
     /**
      * 好友戳一戳。
      * <p>
      * 在私聊中戳一戳指定好友。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param userId 目标用户 QQ
+     * @param botQQ    目标 Bot 的 QQ 号
+     * @param userId   用户 QQ
+     * @param groupQQ  群号（可选）
+     * @param targetId 目标 QQ（被戳的用户）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> friendPoke(long botQQ, String userId);
+    CompletableFuture<ApiResponse<VoidData>> friendPoke(long botQQ, String userId, long groupQQ, String targetId);
 
     /**
      * 发送戳一戳（通用接口）。
@@ -691,31 +694,43 @@ public interface ApiExtra {
 
     /**
      * 接收在线文件。
+     * <p>
+     * 接收指定用户发送的在线文件。
      *
-     * @param botQQ   目标 Bot 的 QQ 号
-     * @param taskId  任务 ID
-     * @param destPath 保存路径
+     * @param botQQ     目标 Bot 的 QQ 号
+     * @param userId    用户 QQ
+     * @param msgId     消息 ID
+     * @param elementId 元素 ID
+     * @param destPath  保存路径（可选）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> receiveOnlineFile(long botQQ, String taskId, String destPath);
+    CompletableFuture<ApiResponse<VoidData>> receiveOnlineFile(long botQQ, String userId, String msgId, String elementId, String destPath);
 
     /**
      * 拒绝接收在线文件。
+     * <p>
+     * 拒绝指定用户发送的在线文件。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param taskId 任务 ID
+     * @param botQQ     目标 Bot 的 QQ 号
+     * @param userId    用户 QQ
+     * @param msgId     消息 ID
+     * @param elementId 元素 ID
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> refuseOnlineFile(long botQQ, String taskId);
+    CompletableFuture<ApiResponse<VoidData>> refuseOnlineFile(long botQQ, String userId, String msgId, String elementId);
 
     /**
      * 取消在线文件传输。
+     * <p>
+     * 取消指定的在线文件传输。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param taskId 任务 ID
+     * @param botQQ     目标 Bot 的 QQ 号
+     * @param userId    用户 QQ
+     * @param msgId     消息 ID
+     * @param elementId 元素 ID
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> cancelOnlineFile(long botQQ, String taskId);
+    CompletableFuture<ApiResponse<VoidData>> cancelOnlineFile(long botQQ, String userId, String msgId, String elementId);
 
     // ==================== 其他扩展 ====================
 

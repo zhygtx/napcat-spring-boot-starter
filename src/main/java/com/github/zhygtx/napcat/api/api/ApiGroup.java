@@ -466,16 +466,13 @@ public interface ApiGroup {
     /**
      * 群打卡（设置群签到）。
      * <p>
-     * 在群聊中发起一个群打卡/签到活动。{@code title} 和 {@code content} 均为可选参数，
-     * 传入 {@code null} 时使用默认模板。
+     * 在群聊中发起一个群打卡/签到活动。
      *
      * @param botQQ   目标 Bot 的 QQ 号
      * @param groupQQ 目标群号
-     * @param title   打卡标题（可选，传入 {@code null} 使用默认值）
-     * @param content 打卡内容（可选，传入 {@code null} 使用默认值）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setGroupSign(long botQQ, long groupQQ, String title, String content);
+    CompletableFuture<ApiResponse<VoidData>> setGroupSign(long botQQ, long groupQQ);
 
     /**
      * 群打卡（发送群签到）。
