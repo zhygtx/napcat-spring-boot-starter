@@ -20,10 +20,11 @@ public interface ApiFriend {
      * <p>
      * 返回当前机器人账号的所有好友信息，包含 QQ 号、昵称、备注、分组等。
      *
-     * @param botQQ 目标 Bot 的 QQ 号
+     * @param botQQ   目标 Bot 的 QQ 号
+     * @param noCache 是否不使用缓存（{@code true} 时强制刷新数据）
      * @return 异步响应，data 为好友列表（数组），每项含 userId/nickname/remark 等
      */
-    CompletableFuture<ApiResponse<List<FriendListData>>> getFriendList(long botQQ);
+    CompletableFuture<ApiResponse<List<FriendListData>>> getFriendList(long botQQ, boolean noCache);
 
     /**
      * 获取带分组的好友列表。
@@ -44,7 +45,7 @@ public interface ApiFriend {
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，data 为单向好友列表
      */
-    CompletableFuture<ApiResponse<List<FriendListData>>> getUnidirectionalFriendList(long botQQ);
+    CompletableFuture<ApiResponse<List<UnidirectionalFriendData>>> getUnidirectionalFriendList(long botQQ);
 
     /**
      * 获取陌生人信息。
@@ -77,11 +78,14 @@ public interface ApiFriend {
      * <p>
      * 将指定用户从机器人的好友列表中删除。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param userId 要删除的好友 QQ
+     * @param botQQ       目标 Bot 的 QQ 号
+     * @param userId      要删除的好友 QQ
+     * @param friendId    好友 ID（string|number，可选）
+     * @param tempBlock   是否临时拉黑（{@code true} 表示拉黑）
+     * @param tempBothDel 是否双方删除（{@code true} 表示双方删除）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> deleteFriend(long botQQ, String userId);
+    CompletableFuture<ApiResponse<VoidData>> deleteFriend(long botQQ, String userId, String friendId, boolean tempBlock, boolean tempBothDel);
 
     /**
      * 设置好友备注。
@@ -101,9 +105,10 @@ public interface ApiFriend {
      * 获取被系统标记为可疑的好友申请列表，用于审核处理。
      *
      * @param botQQ 目标 Bot 的 QQ 号
+     * @param count 获取数量（默认 50）
      * @return 异步响应，data 为可疑好友申请列表，每项含 uin/nickname/flag 等
      */
-    CompletableFuture<ApiResponse<List<DoubtFriendAddRequestData>>> getDoubtFriendsAddRequest(long botQQ);
+    CompletableFuture<ApiResponse<List<DoubtFriendAddRequestData>>> getDoubtFriendsAddRequest(long botQQ, int count);
 
     /**
      * 处理可疑好友申请。
@@ -111,12 +116,11 @@ public interface ApiFriend {
      * 对可疑好友申请进行通过或拒绝操作。
      *
      * @param botQQ   目标 Bot 的 QQ 号
-     * @param uin     申请者的 UIN（来自可疑申请列表）
-     * @param operate 操作类型（{@code true} 通过 / {@code false} 拒绝）
-     * @param message 操作附言（可选）
+     * @param flag    请求标识（来自可疑申请列表）
+     * @param approve 是否同意（{@code true} 通过 / {@code false} 拒绝）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setDoubtFriendsAddRequest(long botQQ, String uin, boolean operate, String message);
+    CompletableFuture<ApiResponse<VoidData>> setDoubtFriendsAddRequest(long botQQ, String flag, boolean approve);
 
     /**
      * 获取资料点赞列表。
@@ -145,18 +149,15 @@ public interface ApiFriend {
     /**
      * 设置 QQ 资料。
      * <p>
-     * 修改机器人的个人资料，包括昵称、公司、邮箱、学校和个性签名。
-     * 传入 {@code null} 的字段不会修改。
+     * 修改机器人的个人资料，包括昵称、个性签名和性别。
      *
      * @param botQQ       目标 Bot 的 QQ 号
-     * @param nickname    新昵称（{@code null} 不修改）
-     * @param company     公司/企业（{@code null} 不修改）
-     * @param email       邮箱（{@code null} 不修改）
-     * @param college     学校（{@code null} 不修改）
+     * @param nickname    新昵称
      * @param personalNote 个性签名（{@code null} 不修改）
+     * @param sex         性别（0: 未知, 1: 男, 2: 女，{@code null} 不修改）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setQqProfile(long botQQ, String nickname, String company, String email, String college, String personalNote);
+    CompletableFuture<ApiResponse<VoidData>> setQqProfile(long botQQ, String nickname, String personalNote, String sex);
 
     /**
      * 设置个性签名。

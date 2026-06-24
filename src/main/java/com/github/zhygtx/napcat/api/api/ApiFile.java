@@ -19,90 +19,95 @@ public interface ApiFile {
     /**
      * 获取图片信息。
      * <p>
-     * 根据文件/缓存名称获取图片的本地路径或 URL。
+     * 根据文件/缓存名称或 file_id 获取图片的本地路径或 URL。
      *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @param file  图片文件名（来自消息中的 file 字段）
+     * @param botQQ  目标 Bot 的 QQ 号
+     * @param file   图片文件名（来自消息中的 file 字段）
+     * @param fileId 文件 ID（可选）
      * @return 异步响应，data 包含图片本地路径等信息
      */
-    CompletableFuture<ApiResponse<FileData>> getImage(long botQQ, String file);
+    CompletableFuture<ApiResponse<FileData>> getImage(long botQQ, String file, String fileId);
 
     /**
      * 获取语音信息。
      * <p>
-     * 根据文件/缓存名称获取语音文件的本地路径或 URL。
+     * 根据文件/缓存名称或 file_id 获取语音文件的本地路径或 URL。
      *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @param file  语音文件名（来自消息中的 file 字段）
+     * @param botQQ     目标 Bot 的 QQ 号
+     * @param file      语音文件名（来自消息中的 file 字段）
+     * @param fileId    文件 ID（可选）
+     * @param outFormat 输出格式（可选）
      * @return 异步响应，data 包含语音本地路径等信息
      */
-    CompletableFuture<ApiResponse<FileData>> getRecord(long botQQ, String file);
+    CompletableFuture<ApiResponse<FileData>> getRecord(long botQQ, String file, String fileId, String outFormat);
 
     /**
      * 获取文件信息。
      * <p>
-     * 根据文件/缓存名称获取文件的本地路径或 URL。
+     * 根据文件/缓存名称或 file_id 获取文件的本地路径或 URL。
      *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @param file  文件名
+     * @param botQQ  目标 Bot 的 QQ 号
+     * @param file   文件名
+     * @param fileId 文件 ID（可选）
      * @return 异步响应，data 包含文件本地路径等信息
      */
-    CompletableFuture<ApiResponse<FileData>> getFile(long botQQ, String file);
+    CompletableFuture<ApiResponse<FileData>> getFile(long botQQ, String file, String fileId);
 
     /**
      * 下载文件到本地。
      * <p>
      * 从指定 URL 下载文件到 NapCat 客户端的本地临时目录。
      *
-     * @param botQQ       目标 Bot 的 QQ 号
-     * @param threadCount 下载线程数
-     * @param headers     自定义请求头（JSON 格式字符串）
-     * @param base64      文件 base64 编码内容
-     * @param name        文件名
-     * @param url         文件下载 URL
+     * @param botQQ   目标 Bot 的 QQ 号
+     * @param headers 自定义请求头（JSON 格式字符串，可选）
+     * @param base64  文件 base64 编码内容（可选）
+     * @param name    文件名（可选）
+     * @param url     文件下载 URL
      * @return 异步响应，data 包含下载后的本地文件路径
      */
-    CompletableFuture<ApiResponse<FileDownloadData>> downloadFile(long botQQ, int threadCount, String headers, String base64, String name, String url);
+    CompletableFuture<ApiResponse<FileDownloadData>> downloadFile(long botQQ, String headers, String base64, String name, String url);
 
     /**
      * 上传群文件。
      * <p>
      * 将本地文件上传到指定群聊的文件空间中。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
-     * @param file   本地文件路径
-     * @param name   上传后的文件名（可选，默认使用原文件名）
-     * @param folder 目标文件夹 ID（可选，上传到根目录时留空）
-     * @return 异步响应，无业务数据
+     * @param botQQ      目标 Bot 的 QQ 号
+     * @param groupQQ    目标群号
+     * @param file       本地文件路径
+     * @param name       上传后的文件名
+     * @param folder     目标文件夹 ID（可选，上传到根目录时留空）
+     * @param folderId   父目录 ID（兼容性字段，可选）
+     * @param uploadFile 是否执行上传（{@code true} 执行）
+     * @return 异步响应，data 包含 file_id
      */
-    CompletableFuture<ApiResponse<VoidData>> uploadGroupFile(long botQQ, long groupQQ, String file, String name, String folder);
+    CompletableFuture<ApiResponse<FileUploadData>> uploadGroupFile(long botQQ, long groupQQ, String file, String name, String folder, String folderId, boolean uploadFile);
 
     /**
      * 上传私聊文件。
      * <p>
      * 将本地文件发送给指定好友（私聊文件传输）。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param userId 目标用户 QQ
-     * @param file   本地文件路径
-     * @param name   文件名（可选）
-     * @return 异步响应，无业务数据
+     * @param botQQ      目标 Bot 的 QQ 号
+     * @param userId     目标用户 QQ
+     * @param file       本地文件路径
+     * @param name       文件名
+     * @param uploadFile 是否执行上传（{@code true} 执行）
+     * @return 异步响应，data 包含 file_id
      */
-    CompletableFuture<ApiResponse<VoidData>> uploadPrivateFile(long botQQ, String userId, String file, String name);
+    CompletableFuture<ApiResponse<FileUploadData>> uploadPrivateFile(long botQQ, String userId, String file, String name, boolean uploadFile);
 
     /**
      * 获取群文件下载 URL。
      * <p>
      * 获取群文件中指定文件的下载链接。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
+     * @param botQQ   目标 Bot 的 QQ 号
      * @param groupQQ 目标群号
-     * @param fileId 文件 ID
-     * @param busid  busid（文件标识）
+     * @param fileId  文件 ID
      * @return 异步响应，data 包含文件下载 URL
      */
-    CompletableFuture<ApiResponse<FileUrlData>> getGroupFileUrl(long botQQ, long groupQQ, String fileId, long busid);
+    CompletableFuture<ApiResponse<FileUrlData>> getGroupFileUrl(long botQQ, long groupQQ, String fileId);
 
     /**
      * 获取私聊文件下载 URL。
@@ -110,26 +115,22 @@ public interface ApiFile {
      * 获取私聊文件中指定文件的下载链接。
      *
      * @param botQQ  目标 Bot 的 QQ 号
-     * @param userId 用户 QQ
      * @param fileId 文件 ID
-     * @param busid  busid
      * @return 异步响应，data 包含文件下载 URL
      */
-    CompletableFuture<ApiResponse<FileUrlData>> getPrivateFileUrl(long botQQ, String userId, String fileId, long busid);
+    CompletableFuture<ApiResponse<FileUrlData>> getPrivateFileUrl(long botQQ, String fileId);
 
     /**
      * 删除群文件。
      * <p>
-     * 删除群聊中的指定文件。
+     * 在群文件系统中删除指定的文件。
      *
      * @param botQQ   目标 Bot 的 QQ 号
      * @param groupQQ 目标群号
      * @param fileId  文件 ID
-     * @param busid   busid
-     * @param folderId 文件夹 ID（可选）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> deleteGroupFile(long botQQ, long groupQQ, String fileId, long busid, String folderId);
+    CompletableFuture<ApiResponse<VoidData>> deleteGroupFile(long botQQ, long groupQQ, String fileId);
 
     /**
      * 创建群文件夹。
@@ -152,9 +153,10 @@ public interface ApiFile {
      * @param botQQ    目标 Bot 的 QQ 号
      * @param groupQQ  目标群号
      * @param folderId 文件夹 ID
+     * @param folder   文件夹名称（可选）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> deleteGroupFolder(long botQQ, long groupQQ, String folderId);
+    CompletableFuture<ApiResponse<VoidData>> deleteGroupFolder(long botQQ, long groupQQ, String folderId, String folder);
 
     /**
      * 获取群文件系统信息。
@@ -172,66 +174,66 @@ public interface ApiFile {
      * <p>
      * 获取群文件根目录下的文件与文件夹列表。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
+     * @param botQQ     目标 Bot 的 QQ 号
+     * @param groupQQ   目标群号
+     * @param fileCount 返回的文件数量（默认 50）
      * @return 异步响应，data 包含文件列表和文件夹列表
      */
-    CompletableFuture<ApiResponse<GroupRootFilesData>> getGroupRootFiles(long botQQ, long groupQQ);
+    CompletableFuture<ApiResponse<GroupRootFilesData>> getGroupRootFiles(long botQQ, long groupQQ, int fileCount);
 
     /**
      * 获取群文件夹内文件列表。
      * <p>
      * 获取指定群文件夹内的文件与子文件夹列表。
      *
-     * @param botQQ    目标 Bot 的 QQ 号
-     * @param groupQQ  目标群号
-     * @param folderId 文件夹 ID
+     * @param botQQ     目标 Bot 的 QQ 号
+     * @param groupQQ   目标群号
+     * @param folderId  文件夹 ID
+     * @param folder    文件夹名称（可选）
+     * @param fileCount 返回的文件数量（默认 50）
      * @return 异步响应，data 包含文件列表和文件夹列表
      */
-    CompletableFuture<ApiResponse<GroupRootFilesData>> getGroupFilesByFolder(long botQQ, long groupQQ, String folderId);
+    CompletableFuture<ApiResponse<GroupRootFilesData>> getGroupFilesByFolder(long botQQ, long groupQQ, String folderId, String folder, int fileCount);
 
     /**
      * 移动群文件。
      * <p>
-     * 将群文件移动到指定文件夹中。
+     * 将群文件从当前目录移动到目标目录。
      *
-     * @param botQQ          目标 Bot 的 QQ 号
-     * @param groupQQ        目标群号
-     * @param fileId         文件 ID
-     * @param busid          busid
-     * @param targetFolderId 目标文件夹 ID
+     * @param botQQ                   目标 Bot 的 QQ 号
+     * @param groupQQ                 目标群号
+     * @param fileId                  文件 ID
+     * @param currentParentDirectory  当前父目录
+     * @param targetParentDirectory   目标父目录
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> moveGroupFile(long botQQ, long groupQQ, String fileId, long busid, String targetFolderId);
+    CompletableFuture<ApiResponse<VoidData>> moveGroupFile(long botQQ, long groupQQ, String fileId, String currentParentDirectory, String targetParentDirectory);
 
     /**
      * 重命名群文件。
      * <p>
      * 修改群文件的文件名。
      *
-     * @param botQQ    目标 Bot 的 QQ 号
-     * @param groupQQ  目标群号
-     * @param fileId   文件 ID
-     * @param busid    busid
-     * @param newName  新文件名
-     * @param folderId 文件夹 ID（可选）
+     * @param botQQ                   目标 Bot 的 QQ 号
+     * @param groupQQ                 目标群号
+     * @param fileId                  文件 ID
+     * @param currentParentDirectory  当前父目录
+     * @param newName                 新文件名
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> renameGroupFile(long botQQ, long groupQQ, String fileId, long busid, String newName, String folderId);
+    CompletableFuture<ApiResponse<VoidData>> renameGroupFile(long botQQ, long groupQQ, String fileId, String currentParentDirectory, String newName);
 
     /**
      * 传输群文件到另一个群。
      * <p>
-     * 将群文件从当前群复制传输到另一个群聊。
+     * 将群文件从当前群复制传输到另一个群聊。返回 object{ok(bool)}。
      *
-     * @param botQQ        目标 Bot 的 QQ 号
-     * @param groupQQ      源群号
-     * @param fileId       文件 ID
-     * @param busid        busid
-     * @param targetGroupQQ 目标群号
+     * @param botQQ   目标 Bot 的 QQ 号
+     * @param groupQQ 源群号
+     * @param fileId  文件 ID
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> transGroupFile(long botQQ, long groupQQ, String fileId, long busid, long targetGroupQQ);
+    CompletableFuture<ApiResponse<VoidData>> transGroupFile(long botQQ, long groupQQ, String fileId);
 
     // ---- 文件集 ----
 

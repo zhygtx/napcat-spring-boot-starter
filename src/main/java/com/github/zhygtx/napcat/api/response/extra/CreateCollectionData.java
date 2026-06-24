@@ -15,4 +15,10 @@ public class CreateCollectionData {
 
     /** 创建时间 */
     private long createTime;
+
+    /** 结果码（0 表示成功） */
+    private int result;
+
+    /** 错误信息 */
+    private String errMsg;
 }

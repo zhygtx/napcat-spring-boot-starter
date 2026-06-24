@@ -128,44 +128,41 @@ public interface ApiSystem {
      * 同时返回 Cookies 和 CSRF Token，是 {@link #getCookies} 和
      * {@link #getCsrfToken} 的组合接口。
      *
-     * @param botQQ 目标 Bot 的 QQ 号
+     * @param botQQ  目标 Bot 的 QQ 号
+     * @param domain 目标域名
      * @return 异步响应，data 同时包含 cookies 和 csrfToken
      */
-    CompletableFuture<ApiResponse<CredentialsData>> getCredentials(long botQQ);
+    CompletableFuture<ApiResponse<CredentialsData>> getCredentials(long botQQ, String domain);
 
     /**
      * 获取扩展 RKey。
      * <p>
-     * 获取腾讯系服务所需的 RKey（Request Key）。
+     * 获取腾讯系服务所需的 RKey（Request Key）列表。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param domain 目标域名（可选）
-     * @param type   请求类型（可选）
-     * @return 异步响应，data 包含 rkey 映射
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @return 异步响应，data 为 RKey 列表，每项含 type / rkey / created_at / ttl
      */
-    CompletableFuture<ApiResponse<RKeyData>> getRkey(long botQQ, String domain, String type);
+    CompletableFuture<ApiResponse<List<RKeyData>>> getRkey(long botQQ);
 
     /**
      * 获取 RKey 服务器。
      * <p>
-     * 获取 RKey 相关的服务器地址列表。
+     * 获取 RKey 相关的服务器地址信息。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param domain 目标域名（可选）
-     * @return 异步响应，data 包含服务器列表信息
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @return 异步响应，data 包含服务器信息（private_rkey / group_rkey / expired_time / name）
      */
-    CompletableFuture<ApiResponse<RKeyServerData>> getRkeyServer(long botQQ, String domain);
+    CompletableFuture<ApiResponse<RKeyServerData>> getRkeyServer(long botQQ);
 
     /**
      * 获取 ClientKey。
      * <p>
      * 获取当前登录态的 ClientKey，用于某些腾讯服务的身份标识。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param domain 目标域名（可选）
+     * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，data 包含 clientKey 字符串
      */
-    CompletableFuture<ApiResponse<ClientKeyData>> getClientkey(long botQQ, String domain);
+    CompletableFuture<ApiResponse<ClientKeyData>> getClientkey(long botQQ);
 
     /**
      * 获取 NC RKey（NapCat 自定义）。
@@ -240,9 +237,9 @@ public interface ApiSystem {
      * @param faceId   自定义表情 ID
      * @param faceType 表情类型
      * @param wording  自定义状态文本
-     * @return 异步响应，无业务数据
+     * @return 异步响应，data 为 string 类型
      */
-    CompletableFuture<ApiResponse<VoidData>> setDiyOnlineStatus(long botQQ, String faceId, String faceType, String wording);
+    CompletableFuture<ApiResponse<String>> setDiyOnlineStatus(long botQQ, String faceId, String faceType, String wording);
 
     /**
      * 获取在线客户端列表。
@@ -272,8 +269,9 @@ public interface ApiSystem {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param cmd   命令名称
-     * @param body  数据包正文
+     * @param data  数据包正文
+     * @param rsp   是否需要响应（默认 {@code true}）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> sendPacket(long botQQ, String cmd, String body);
+    CompletableFuture<ApiResponse<VoidData>> sendPacket(long botQQ, String cmd, String data, boolean rsp);
 }

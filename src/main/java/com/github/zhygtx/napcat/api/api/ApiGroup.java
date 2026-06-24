@@ -21,10 +21,11 @@ public interface ApiGroup {
      * <p>
      * 返回机器人加入的所有群聊的基本信息（群号、群名、成员数等）。
      *
-     * @param botQQ 目标 Bot 的 QQ 号
+     * @param botQQ  目标 Bot 的 QQ 号
+     * @param noCache 是否不使用缓存（{@code true} 时强制刷新）
      * @return 异步响应，data 为群列表（数组），每项含 groupId/groupName/memberCount 等
      */
-    CompletableFuture<ApiResponse<List<GroupInfoData>>> getGroupList(long botQQ);
+    CompletableFuture<ApiResponse<List<GroupInfoData>>> getGroupList(long botQQ, boolean noCache);
 
     /**
      * 获取群信息。
@@ -196,7 +197,7 @@ public interface ApiGroup {
      * @param cache  是否使用缓存（{@code 1} 使用 / {@code 0} 不使用）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setGroupPortrait(long botQQ, long groupQQ, String file, int cache);
+    CompletableFuture<ApiResponse<GroupPortraitResult>> setGroupPortrait(long botQQ, long groupQQ, String file, int cache);
 
     /**
      * 获取群禁言列表。
@@ -254,61 +255,64 @@ public interface ApiGroup {
      * <p>
      * 在群聊中创建一个群待办事项（需引用一条消息）。
      *
-     * @param botQQ    目标 Bot 的 QQ 号
-     * @param groupQQ  目标群号
-     * @param messageId 引用的消息 ID
+     * @param botQQ      目标 Bot 的 QQ 号
+     * @param groupQQ    目标群号
+     * @param messageId  引用的消息 ID
+     * @param messageSeq 消息序号（可选）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setGroupTodo(long botQQ, long groupQQ, long messageId);
+    CompletableFuture<ApiResponse<VoidData>> setGroupTodo(long botQQ, long groupQQ, String messageId, String messageSeq);
 
     /**
      * 取消群待办。
      * <p>
      * 取消指定的群待办事项。
      *
-     * @param botQQ    目标 Bot 的 QQ 号
-     * @param groupQQ  目标群号
-     * @param messageId 消息 ID
+     * @param botQQ      目标 Bot 的 QQ 号
+     * @param groupQQ    目标群号
+     * @param messageId  消息 ID
+     * @param messageSeq 消息序号（可选）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> cancelGroupTodo(long botQQ, long groupQQ, long messageId);
+    CompletableFuture<ApiResponse<VoidData>> cancelGroupTodo(long botQQ, long groupQQ, String messageId, String messageSeq);
 
     /**
      * 完成群待办。
      * <p>
      * 将指定的群待办事项标记为已完成。
      *
-     * @param botQQ    目标 Bot 的 QQ 号
-     * @param groupQQ  目标群号
-     * @param messageId 消息 ID
+     * @param botQQ      目标 Bot 的 QQ 号
+     * @param groupQQ    目标群号
+     * @param messageId  消息 ID
+     * @param messageSeq 消息序号（可选）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> completeGroupTodo(long botQQ, long groupQQ, long messageId);
+    CompletableFuture<ApiResponse<VoidData>> completeGroupTodo(long botQQ, long groupQQ, String messageId, String messageSeq);
 
     /**
      * 设置群专属头衔。
      * <p>
      * 为指定群成员设置群头衔（群称号）。需要机器人是群主。
      *
-     * @param botQQ       目标 Bot 的 QQ 号
-     * @param groupQQ     目标群号
-     * @param userId      目标成员 QQ
+     * @param botQQ        目标 Bot 的 QQ 号
+     * @param groupQQ      目标群号
+     * @param userId       目标成员 QQ
      * @param specialTitle 头衔名称
-     * @param duration    持续时间（秒），{@code -1} 表示永久
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setGroupSpecialTitle(long botQQ, long groupQQ, String userId, String specialTitle, long duration);
+    CompletableFuture<ApiResponse<VoidData>> setGroupSpecialTitle(long botQQ, long groupQQ, String userId, String specialTitle);
 
     /**
      * 退出群组。
      * <p>
      * 令机器人主动退出指定群聊。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
+     * @param botQQ     目标 Bot 的 QQ 号
+     * @param groupQQ   目标群号
+     * @param isDismiss 是否解散群（仅群主可用，{@code true} 时解散群）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setGroupLeave(long botQQ, long groupQQ);
+    CompletableFuture<ApiResponse<VoidData>> setGroupLeave(long botQQ, long groupQQ, boolean isDismiss);
 
     /**
      * 处理加群请求。
@@ -319,9 +323,10 @@ public interface ApiGroup {
      * @param flag    请求标识（来自事件上报的 flag 字段）
      * @param approve 是否同意（{@code true} 同意 / {@code false} 拒绝）
      * @param reason  拒绝理由（拒绝时可选）
+     * @param count   批量处理数量（默认 100）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> setGroupAddRequest(long botQQ, String flag, boolean approve, String reason);
+    CompletableFuture<ApiResponse<VoidData>> setGroupAddRequest(long botQQ, String flag, boolean approve, String reason, int count);
 
     /**
      * 获取群荣誉信息。
@@ -340,11 +345,11 @@ public interface ApiGroup {
      * <p>
      * 获取群聊的系统消息，包括待处理的加群请求和邀请。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param count 获取数量（默认 50）
      * @return 异步响应，data 包含加群请求和邀请列表
      */
-    CompletableFuture<ApiResponse<GroupSystemMsgData>> getGroupSystemMsg(long botQQ, long groupQQ);
+    CompletableFuture<ApiResponse<GroupSystemMsgData>> getGroupSystemMsg(long botQQ, int count);
 
     /**
      * 获取群艾特全体剩余次数。
@@ -386,31 +391,32 @@ public interface ApiGroup {
      *
      * @param botQQ     目标 Bot 的 QQ 号
      * @param messageId 要移除的精华消息 ID
+     * @param msgSeq    消息序号
+     * @param msgRandom 消息随机数
+     * @param groupQQ   目标群号
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> deleteEssenceMsg(long botQQ, long messageId);
+    CompletableFuture<ApiResponse<VoidData>> deleteEssenceMsg(long botQQ, long messageId, String msgSeq, String msgRandom, long groupQQ);
 
     /**
      * 获取群忽略通知列表。
      * <p>
      * 获取群聊中被忽略的通知信息。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
+     * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，包含忽略通知信息
      */
-    CompletableFuture<ApiResponse<GroupIgnoredNotifiesData>> getGroupIgnoredNotifies(long botQQ, long groupQQ);
+    CompletableFuture<ApiResponse<GroupIgnoredNotifiesData>> getGroupIgnoredNotifies(long botQQ);
 
     /**
      * 获取群忽略加群请求。
      * <p>
      * 获取已被忽略/已过期的加群请求列表。
      *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
+     * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，包含忽略的加群请求信息
      */
-    CompletableFuture<ApiResponse<List<GroupIgnoreAddRequestData>>> getGroupIgnoreAddRequest(long botQQ, long groupQQ);
+    CompletableFuture<ApiResponse<List<GroupIgnoreAddRequestData>>> getGroupIgnoreAddRequest(long botQQ);
 
     // ---- 群公告 ----
 
@@ -419,14 +425,18 @@ public interface ApiGroup {
      * <p>
      * 在指定群聊中发布一条群公告。需要机器人是群管理员或群主。
      *
-     * @param botQQ   目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
-     * @param title   公告标题
-     * @param content 公告内容
-     * @param pinned  是否置顶
+     * @param botQQ             目标 Bot 的 QQ 号
+     * @param groupQQ           目标群号
+     * @param content           公告内容
+     * @param image             公告图片路径或 URL（可选）
+     * @param pinned            是否置顶（0/1）
+     * @param type              类型（默认为 1）
+     * @param confirmRequired   是否需要确认（0/1）
+     * @param isShowEditCard    是否显示修改群名片引导（0/1）
+     * @param tipWindowType     弹窗类型（默认为 0）
      * @return 异步响应，无业务数据
      */
-    CompletableFuture<ApiResponse<VoidData>> sendGroupNotice(long botQQ, long groupQQ, String title, String content, boolean pinned);
+    CompletableFuture<ApiResponse<VoidData>> sendGroupNotice(long botQQ, long groupQQ, String content, String image, int pinned, int type, int confirmRequired, int isShowEditCard, int tipWindowType);
 
     /**
      * 获取群公告列表。
@@ -456,12 +466,13 @@ public interface ApiGroup {
     /**
      * 群打卡（设置群签到）。
      * <p>
-     * 在群聊中发起一个群打卡/签到活动。
+     * 在群聊中发起一个群打卡/签到活动。{@code title} 和 {@code content} 均为可选参数，
+     * 传入 {@code null} 时使用默认模板。
      *
      * @param botQQ   目标 Bot 的 QQ 号
      * @param groupQQ 目标群号
-     * @param title   打卡标题（可选）
-     * @param content 打卡内容（可选）
+     * @param title   打卡标题（可选，传入 {@code null} 使用默认值）
+     * @param content 打卡内容（可选，传入 {@code null} 使用默认值）
      * @return 异步响应，无业务数据
      */
     CompletableFuture<ApiResponse<VoidData>> setGroupSign(long botQQ, long groupQQ, String title, String content);
@@ -486,5 +497,5 @@ public interface ApiGroup {
      * @param groupQQ 目标群号
      * @return 异步响应，data 为打卡列表
      */
-    CompletableFuture<ApiResponse<List<?>>> getGroupSignedList(long botQQ, long groupQQ);
+    CompletableFuture<ApiResponse<List<GroupSignedData>>> getGroupSignedList(long botQQ, long groupQQ);
 }
