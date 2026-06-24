@@ -31,9 +31,11 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupRequestEvent extends RequestEvent {
 
+    /** 子类型（add / invite） */
     @JsonProperty("sub_type")
     private String subType;
 
+    /** 群号 */
     @JsonProperty("group_id")
     private long groupId;
 }

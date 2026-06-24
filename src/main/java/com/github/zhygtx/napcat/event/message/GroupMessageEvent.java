@@ -25,18 +25,23 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupMessageEvent extends MessageEvent {
 
+    /** 消息类型，固定为 "group" */
     @JsonProperty("message_type")
     private String messageType = "group";
 
+    /** 子类型（normal / anonymous / notice） */
     @JsonProperty("sub_type")
     private String subType;
 
+    /** 群号 */
     @JsonProperty("group_id")
     private long groupId;
 
+    /** 匿名信息（匿名消息时不为 null） */
     @JsonProperty("anonymous")
     private Object anonymous;
 
+    /** 发送者信息 */
     @JsonProperty("sender")
     private GroupSender sender;
 }

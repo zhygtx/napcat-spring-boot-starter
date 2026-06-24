@@ -24,6 +24,7 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupDecreaseKickMeNoticeEvent extends GroupDecreaseNoticeEvent {
 
+    /** 操作者 QQ 号（踢出机器人的管理员） */
     @JsonProperty("operator_id")
     private long operatorId;
 }

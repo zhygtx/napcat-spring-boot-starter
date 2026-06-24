@@ -24,6 +24,7 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupAdminNoticeEvent extends GroupNoticeEvent {
 
+    /** 子类型（set / unset） */
     @JsonProperty("sub_type")
     private String subType;
 }

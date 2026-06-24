@@ -24,9 +24,11 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PrivateGroupMessageEvent extends PrivateMessageEvent {
 
+    /** 临时会话来源 ID（群号） */
     @JsonProperty("target_id")
     private Long targetId;
 
+    /** 临时会话来源类型 */
     @JsonProperty("temp_source")
     private Integer tempSource;
 }

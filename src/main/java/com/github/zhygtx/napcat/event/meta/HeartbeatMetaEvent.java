@@ -26,9 +26,11 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HeartbeatMetaEvent extends MetaEvent {
 
+    /** 状态信息（包含 online、good 等字段） */
     @JsonProperty("status")
     private Map<String, Object> status;
 
+    /** 心跳间隔（毫秒） */
     @JsonProperty("interval")
     private long interval;
 

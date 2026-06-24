@@ -21,15 +21,19 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FriendSender {
 
+    /** 发送者 QQ 号 */
     @JsonProperty("user_id")
     private long userId;
 
+    /** 昵称 */
     @JsonProperty("nickname")
     private String nickname;
 
+    /** 性别（male / female / unknown） */
     @JsonProperty("sex")
     private String sex;
 
+    /** 年龄 */
     @JsonProperty("age")
     private int age;
 }

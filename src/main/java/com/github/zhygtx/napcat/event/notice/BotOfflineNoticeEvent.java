@@ -27,12 +27,15 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BotOfflineNoticeEvent extends NoticeEvent {
 
+    /** Bot QQ 号 */
     @JsonProperty("user_id")
     private long userId;
 
+    /** 离线原因标签 */
     @JsonProperty("tag")
     private String tag;
 
+    /** 离线原因详情 */
     @JsonProperty("message")
     private String message;
 }

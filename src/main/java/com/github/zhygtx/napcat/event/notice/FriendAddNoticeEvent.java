@@ -24,6 +24,7 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FriendAddNoticeEvent extends NoticeEvent {
 
+    /** 新添加的好友 QQ 号 */
     @JsonProperty("user_id")
     private long userId;
 }

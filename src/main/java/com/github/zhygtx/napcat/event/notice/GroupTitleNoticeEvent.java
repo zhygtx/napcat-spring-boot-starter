@@ -24,6 +24,7 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupTitleNoticeEvent extends GroupNoticeEvent {
 
+    /** 新的专属头衔 */
     @JsonProperty("title")
     private String title;
 }

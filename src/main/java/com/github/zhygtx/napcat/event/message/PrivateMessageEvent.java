@@ -25,18 +25,23 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PrivateMessageEvent extends MessageEvent {
 
+    /** 消息类型，固定为 "private" */
     @JsonProperty("message_type")
     private String messageType = "private";
 
+    /** 子类型（friend / group / other） */
     @JsonProperty("sub_type")
     private String subType;
 
+    /** 临时会话来源 ID（临时会话时有效） */
     @JsonProperty("target_id")
     private Long targetId;
 
+    /** 临时会话来源类型 */
     @JsonProperty("temp_source")
     private Integer tempSource;
 
+    /** 发送者信息 */
     @JsonProperty("sender")
     private FriendSender sender;
 }

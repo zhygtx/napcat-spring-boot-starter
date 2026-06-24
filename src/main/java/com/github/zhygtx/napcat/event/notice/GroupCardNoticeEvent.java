@@ -24,9 +24,11 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupCardNoticeEvent extends GroupNoticeEvent {
 
+    /** 新群名片 */
     @JsonProperty("card_new")
     private String cardNew;
 
+    /** 旧群名片 */
     @JsonProperty("card_old")
     private String cardOld;
 }

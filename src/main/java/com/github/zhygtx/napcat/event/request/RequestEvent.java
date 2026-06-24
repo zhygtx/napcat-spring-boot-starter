@@ -21,15 +21,19 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class RequestEvent extends BaseEvent {
 
+    /** 请求类型（friend / group） */
     @JsonProperty("request_type")
     private String requestType;
 
+    /** 请求发送者 QQ 号 */
     @JsonProperty("user_id")
     private long userId;
 
+    /** 验证信息（加好友/加群的附言） */
     @JsonProperty("comment")
     private String comment;
 
+    /** 请求标识（用于处理请求的 flag） */
     @JsonProperty("flag")
     private String flag;
 }

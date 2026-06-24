@@ -24,9 +24,11 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupDecreaseNoticeEvent extends GroupNoticeEvent {
 
+    /** 子类型（leave / kick / kick_me / disband） */
     @JsonProperty("sub_type")
     private String subType;
 
+    /** 操作者 QQ 号（管理员或退群者本人） */
     @JsonProperty("operator_id")
     private long operatorId;
 }

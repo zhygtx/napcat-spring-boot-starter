@@ -24,9 +24,11 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupRecallNoticeEvent extends GroupNoticeEvent {
 
+    /** 操作者 QQ 号（撤回消息的人，可能是发送者本人或管理员） */
     @JsonProperty("operator_id")
     private long operatorId;
 
+    /** 被撤回的消息 ID */
     @JsonProperty("message_id")
     private long messageId;
 }

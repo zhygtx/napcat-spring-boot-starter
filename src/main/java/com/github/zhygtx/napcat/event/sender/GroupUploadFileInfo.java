@@ -21,15 +21,19 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupUploadFileInfo {
 
+    /** 文件 ID */
     @JsonProperty("id")
     private String id;
 
+    /** 文件名 */
     @JsonProperty("name")
     private String name;
 
+    /** 文件大小（字节） */
     @JsonProperty("size")
     private long size;
 
+    /** 文件总线 ID */
     @JsonProperty("busid")
     private long busid;
 }

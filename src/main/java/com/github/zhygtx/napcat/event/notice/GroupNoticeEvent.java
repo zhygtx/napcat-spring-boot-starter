@@ -20,9 +20,11 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class GroupNoticeEvent extends NoticeEvent {
 
+    /** 群号 */
     @JsonProperty("group_id")
     private long groupId;
 
+    /** 相关用户 QQ 号 */
     @JsonProperty("user_id")
     private long userId;
 }

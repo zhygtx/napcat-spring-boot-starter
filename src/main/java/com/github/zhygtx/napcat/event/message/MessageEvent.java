@@ -23,18 +23,23 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class MessageEvent extends BaseEvent {
 
+    /** 消息 ID */
     @JsonProperty("message_id")
     private long messageId;
 
+    /** 发送者 QQ 号 */
     @JsonProperty("user_id")
     private long userId;
 
+    /** 消息内容（消息段列表） */
     @JsonProperty("message")
     private List<MessageSegment> message;
 
+    /** CQ 码格式的原始消息文本 */
     @JsonProperty("raw_message")
     private String rawMessage;
 
+    /** 字体 ID */
     @JsonProperty("font")
     private long font;
 }

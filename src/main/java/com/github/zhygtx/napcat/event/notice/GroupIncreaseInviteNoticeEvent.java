@@ -24,6 +24,7 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupIncreaseInviteNoticeEvent extends GroupIncreaseNoticeEvent {
 
+    /** 邀请者 QQ 号 */
     @JsonProperty("operator_id")
     private long operatorId;
 }

@@ -24,15 +24,19 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InputStatusNoticeEvent extends NoticeEvent {
 
+    /** 正在输入的用户 QQ 号 */
     @JsonProperty("user_id")
     private long userId;
 
+    /** 群号（群聊输入状态时有效） */
     @JsonProperty("group_id")
     private Long groupId;
 
+    /** 输入状态文本 */
     @JsonProperty("status_text")
     private String statusText;
 
+    /** 输入事件类型 */
     @JsonProperty("event_type")
     private int eventType;
 }

@@ -25,12 +25,15 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupBanNoticeEvent extends GroupNoticeEvent {
 
+    /** 子类型（ban / lift_ban） */
     @JsonProperty("sub_type")
     private String subType;
 
+    /** 操作者 QQ 号（管理员或群主） */
     @JsonProperty("operator_id")
     private long operatorId;
 
+    /** 禁言时长（秒），解除禁言时为 0 */
     @JsonProperty("duration")
     private long duration;
 }

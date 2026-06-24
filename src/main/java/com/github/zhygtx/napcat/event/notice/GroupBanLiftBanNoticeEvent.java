@@ -24,6 +24,7 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupBanLiftBanNoticeEvent extends GroupBanNoticeEvent {
 
+    /** 解除前已禁言的时长（秒） */
     @JsonProperty("duration")
     private long duration;
 }

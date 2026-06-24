@@ -24,12 +24,15 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProfileLikeNoticeEvent extends NoticeEvent {
 
+    /** 点赞者 QQ 号 */
     @JsonProperty("operator_id")
     private long operatorId;
 
+    /** 点赞者昵称 */
     @JsonProperty("operator_nick")
     private String operatorNick;
 
+    /** 点赞次数 */
     @JsonProperty("times")
     private int times;
 }

@@ -21,6 +21,7 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class NoticeEvent extends BaseEvent {
 
+    /** 通知类型（group_upload / group_admin / group_decrease 等） */
     @JsonProperty("notice_type")
     private String noticeType;
 }

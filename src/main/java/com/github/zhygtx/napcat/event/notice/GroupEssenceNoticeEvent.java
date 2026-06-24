@@ -24,15 +24,19 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupEssenceNoticeEvent extends GroupNoticeEvent {
 
+    /** 子类型（add / delete） */
     @JsonProperty("sub_type")
     private String subType;
 
+    /** 消息 ID */
     @JsonProperty("message_id")
     private long messageId;
 
+    /** 消息发送者 QQ 号 */
     @JsonProperty("sender_id")
     private long senderId;
 
+    /** 操作者 QQ 号（设置精华的管理员） */
     @JsonProperty("operator_id")
     private long operatorId;
 }

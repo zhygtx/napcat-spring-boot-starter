@@ -25,27 +25,35 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupSender {
 
+    /** 发送者 QQ 号 */
     @JsonProperty("user_id")
     private long userId;
 
+    /** 昵称 */
     @JsonProperty("nickname")
     private String nickname;
 
+    /** 性别（male / female / unknown） */
     @JsonProperty("sex")
     private String sex;
 
+    /** 年龄 */
     @JsonProperty("age")
     private int age;
 
+    /** 群名片/群昵称 */
     @JsonProperty("card")
     private String card;
 
+    /** 角色（owner / admin / member） */
     @JsonProperty("role")
     private String role;
 
+    /** 专属头衔 */
     @JsonProperty("title")
     private String title;
 
+    /** 成员等级 */
     @JsonProperty("level")
     private String level;
 }

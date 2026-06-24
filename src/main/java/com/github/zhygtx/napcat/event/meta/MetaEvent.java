@@ -21,6 +21,7 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class MetaEvent extends BaseEvent {
 
+    /** 元事件类型（heartbeat / lifecycle） */
     @JsonProperty("meta_event_type")
     private String metaEventType;
 }

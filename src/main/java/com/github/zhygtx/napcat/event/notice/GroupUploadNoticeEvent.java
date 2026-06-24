@@ -25,6 +25,7 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupUploadNoticeEvent extends GroupNoticeEvent {
 
+    /** 上传的文件信息 */
     @JsonProperty("file")
     private GroupUploadFileInfo file;
 }

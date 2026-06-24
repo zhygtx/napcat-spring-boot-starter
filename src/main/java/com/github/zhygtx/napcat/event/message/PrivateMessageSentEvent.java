@@ -24,12 +24,15 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PrivateMessageSentEvent extends MessageSentEvent {
 
+    /** 消息类型，固定为 "private" */
     @JsonProperty("message_type")
     private String privateMessageType;
 
+    /** 子类型（friend / group 等） */
     @JsonProperty("sub_type")
     private String subType;
 
+    /** 发送者信息 */
     @JsonProperty("sender")
     private Object sender;
 }

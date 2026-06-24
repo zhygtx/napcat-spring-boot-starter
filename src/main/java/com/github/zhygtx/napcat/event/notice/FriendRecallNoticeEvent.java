@@ -24,9 +24,11 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FriendRecallNoticeEvent extends NoticeEvent {
 
+    /** 好友 QQ 号 */
     @JsonProperty("user_id")
     private long userId;
 
+    /** 被撤回的消息 ID */
     @JsonProperty("message_id")
     private long messageId;
 }

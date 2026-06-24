@@ -25,12 +25,15 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PokeNoticeEvent extends NoticeEvent {
 
+    /** 群号（好友戳一戳时为 null） */
     @JsonProperty("group_id")
     private Long groupId;
 
+    /** 发送戳一戳的用户 QQ 号 */
     @JsonProperty("user_id")
     private long userId;
 
+    /** 被戳的用户 QQ 号 */
     @JsonProperty("target_id")
     private long targetId;
 }

@@ -27,9 +27,11 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroupMsgEmojiLikeNoticeEvent extends GroupNoticeEvent {
 
+    /** 被点赞的消息 ID */
     @JsonProperty("message_id")
     private long messageId;
 
+    /** 表情回应列表 */
     @JsonProperty("likes")
     private List<Map<String, Object>> likes;
 }

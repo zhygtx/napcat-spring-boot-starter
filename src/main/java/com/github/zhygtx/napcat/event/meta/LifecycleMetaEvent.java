@@ -34,6 +34,7 @@ import lombok.experimental.SuperBuilder;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LifecycleMetaEvent extends MetaEvent {
 
+    /** 子类型（enable / disable / connect） */
     @JsonProperty("sub_type")
     private String subType;
 }
