@@ -23,6 +23,8 @@ public interface ApiGroup {
      * 删除群相册媒体。
      * <p>
      * 对应 NapCat API: {@code del_group_album_media}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -43,6 +45,8 @@ public interface ApiGroup {
      * 点赞群相册媒体。
      * <p>
      * 对应 NapCat API: {@code set_group_album_media_like}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -64,6 +68,8 @@ public interface ApiGroup {
      * 取消点赞群相册媒体。
      * <p>
      * 对应 NapCat API: {@code cancel_group_album_media_like}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -85,6 +91,8 @@ public interface ApiGroup {
      * 发表群相册评论。
      * <p>
      * 对应 NapCat API: {@code do_group_album_comment}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -106,6 +114,8 @@ public interface ApiGroup {
      * 获取群相册媒体列表。
      * <p>
      * 对应 NapCat API: {@code get_group_album_media_list}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -126,6 +136,8 @@ public interface ApiGroup {
      * 获取群相册列表。
      * <p>
      * 对应 NapCat API: {@code get_qun_album_list}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -145,6 +157,8 @@ public interface ApiGroup {
      * 上传图片到群相册。
      * <p>
      * 对应 NapCat API: {@code upload_image_to_qun_album}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -166,6 +180,8 @@ public interface ApiGroup {
      * 设置群加群选项。
      * <p>
      * 对应 NapCat API: {@code set_group_add_option}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -187,6 +203,8 @@ public interface ApiGroup {
      * 设置群机器人加群选项。
      * <p>
      * 对应 NapCat API: {@code set_group_robot_add_option}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -207,6 +225,8 @@ public interface ApiGroup {
      * 设置群搜索选项。
      * <p>
      * 对应 NapCat API: {@code set_group_search}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -229,6 +249,8 @@ public interface ApiGroup {
      * 设置群备注
      * <p>
      * 对应 NapCat API: {@code set_group_remark}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -248,6 +270,8 @@ public interface ApiGroup {
      * 获取群详细信息 (扩展)。
      * <p>
      * 对应 NapCat API: {@code get_group_info_ex}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -266,6 +290,8 @@ public interface ApiGroup {
      * 群打卡。
      * <p>
      * 对应 NapCat API: {@code set_group_sign}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -284,6 +310,8 @@ public interface ApiGroup {
      * 群打卡。
      * <p>
      * 对应 NapCat API: {@code send_group_sign}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -302,6 +330,8 @@ public interface ApiGroup {
      * 获取群组今日打卡列表。
      * <p>
      * 对应 NapCat API: {@code get_group_signed_list}
+     * <p>
+     * 分类：群组扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -322,6 +352,8 @@ public interface ApiGroup {
      * 获取群聊的详细信息，包括成员数、最大成员数等
      * <p>
      * 对应 NapCat API: {@code get_group_detail_info}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -342,6 +374,8 @@ public interface ApiGroup {
      * 获取当前帐号的群聊列表
      * <p>
      * 对应 NapCat API: {@code get_group_list}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param noCache 【可选】是否不使用缓存
@@ -362,6 +396,8 @@ public interface ApiGroup {
      * 获取群聊的基本信息
      * <p>
      * 对应 NapCat API: {@code get_group_info}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -382,6 +418,8 @@ public interface ApiGroup {
      * 获取群聊中的所有成员列表
      * <p>
      * 对应 NapCat API: {@code get_group_member_list}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -403,6 +441,8 @@ public interface ApiGroup {
      * 获取群聊中指定成员的信息
      * <p>
      * 对应 NapCat API: {@code get_group_member_info}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -425,6 +465,8 @@ public interface ApiGroup {
      * 同意或拒绝加群请求或邀请
      * <p>
      * 对应 NapCat API: {@code set_group_add_request}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param flag 【必填】请求flag
@@ -448,6 +490,8 @@ public interface ApiGroup {
      * 退出或解散指定群聊
      * <p>
      * 对应 NapCat API: {@code set_group_leave}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -469,6 +513,8 @@ public interface ApiGroup {
      * 修改指定群聊的名称
      * <p>
      * 对应 NapCat API: {@code set_group_name}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -490,6 +536,8 @@ public interface ApiGroup {
      * 设置群聊中指定成员的群名片
      * <p>
      * 对应 NapCat API: {@code set_group_card}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -512,6 +560,8 @@ public interface ApiGroup {
      * 获取指定群聊中的公告列表
      * <p>
      * 对应 NapCat API: {@code _get_group_notice}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -532,6 +582,8 @@ public interface ApiGroup {
      * 获取指定群聊中的精华消息列表
      * <p>
      * 对应 NapCat API: {@code get_essence_msg_list}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -552,6 +604,8 @@ public interface ApiGroup {
      * 获取被忽略的入群申请和邀请通知
      * <p>
      * 对应 NapCat API: {@code get_group_ignored_notifies}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -571,6 +625,8 @@ public interface ApiGroup {
      * 将一条消息从群精华消息列表中移出
      * <p>
      * 对应 NapCat API: {@code delete_essence_msg}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【可选】消息ID
@@ -594,6 +650,8 @@ public interface ApiGroup {
      * 将一条消息设置为群精华消息
      * <p>
      * 对应 NapCat API: {@code set_essence_msg}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【必填】消息ID
@@ -614,6 +672,8 @@ public interface ApiGroup {
      * 删除群聊中的公告
      * <p>
      * 对应 NapCat API: {@code _del_group_notice}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -633,6 +693,8 @@ public interface ApiGroup {
      * 获取群禁言列表。
      * <p>
      * 对应 NapCat API: {@code get_group_shut_list}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -651,6 +713,8 @@ public interface ApiGroup {
      * 获取群被忽略的加群请求。
      * <p>
      * 对应 NapCat API: {@code get_group_ignore_add_request}
+     * <p>
+     * 分类：群组接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据

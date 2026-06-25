@@ -25,6 +25,8 @@ public interface ApiFriend {
      * 设置好友备注
      * <p>
      * 对应 NapCat API: {@code set_friend_remark}
+     * <p>
+     * 分类：用户接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】对方 QQ 号
@@ -44,6 +46,8 @@ public interface ApiFriend {
      * 获取当前帐号的好友列表
      * <p>
      * 对应 NapCat API: {@code get_friend_list}
+     * <p>
+     * 分类：用户接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param noCache 【可选】是否不使用缓存
@@ -64,6 +68,8 @@ public interface ApiFriend {
      * 同意或拒绝加好友请求
      * <p>
      * 对应 NapCat API: {@code set_friend_add_request}
+     * <p>
+     * 分类：用户接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param flag 【必填】加好友请求的 flag (需从上报中获取)
@@ -86,6 +92,8 @@ public interface ApiFriend {
      * 获取指定域名的 Cookies
      * <p>
      * 对应 NapCat API: {@code get_cookies}
+     * <p>
+     * 分类：用户接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param domain 【必填】需要获取 cookies 的域名
@@ -106,6 +114,8 @@ public interface ApiFriend {
      * 获取最近会话
      * <p>
      * 对应 NapCat API: {@code get_recent_contact}
+     * <p>
+     * 分类：用户接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param count 【必填】获取的数量（默认 10）
@@ -124,6 +134,8 @@ public interface ApiFriend {
      * 获取带分组的好友列表。
      * <p>
      * 对应 NapCat API: {@code get_friends_with_category}
+     * <p>
+     * 分类：用户扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -141,6 +153,8 @@ public interface ApiFriend {
      * 获取资料点赞。
      * <p>
      * 对应 NapCat API: {@code get_profile_like}
+     * <p>
+     * 分类：用户扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【可选】QQ号
@@ -163,6 +177,8 @@ public interface ApiFriend {
      * 设置自定义在线状态
      * <p>
      * 对应 NapCat API: {@code set_diy_online_status}
+     * <p>
+     * 分类：用户扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param faceId 【必填】图标ID
@@ -183,6 +199,8 @@ public interface ApiFriend {
      * 获取单向好友列表。
      * <p>
      * 对应 NapCat API: {@code get_unidirectional_friend_list}
+     * <p>
+     * 分类：用户扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据

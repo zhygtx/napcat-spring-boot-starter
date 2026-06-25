@@ -25,6 +25,8 @@ public interface ApiSystem {
      * 同意或拒绝系统的可疑好友申请
      * <p>
      * 对应 NapCat API: {@code set_doubt_friends_add_request}
+     * <p>
+     * 分类：系统接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param flag 【必填】请求 flag
@@ -46,6 +48,8 @@ public interface ApiSystem {
      * 获取系统的可疑好友申请列表
      * <p>
      * 对应 NapCat API: {@code get_doubt_friends_add_request}
+     * <p>
+     * 分类：系统接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param count 【必填】获取数量（默认 50）
@@ -66,6 +70,8 @@ public interface ApiSystem {
      * 获取当前登录帐号的信息
      * <p>
      * 对应 NapCat API: {@code get_login_info}
+     * <p>
+     * 分类：系统接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -85,6 +91,8 @@ public interface ApiSystem {
      * 获取版本信息
      * <p>
      * 对应 NapCat API: {@code get_version_info}
+     * <p>
+     * 分类：系统接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -104,6 +112,8 @@ public interface ApiSystem {
      * 检查是否可以发送语音
      * <p>
      * 对应 NapCat API: {@code can_send_record}
+     * <p>
+     * 分类：系统接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -123,6 +133,8 @@ public interface ApiSystem {
      * 检查是否可以发送图片
      * <p>
      * 对应 NapCat API: {@code can_send_image}
+     * <p>
+     * 分类：系统接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -142,6 +154,8 @@ public interface ApiSystem {
      * 获取运行状态
      * <p>
      * 对应 NapCat API: {@code get_status}
+     * <p>
+     * 分类：系统接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -161,6 +175,8 @@ public interface ApiSystem {
      * 获取 CSRF Token
      * <p>
      * 对应 NapCat API: {@code get_csrf_token}
+     * <p>
+     * 分类：系统接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -180,6 +196,8 @@ public interface ApiSystem {
      * 获取登录凭证
      * <p>
      * 对应 NapCat API: {@code get_credentials}
+     * <p>
+     * 分类：系统接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param domain 【必填】需要获取 cookies 的域名
@@ -200,6 +218,8 @@ public interface ApiSystem {
      * 获取底层Packet服务的运行状态
      * <p>
      * 对应 NapCat API: {@code nc_get_packet_status}
+     * <p>
+     * 分类：系统接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，无业务数据
@@ -219,6 +239,8 @@ public interface ApiSystem {
      * 重启服务
      * <p>
      * 对应 NapCat API: {@code set_restart}
+     * <p>
+     * 分类：系统接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，无业务数据
@@ -238,6 +260,8 @@ public interface ApiSystem {
      * 获取群系统消息
      * <p>
      * 对应 NapCat API: {@code get_group_system_msg}
+     * <p>
+     * 分类：系统接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param count 【必填】获取的消息数量（默认 50）
@@ -258,6 +282,8 @@ public interface ApiSystem {
      * 清理缓存
      * <p>
      * 对应 NapCat API: {@code clean_cache}
+     * <p>
+     * 分类：系统接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，无业务数据
@@ -275,6 +301,8 @@ public interface ApiSystem {
      * 获取扩展 RKey。
      * <p>
      * 对应 NapCat API: {@code get_rkey}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -292,6 +320,8 @@ public interface ApiSystem {
      * 获取 RKey 服务器。
      * <p>
      * 对应 NapCat API: {@code get_rkey_server}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -479,6 +509,8 @@ public interface ApiSystem {
      * ```
      * <p>
      * 对应 NapCat API: {@code set_online_status}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param status 【必填】在线状态
@@ -499,6 +531,8 @@ public interface ApiSystem {
      * 获取机器人 UIN 范围。
      * <p>
      * 对应 NapCat API: {@code get_robot_uin_range}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -516,6 +550,8 @@ public interface ApiSystem {
      * 获取自定义表情。
      * <p>
      * 对应 NapCat API: {@code fetch_custom_face}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param count 【必填】获取数量（默认 48）
@@ -534,6 +570,8 @@ public interface ApiSystem {
      * 获取自定义表情详情。
      * <p>
      * 对应 NapCat API: {@code fetch_custom_face_detail}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param count 【必填】获取数量（默认 48）
@@ -552,6 +590,8 @@ public interface ApiSystem {
      * 添加自定义表情。
      * <p>
      * 对应 NapCat API: {@code add_custom_face}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【必填】本地表情文件路径
@@ -577,6 +617,8 @@ public interface ApiSystem {
      * 删除自定义表情。
      * <p>
      * 对应 NapCat API: {@code delete_custom_face}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param resId 【可选】
@@ -598,6 +640,8 @@ public interface ApiSystem {
      * 修改自定义表情描述。
      * <p>
      * 对应 NapCat API: {@code set_custom_face_desc}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param emojiId 【必填】表情ID
@@ -619,6 +663,8 @@ public interface ApiSystem {
      * 设置输入状态。
      * <p>
      * 对应 NapCat API: {@code set_input_status}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】QQ号
@@ -638,6 +684,8 @@ public interface ApiSystem {
      * 获取用户在线状态。
      * <p>
      * 对应 NapCat API: {@code nc_get_user_status}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】QQ号
@@ -656,6 +704,8 @@ public interface ApiSystem {
      * 获取 RKey。
      * <p>
      * 对应 NapCat API: {@code nc_get_rkey}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -673,6 +723,8 @@ public interface ApiSystem {
      * 获取小程序 Ark。
      * <p>
      * 对应 NapCat API: {@code get_mini_app_ark}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -690,6 +742,8 @@ public interface ApiSystem {
      * 发送原始数据包。
      * <p>
      * 对应 NapCat API: {@code send_packet}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param cmd 【必填】命令字
@@ -710,6 +764,8 @@ public interface ApiSystem {
      * 退出登录。
      * <p>
      * 对应 NapCat API: {@code bot_exit}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，无业务数据
@@ -727,6 +783,8 @@ public interface ApiSystem {
      * 获取收藏列表。
      * <p>
      * 对应 NapCat API: {@code get_collection_list}
+     * <p>
+     * 分类：系统扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param category 【必填】分类ID

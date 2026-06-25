@@ -24,6 +24,8 @@ public interface ApiFile {
      * 获取指定文件的详细信息及下载路径
      * <p>
      * 对应 NapCat API: {@code get_file}
+     * <p>
+     * 分类：文件接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径、URL或Base64
@@ -45,6 +47,8 @@ public interface ApiFile {
      * 获取指定图片的信息及路径
      * <p>
      * 对应 NapCat API: {@code get_image}
+     * <p>
+     * 分类：文件接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径、URL或Base64
@@ -66,6 +70,8 @@ public interface ApiFile {
      * 获取指定语音文件的信息，并支持格式转换
      * <p>
      * 对应 NapCat API: {@code get_record}
+     * <p>
+     * 分类：文件接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径、URL或Base64
@@ -88,6 +94,8 @@ public interface ApiFile {
      * 获取指定群文件的下载链接
      * <p>
      * 对应 NapCat API: {@code get_group_file_url}
+     * <p>
+     * 分类：文件接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -109,6 +117,8 @@ public interface ApiFile {
      * 获取指定私聊文件的下载链接
      * <p>
      * 对应 NapCat API: {@code get_private_file_url}
+     * <p>
+     * 分类：文件接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param fileId 【必填】文件ID
@@ -127,6 +137,8 @@ public interface ApiFile {
      * 移动群文件。
      * <p>
      * 对应 NapCat API: {@code move_group_file}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -148,6 +160,8 @@ public interface ApiFile {
      * 重命名群文件。
      * <p>
      * 对应 NapCat API: {@code rename_group_file}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -169,6 +183,8 @@ public interface ApiFile {
      * 传输群文件。
      * <p>
      * 对应 NapCat API: {@code trans_group_file}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -188,6 +204,8 @@ public interface ApiFile {
      * 创建闪传任务。
      * <p>
      * 对应 NapCat API: {@code create_flash_task}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param files 【必填】文件列表或单个文件路径
@@ -208,6 +226,8 @@ public interface ApiFile {
      * 获取闪传文件列表。
      * <p>
      * 对应 NapCat API: {@code get_flash_file_list}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param filesetId 【必填】文件集 ID
@@ -226,6 +246,8 @@ public interface ApiFile {
      * 获取闪传文件链接。
      * <p>
      * 对应 NapCat API: {@code get_flash_file_url}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param filesetId 【必填】文件集 ID
@@ -246,6 +268,8 @@ public interface ApiFile {
      * 发送闪传消息。
      * <p>
      * 对应 NapCat API: {@code send_flash_msg}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param filesetId 【必填】文件集 ID
@@ -266,6 +290,8 @@ public interface ApiFile {
      * 获取文件分享链接。
      * <p>
      * 对应 NapCat API: {@code get_share_link}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param filesetId 【必填】文件集 ID
@@ -284,6 +310,8 @@ public interface ApiFile {
      * 获取文件集信息。
      * <p>
      * 对应 NapCat API: {@code get_fileset_info}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param filesetId 【必填】文件集 ID
@@ -302,6 +330,8 @@ public interface ApiFile {
      * 获取在线文件消息。
      * <p>
      * 对应 NapCat API: {@code get_online_file_msg}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】用户 QQ
@@ -320,6 +350,8 @@ public interface ApiFile {
      * 发送在线文件。
      * <p>
      * 对应 NapCat API: {@code send_online_file}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】用户 QQ
@@ -340,6 +372,8 @@ public interface ApiFile {
      * 发送在线文件夹。
      * <p>
      * 对应 NapCat API: {@code send_online_folder}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】用户 QQ
@@ -360,6 +394,8 @@ public interface ApiFile {
      * 接收在线文件。
      * <p>
      * 对应 NapCat API: {@code receive_online_file}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】用户 QQ
@@ -380,6 +416,8 @@ public interface ApiFile {
      * 拒绝在线文件。
      * <p>
      * 对应 NapCat API: {@code refuse_online_file}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】用户 QQ
@@ -400,6 +438,8 @@ public interface ApiFile {
      * 取消在线文件。
      * <p>
      * 对应 NapCat API: {@code cancel_online_file}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】用户 QQ
@@ -419,6 +459,8 @@ public interface ApiFile {
      * 下载文件集。
      * <p>
      * 对应 NapCat API: {@code download_fileset}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param filesetId 【必填】文件集 ID
@@ -437,6 +479,8 @@ public interface ApiFile {
      * 获取文件集 ID。
      * <p>
      * 对应 NapCat API: {@code get_fileset_id}
+     * <p>
+     * 分类：文件扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param shareCode 【必填】分享码或分享链接

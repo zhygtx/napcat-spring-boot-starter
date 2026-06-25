@@ -24,6 +24,8 @@ public interface ApiExtra {
      * 清理流式传输临时文件。
      * <p>
      * 对应 NapCat API: {@code clean_stream_temp_file}
+     * <p>
+     * 分类：流式传输扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，无业务数据
@@ -41,6 +43,8 @@ public interface ApiExtra {
      * 下载语音文件流。
      * <p>
      * 对应 NapCat API: {@code download_file_record_stream}
+     * <p>
+     * 分类：流式传输扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径或 URL
@@ -62,6 +66,8 @@ public interface ApiExtra {
      * 下载图片文件流。
      * <p>
      * 对应 NapCat API: {@code download_file_image_stream}
+     * <p>
+     * 分类：流式传输扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径或 URL
@@ -82,6 +88,8 @@ public interface ApiExtra {
      * 测试下载流。
      * <p>
      * 对应 NapCat API: {@code test_download_stream}
+     * <p>
+     * 分类：流式传输扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param error 【可选】是否触发测试错误（默认 False）
@@ -102,6 +110,8 @@ public interface ApiExtra {
      * 以流式方式从网络或本地下载文件
      * <p>
      * 对应 NapCat API: {@code download_file_stream}
+     * <p>
+     * 分类：流式接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径或 URL
@@ -124,6 +134,8 @@ public interface ApiExtra {
      * 以流式方式上传文件数据到机器人
      * <p>
      * 对应 NapCat API: {@code upload_file_stream}
+     * <p>
+     * 分类：流式接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param streamId 【必填】流 ID
@@ -154,6 +166,8 @@ public interface ApiExtra {
      * 从指定群聊中批量踢出多个成员
      * <p>
      * 对应 NapCat API: {@code set_group_kick_members}
+     * <p>
+     * 分类：扩展接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -174,6 +188,8 @@ public interface ApiExtra {
      * 创建收藏。
      * <p>
      * 对应 NapCat API: {@code create_collection}
+     * <p>
+     * 分类：扩展接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param rawData 【必填】原始数据
@@ -195,6 +211,8 @@ public interface ApiExtra {
      * 修改当前登录帐号的个性签名
      * <p>
      * 对应 NapCat API: {@code set_self_longnick}
+     * <p>
+     * 分类：扩展接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param longNick 【必填】签名内容
@@ -215,6 +233,8 @@ public interface ApiExtra {
      * 修改当前账号的QQ头像
      * <p>
      * 对应 NapCat API: {@code set_qq_avatar}
+     * <p>
+     * 分类：扩展接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【必填】图片路径、URL或Base64
@@ -235,6 +255,8 @@ public interface ApiExtra {
      * 将英文单词列表翻译为中文
      * <p>
      * 对应 NapCat API: {@code translate_en2zh}
+     * <p>
+     * 分类：扩展接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param words 【必填】待翻译单词列表
@@ -255,6 +277,8 @@ public interface ApiExtra {
      * 获取当前登录帐号的ClientKey
      * <p>
      * 对应 NapCat API: {@code get_clientkey}
+     * <p>
+     * 分类：扩展接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -274,6 +298,8 @@ public interface ApiExtra {
      * 识别图片中的文字内容(仅Windows端支持)
      * <p>
      * 对应 NapCat API: {@code ocr_image}
+     * <p>
+     * 分类：扩展接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param image 【必填】图片路径、URL或Base64
@@ -294,6 +320,8 @@ public interface ApiExtra {
      * 识别图片中的文字内容(仅Windows端支持)
      * <p>
      * 对应 NapCat API: {@code ocr_image}
+     * <p>
+     * 分类：扩展接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param image 【必填】图片路径、URL或Base64
@@ -314,6 +342,8 @@ public interface ApiExtra {
      * 设置群聊中指定成员的专属头衔
      * <p>
      * 对应 NapCat API: {@code set_group_special_title}
+     * <p>
+     * 分类：扩展接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -336,6 +366,8 @@ public interface ApiExtra {
      * 获取群聊中的AI角色列表
      * <p>
      * 对应 NapCat API: {@code get_ai_characters}
+     * <p>
+     * 分类：扩展接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -357,6 +389,8 @@ public interface ApiExtra {
      * 修改当前账号的昵称、个性签名等资料
      * <p>
      * 对应 NapCat API: {@code set_qq_profile}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param nickname 【必填】昵称
@@ -379,6 +413,8 @@ public interface ApiExtra {
      * 获取群文件根目录下的所有文件和文件夹
      * <p>
      * 对应 NapCat API: {@code get_group_root_files}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -400,6 +436,8 @@ public interface ApiExtra {
      * 从好友列表中删除指定用户
      * <p>
      * 对应 NapCat API: {@code delete_friend}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param friendId 【可选】好友 QQ 号
@@ -423,6 +461,8 @@ public interface ApiExtra {
      * 检查指定URL的安全等级
      * <p>
      * 对应 NapCat API: {@code check_url_safely}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param url 【必填】要检查的 URL
@@ -443,6 +483,8 @@ public interface ApiExtra {
      * 获取当前登录账号的在线客户端列表
      * <p>
      * 对应 NapCat API: {@code get_online_clients}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
@@ -462,6 +504,8 @@ public interface ApiExtra {
      * 获取指定群聊的荣誉信息，如龙王等
      * <p>
      * 对应 NapCat API: {@code get_group_honor_info}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -483,6 +527,8 @@ public interface ApiExtra {
      * 在指定群聊中发布新的公告
      * <p>
      * 对应 NapCat API: {@code _send_group_notice}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -510,6 +556,8 @@ public interface ApiExtra {
      * 获取指定群聊中艾特全体成员的剩余次数
      * <p>
      * 对应 NapCat API: {@code get_group_at_all_remain}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -530,6 +578,8 @@ public interface ApiExtra {
      * 发送合并转发消息
      * <p>
      * 对应 NapCat API: {@code send_forward_msg}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageType 【可选】消息类型 (private/group)
@@ -557,6 +607,8 @@ public interface ApiExtra {
      * 发送群合并转发消息。
      * <p>
      * 对应 NapCat API: {@code send_group_forward_msg}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageType 【可选】消息类型 (private/group)
@@ -584,6 +636,8 @@ public interface ApiExtra {
      * 发送私聊合并转发消息。
      * <p>
      * 对应 NapCat API: {@code send_private_forward_msg}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageType 【可选】消息类型 (private/group)
@@ -613,6 +667,8 @@ public interface ApiExtra {
      * 获取指定非好友用户的信息
      * <p>
      * 对应 NapCat API: {@code get_stranger_info}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】用户QQ
@@ -634,6 +690,8 @@ public interface ApiExtra {
      * 下载网络文件到本地临时目录
      * <p>
      * 对应 NapCat API: {@code download_file}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param url 【可选】下载链接
@@ -657,6 +715,8 @@ public interface ApiExtra {
      * 上传资源路径或URL指定的文件到指定群聊的文件系统中
      * <p>
      * 对应 NapCat API: {@code upload_group_file}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -682,6 +742,8 @@ public interface ApiExtra {
      * 获取指定群聊的历史聊天记录
      * <p>
      * 对应 NapCat API: {@code get_group_msg_history}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -709,6 +771,8 @@ public interface ApiExtra {
      * 获取指定好友的历史聊天记录
      * <p>
      * 对应 NapCat API: {@code get_friend_msg_history}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】用户QQ
@@ -736,6 +800,8 @@ public interface ApiExtra {
      * 处理来自事件上报的快速操作请求
      * <p>
      * 对应 NapCat API: {@code handle_quick_operation}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param context 【必填】事件上下文
@@ -757,6 +823,8 @@ public interface ApiExtra {
      * 修改指定群聊的头像
      * <p>
      * 对应 NapCat API: {@code set_group_portrait}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【必填】头像文件路径或 URL
@@ -778,6 +846,8 @@ public interface ApiExtra {
      * 上传本地文件到指定私聊会话中
      * <p>
      * 对应 NapCat API: {@code upload_private_file}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】用户 QQ
@@ -801,6 +871,8 @@ public interface ApiExtra {
      * 获取当前账号可用的设备机型显示名称列表
      * <p>
      * 对应 NapCat API: {@code _get_model_show}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param model 【可选】模型名称
@@ -821,6 +893,8 @@ public interface ApiExtra {
      * 设置当前账号的设备机型名称
      * <p>
      * 对应 NapCat API: {@code _set_model_show}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，无业务数据
@@ -840,6 +914,8 @@ public interface ApiExtra {
      * 在群文件系统中删除指定的文件
      * <p>
      * 对应 NapCat API: {@code delete_group_file}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -861,6 +937,8 @@ public interface ApiExtra {
      * 在群文件系统中创建新的文件夹
      * <p>
      * 对应 NapCat API: {@code create_group_file_folder}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -883,6 +961,8 @@ public interface ApiExtra {
      * 在群文件系统中删除指定的文件夹
      * <p>
      * 对应 NapCat API: {@code delete_group_folder}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -905,6 +985,8 @@ public interface ApiExtra {
      * 获取群聊文件系统的空间及状态信息
      * <p>
      * 对应 NapCat API: {@code get_group_file_system_info}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -925,6 +1007,8 @@ public interface ApiExtra {
      * 获取指定群文件夹下的文件及子文件夹列表
      * <p>
      * 对应 NapCat API: {@code get_group_files_by_folder}
+     * <p>
+     * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -948,6 +1032,8 @@ public interface ApiExtra {
      * 获取当前帐号已加入的频道列表
      * <p>
      * 对应 NapCat API: {@code get_guild_list}
+     * <p>
+     * 分类：频道接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，无业务数据
@@ -967,6 +1053,8 @@ public interface ApiExtra {
      * 获取当前帐号在频道中的个人资料
      * <p>
      * 对应 NapCat API: {@code get_guild_service_profile}
+     * <p>
+     * 分类：频道接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，无业务数据
@@ -986,6 +1074,8 @@ public interface ApiExtra {
      * 通过 AI 语音引擎获取指定文本的语音 URL
      * <p>
      * 对应 NapCat API: {@code get_ai_record}
+     * <p>
+     * 分类：AI 扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param character 【必填】角色ID
@@ -1008,6 +1098,8 @@ public interface ApiExtra {
      * 发送 AI 生成的语音到指定群聊
      * <p>
      * 对应 NapCat API: {@code send_group_ai_record}
+     * <p>
+     * 分类：AI 扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param character 【必填】角色ID

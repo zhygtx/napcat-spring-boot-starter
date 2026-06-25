@@ -24,6 +24,8 @@ public interface ApiMessage {
      * 将指定消息设置为群待办
      * <p>
      * 对应 NapCat API: {@code set_group_todo}
+     * <p>
+     * 分类：核心接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -46,6 +48,8 @@ public interface ApiMessage {
      * 将指定消息对应的群待办标记为已完成
      * <p>
      * 对应 NapCat API: {@code complete_group_todo}
+     * <p>
+     * 分类：核心接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -68,6 +72,8 @@ public interface ApiMessage {
      * 将指定消息对应的群待办取消
      * <p>
      * 对应 NapCat API: {@code cancel_group_todo}
+     * <p>
+     * 分类：核心接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -90,6 +96,8 @@ public interface ApiMessage {
      * 在群聊或私聊中发送戳一戳动作
      * <p>
      * 对应 NapCat API: {@code group_poke}
+     * <p>
+     * 分类：核心接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【可选】群号
@@ -112,6 +120,8 @@ public interface ApiMessage {
      * 在群聊或私聊中发送戳一戳动作
      * <p>
      * 对应 NapCat API: {@code friend_poke}
+     * <p>
+     * 分类：核心接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【可选】群号
@@ -134,6 +144,8 @@ public interface ApiMessage {
      * 在群聊或私聊中发送戳一戳动作
      * <p>
      * 对应 NapCat API: {@code send_poke}
+     * <p>
+     * 分类：核心接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【可选】群号
@@ -154,6 +166,8 @@ public interface ApiMessage {
      * 获取表情点赞详情。
      * <p>
      * 对应 NapCat API: {@code fetch_emoji_like}
+     * <p>
+     * 分类：消息扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【必填】消息ID
@@ -176,6 +190,8 @@ public interface ApiMessage {
      * 获取消息表情点赞列表。
      * <p>
      * 对应 NapCat API: {@code get_emoji_likes}
+     * <p>
+     * 分类：消息扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【可选】群号，短ID可不传
@@ -198,6 +214,8 @@ public interface ApiMessage {
      * 获取语音转文字结果。
      * <p>
      * 对应 NapCat API: {@code fetch_ptt_text}
+     * <p>
+     * 分类：消息扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【必填】消息ID
@@ -218,6 +236,8 @@ public interface ApiMessage {
      * 获取群分享的 Ark 内容
      * <p>
      * 对应 NapCat API: {@code ArkShareGroup}
+     * <p>
+     * 分类：消息扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -238,6 +258,8 @@ public interface ApiMessage {
      * 获取用户推荐的 Ark 内容
      * <p>
      * 对应 NapCat API: {@code ArkSharePeer}
+     * <p>
+     * 分类：消息扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【可选】QQ号
@@ -260,6 +282,8 @@ public interface ApiMessage {
      * 获取群分享的 Ark 内容
      * <p>
      * 对应 NapCat API: {@code send_group_ark_share}
+     * <p>
+     * 分类：消息扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -280,6 +304,8 @@ public interface ApiMessage {
      * 获取用户推荐的 Ark 内容
      * <p>
      * 对应 NapCat API: {@code send_ark_share}
+     * <p>
+     * 分类：消息扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【可选】QQ号
@@ -300,6 +326,8 @@ public interface ApiMessage {
      * 设置消息表情点赞。
      * <p>
      * 对应 NapCat API: {@code set_msg_emoji_like}
+     * <p>
+     * 分类：消息扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【必填】消息ID
@@ -320,6 +348,8 @@ public interface ApiMessage {
      * 点击内联键盘按钮。
      * <p>
      * 对应 NapCat API: {@code click_inline_keyboard_button}
+     * <p>
+     * 分类：消息扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
@@ -344,6 +374,8 @@ public interface ApiMessage {
      * 转发单条消息
      * <p>
      * 对应 NapCat API: {@code forward_friend_single_msg}
+     * <p>
+     * 分类：消息接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【必填】消息ID
@@ -366,6 +398,8 @@ public interface ApiMessage {
      * 转发单条消息
      * <p>
      * 对应 NapCat API: {@code forward_group_single_msg}
+     * <p>
+     * 分类：消息接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【必填】消息ID
@@ -388,6 +422,8 @@ public interface ApiMessage {
      * 标记指定渠道的消息为已读
      * <p>
      * 对应 NapCat API: {@code mark_group_msg_as_read}
+     * <p>
+     * 分类：消息接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【可选】用户QQ
@@ -410,6 +446,8 @@ public interface ApiMessage {
      * 标记指定渠道的消息为已读
      * <p>
      * 对应 NapCat API: {@code mark_private_msg_as_read}
+     * <p>
+     * 分类：消息接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【可选】用户QQ
@@ -432,6 +470,8 @@ public interface ApiMessage {
      * 撤回已发送的消息
      * <p>
      * 对应 NapCat API: {@code delete_msg}
+     * <p>
+     * 分类：消息接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【必填】消息ID
@@ -452,6 +492,8 @@ public interface ApiMessage {
      * 标记指定渠道的消息为已读
      * <p>
      * 对应 NapCat API: {@code mark_msg_as_read}
+     * <p>
+     * 分类：消息接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【可选】用户QQ
@@ -472,6 +514,8 @@ public interface ApiMessage {
      * 标记所有消息已读。
      * <p>
      * 对应 NapCat API: {@code _mark_all_as_read}
+     * <p>
+     * 分类：消息接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，成功时 data 包含业务数据
