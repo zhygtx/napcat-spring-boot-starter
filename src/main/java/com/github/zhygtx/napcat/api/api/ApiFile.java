@@ -241,7 +241,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> getFlashFileList(long botQQ, String filesetId);
+    CompletableFuture<ApiResponse<List<FlashFileData>>> getFlashFileList(long botQQ, String filesetId);
 
     /**
      * 获取闪传文件链接。
@@ -296,7 +296,7 @@ public interface ApiFile {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param filesetId 【必填】文件集 ID
-     * @return 异步响应，成功时 data 包含业务数据
+     * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -305,7 +305,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> getShareLink(long botQQ, String filesetId);
+    CompletableFuture<ApiResponse<VoidData>> getShareLink(long botQQ, String filesetId);
 
     /**
      * 获取文件集信息。
@@ -336,7 +336,7 @@ public interface ApiFile {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】用户 QQ
-     * @return 异步响应，成功时 data 包含业务数据
+     * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -345,7 +345,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> getOnlineFileMsg(long botQQ, Long userId);
+    CompletableFuture<ApiResponse<VoidData>> getOnlineFileMsg(long botQQ, Long userId);
 
     /**
      * 发送在线文件。
@@ -358,7 +358,7 @@ public interface ApiFile {
      * @param userId 【必填】用户 QQ
      * @param filePath 【必填】本地文件路径
      * @param fileName 【可选】文件名 (可选)
-     * @return 异步响应，成功时 data 包含业务数据
+     * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -367,7 +367,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> sendOnlineFile(long botQQ, Long userId, String filePath, String fileName);
+    CompletableFuture<ApiResponse<VoidData>> sendOnlineFile(long botQQ, Long userId, String filePath, String fileName);
 
     /**
      * 发送在线文件夹。
@@ -380,7 +380,7 @@ public interface ApiFile {
      * @param userId 【必填】用户 QQ
      * @param folderPath 【必填】本地文件夹路径
      * @param folderName 【可选】文件夹名称 (可选)
-     * @return 异步响应，成功时 data 包含业务数据
+     * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -389,7 +389,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> sendOnlineFolder(long botQQ, Long userId, String folderPath, String folderName);
+    CompletableFuture<ApiResponse<VoidData>> sendOnlineFolder(long botQQ, Long userId, String folderPath, String folderName);
 
     /**
      * 接收在线文件。
@@ -402,7 +402,7 @@ public interface ApiFile {
      * @param userId 【必填】用户 QQ
      * @param msgId 【必填】消息 ID
      * @param elementId 【必填】元素 ID
-     * @return 异步响应，成功时 data 包含业务数据
+     * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -411,7 +411,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> receiveOnlineFile(long botQQ, Long userId, String msgId, String elementId);
+    CompletableFuture<ApiResponse<VoidData>> receiveOnlineFile(long botQQ, Long userId, String msgId, String elementId);
 
     /**
      * 拒绝在线文件。
@@ -424,7 +424,7 @@ public interface ApiFile {
      * @param userId 【必填】用户 QQ
      * @param msgId 【必填】消息 ID
      * @param elementId 【必填】元素 ID
-     * @return 异步响应，成功时 data 包含业务数据
+     * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -433,7 +433,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> refuseOnlineFile(long botQQ, Long userId, String msgId, String elementId);
+    CompletableFuture<ApiResponse<VoidData>> refuseOnlineFile(long botQQ, Long userId, String msgId, String elementId);
 
     /**
      * 取消在线文件。
@@ -445,7 +445,7 @@ public interface ApiFile {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】用户 QQ
      * @param msgId 【必填】消息 ID
-     * @return 异步响应，成功时 data 包含业务数据
+     * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -454,7 +454,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> cancelOnlineFile(long botQQ, Long userId, String msgId);
+    CompletableFuture<ApiResponse<VoidData>> cancelOnlineFile(long botQQ, Long userId, String msgId);
 
     /**
      * 下载文件集。
@@ -465,7 +465,7 @@ public interface ApiFile {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param filesetId 【必填】文件集 ID
-     * @return 异步响应，成功时 data 包含业务数据
+     * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -474,7 +474,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> downloadFileset(long botQQ, String filesetId);
+    CompletableFuture<ApiResponse<VoidData>> downloadFileset(long botQQ, String filesetId);
 
     /**
      * 获取文件集 ID。

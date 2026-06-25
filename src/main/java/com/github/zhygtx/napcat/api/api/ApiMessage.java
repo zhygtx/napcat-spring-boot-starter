@@ -1,12 +1,11 @@
 package com.github.zhygtx.napcat.api.api;
 
-import com.github.zhygtx.napcat.api.response.*;
-import com.github.zhygtx.napcat.api.response.extra.*;
-import com.github.zhygtx.napcat.api.response.file.*;
-import com.github.zhygtx.napcat.api.response.friend.*;
-import com.github.zhygtx.napcat.api.response.group.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.zhygtx.napcat.api.response.ApiResponse;
+import com.github.zhygtx.napcat.api.response.VoidData;
+import com.github.zhygtx.napcat.api.response.group.GroupMsgData;
 import com.github.zhygtx.napcat.api.response.message.*;
-import com.github.zhygtx.napcat.api.response.system.*;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -603,7 +602,7 @@ public interface ApiMessage {
      * @param buttonId 【必填】按钮ID（默认 ）
      * @param callbackData 【必填】回调数据（默认 ）
      * @param msgSeq 【必填】消息序列号（默认 10086）
-     * @return 异步响应，成功时 data 包含业务数据
+     * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -612,5 +611,5 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> clickInlineKeyboardButton(long botQQ, Long groupId, String botAppid, String buttonId, String callbackData, String msgSeq);
+    CompletableFuture<ApiResponse<VoidData>> clickInlineKeyboardButton(long botQQ, Long groupId, String botAppid, String buttonId, String callbackData, String msgSeq);
 }

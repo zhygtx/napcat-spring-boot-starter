@@ -197,7 +197,7 @@ public interface ApiExtra {
      * @param nickname 【必填】昵称
      * @param personalNote 【可选】个性签名
      * @param sex 【可选】性别 (0: 未知, 1: 男, 2: 女)
-     * @return 异步响应，成功时 data 包含业务数据
+     * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -206,7 +206,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> setQqProfile(long botQQ, String nickname, String personalNote, Long sex);
+    CompletableFuture<ApiResponse<VoidData>> setQqProfile(long botQQ, String nickname, String personalNote, Long sex);
 
     /**
      * 创建收藏。
@@ -240,7 +240,7 @@ public interface ApiExtra {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param longNick 【必填】签名内容
-     * @return 异步响应，成功时 data 包含业务数据
+     * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -249,7 +249,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> setSelfLongnick(long botQQ, String longNick);
+    CompletableFuture<ApiResponse<VoidData>> setSelfLongnick(long botQQ, String longNick);
 
     /**
      * 设置QQ头像。
@@ -938,7 +938,7 @@ public interface ApiExtra {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param fileId 【必填】文件ID
-     * @return 异步响应，成功时 data 包含业务数据
+     * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -947,7 +947,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> deleteGroupFile(long botQQ, Long groupId, String fileId);
+    CompletableFuture<ApiResponse<VoidData>> deleteGroupFile(long botQQ, Long groupId, String fileId);
 
     /**
      * 创建群文件目录。
@@ -986,7 +986,7 @@ public interface ApiExtra {
      * @param groupId 【必填】群号
      * @param folderId 【可选】文件夹ID
      * @param folder 【可选】文件夹ID
-     * @return 异步响应，成功时 data 包含业务数据
+     * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -995,7 +995,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> deleteGroupFolder(long botQQ, Long groupId, String folderId, String folder);
+    CompletableFuture<ApiResponse<VoidData>> deleteGroupFolder(long botQQ, Long groupId, String folderId, String folder);
 
     /**
      * 获取群文件系统信息。
