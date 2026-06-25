@@ -585,7 +585,7 @@ public interface ApiExtra {
      * @param messageType 【可选】消息类型 (private/group)
      * @param userId 【可选】用户QQ
      * @param groupId 【可选】群号
-     * @param message 【必填】
+     * @param message 【必填】OneBot 11 消息混合类型
      * @param autoEscape 【可选】是否作为纯文本发送
      * @param source 【可选】合并转发来源
      * @param news 【可选】合并转发新闻
@@ -614,7 +614,7 @@ public interface ApiExtra {
      * @param messageType 【可选】消息类型 (private/group)
      * @param userId 【可选】用户QQ
      * @param groupId 【可选】群号
-     * @param message 【必填】
+     * @param message 【必填】OneBot 11 消息混合类型
      * @param autoEscape 【可选】是否作为纯文本发送
      * @param source 【可选】合并转发来源
      * @param news 【可选】合并转发新闻
@@ -643,7 +643,7 @@ public interface ApiExtra {
      * @param messageType 【可选】消息类型 (private/group)
      * @param userId 【可选】用户QQ
      * @param groupId 【可选】群号
-     * @param message 【必填】
+     * @param message 【必填】OneBot 11 消息混合类型
      * @param autoEscape 【可选】是否作为纯文本发送
      * @param source 【可选】合并转发来源
      * @param news 【可选】合并转发新闻
