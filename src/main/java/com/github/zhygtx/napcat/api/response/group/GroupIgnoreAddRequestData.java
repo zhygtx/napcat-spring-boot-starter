@@ -1,46 +1,45 @@
 package com.github.zhygtx.napcat.api.response.group;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * 群被忽略的加群请求响应数据。
  * <p>
- * 对应 <code>/get_group_ignore_add_request</code> 的 data 字段（数组形式）。
  */
 @Data
 public class GroupIgnoreAddRequestData {
 
-    /** 请求 ID */
-    private long requestId;
+    /** 请求ID */
+    @JsonProperty("request_id")
+    private Long requestId;
 
-    /** 请求者 QQ */
-    private long requesterUin;
+    /** 邀请者QQ */
+    @JsonProperty("invitor_uin")
+    private Long invitorUin;
 
-    /** 请求者昵称 */
-    private String requesterNick;
-
-    /** 请求消息 */
-    private String message;
+    /** 邀请者昵称 */
+    @JsonProperty("invitor_nick")
+    private String invitorNick;
 
     /** 群号 */
-    private long groupId;
+    @JsonProperty("group_id")
+    private Long groupId;
 
-    /** 群名 */
+    /** 验证信息 */
+    private String message;
+
+    /** 群名称 */
+    @JsonProperty("group_name")
     private String groupName;
 
-    /** 是否已检查 */
-    private boolean checked;
+    /** 是否已处理 */
+    private Boolean checked;
 
-    /** 操作者 QQ */
-    private long actorUin;
+    /** 处理者QQ */
+    private Long actor;
 
-    /** 操作者昵称 */
-    private String actorNick;
+    /** 请求者昵称 */
+    @JsonProperty("requester_nick")
+    private String requesterNick;
 
-    /** 请求时间 */
-    private long time;
-
-    /** 原始 JSON（保留未映射字段） */
-    private JsonNode raw;
 }

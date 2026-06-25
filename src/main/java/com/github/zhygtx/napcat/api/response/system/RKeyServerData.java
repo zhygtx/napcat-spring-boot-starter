@@ -1,16 +1,28 @@
 package com.github.zhygtx.napcat.api.response.system;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * RKey 服务器响应数据。
+ * 获取 RKey 服务器
  * <p>
- * 对应 <code>/get_rkey_server</code> 的 data 字段。
  */
 @Data
-public class RKeyServerData {
+public class RkeyServerData {
 
-    /** 服务器列表 */
-    private JsonNode servers;
+    /** 私聊 RKey */
+    @JsonProperty("private_rkey")
+    private String privateRkey;
+
+    /** 群聊 RKey */
+    @JsonProperty("group_rkey")
+    private String groupRkey;
+
+    /** 过期时间 */
+    @JsonProperty("expired_time")
+    private Long expiredTime;
+
+    /** 名称 */
+    private String name;
+
 }

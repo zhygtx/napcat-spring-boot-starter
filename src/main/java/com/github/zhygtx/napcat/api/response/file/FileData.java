@@ -1,27 +1,30 @@
 package com.github.zhygtx.napcat.api.response.file;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * 文件信息响应数据。
+ * 获取文件
  * <p>
- * 对应 <code>/get_image</code>、<code>/get_record</code>、<code>/get_file</code> 的 data 字段。
  */
 @Data
 public class FileData {
 
-    /** 文件路径 */
+    /** 本地路径 */
     private String file;
 
-    /** 文件名（可选） */
-    private String fileName;
-
-    /** 文件大小（可选） */
-    private long fileSize;
-
-    /** URL（可选） */
+    /** 下载URL */
     private String url;
 
-    /** Base64 编码内容（可选） */
+    /** 文件大小 */
+    @JsonProperty("file_size")
+    private String fileSize;
+
+    /** 文件名 */
+    @JsonProperty("file_name")
+    private String fileName;
+
+    /** Base64编码 */
     private String base64;
+
 }

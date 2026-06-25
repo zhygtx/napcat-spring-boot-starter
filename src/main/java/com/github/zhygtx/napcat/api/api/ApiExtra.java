@@ -1,954 +1,1026 @@
 package com.github.zhygtx.napcat.api.api;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.zhygtx.napcat.api.response.*;
+import com.github.zhygtx.napcat.api.response.extra.*;
+import com.github.zhygtx.napcat.api.response.file.*;
+import com.github.zhygtx.napcat.api.response.friend.*;
+import com.github.zhygtx.napcat.api.response.group.*;
 import com.github.zhygtx.napcat.api.response.message.*;
 import com.github.zhygtx.napcat.api.response.system.*;
-import com.github.zhygtx.napcat.api.response.friend.*;
-import com.github.zhygtx.napcat.api.response.extra.*;
-import com.fasterxml.jackson.databind.JsonNode;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
  * 扩展 API 接口。
  * <p>
- * 涵盖 OneBot 标准协议之外的进阶功能，包括：
- * <ul>
- *   <li>合并转发消息（发送/获取/单条转发）</li>
- *   <li>群聊/私聊历史消息</li>
- *   <li>消息已读标记</li>
- *   <li>戳一戳（群/好友）</li>
- *   <li>表情点赞/互动</li>
- *   <li>群相册管理</li>
- *   <li>文件流式传输</li>
- *   <li>OCR 识别 / 翻译</li>
- *   <li>收藏管理</li>
- *   <li>频道/公会</li>
- *   <li>AI 语音/角色</li>
- *   <li>闪传任务</li>
- *   <li>在线文件传输</li>
- *   <li>Ark 分享、内联键盘等</li>
- * </ul>
+ * 涵盖合并转发、历史消息、戳一戳、表情点赞、群相册、流式传输、OCR/翻译、收藏、频道、AI 等进阶功能。
  * 所有方法通过指定 {@code botQQ} 区分目标 Bot 连接。
  */
 @SuppressWarnings("unused")
 public interface ApiExtra {
 
-    // ==================== 转发消息 ====================
-
-    /**
-     * 发送合并转发消息。
-     * <p>
-     * 以合并转发（转发聊天记录）形式发送一组消息。
-     *
-     * @param botQQ       目标 Bot 的 QQ 号
-     * @param message     转发消息节点列表（JsonNode 数组格式）
-     * @param messageType 消息类型（"private" / "group"）
-     * @param userId      用户 QQ（私聊时必填）
-     * @param groupQQ     群号（群聊时必填）
-     * @param source      合并转发来源（可选）
-     * @param news        合并转发新闻列表（可选）
-     * @param summary     合并转发摘要（可选）
-     * @param prompt      合并转发提示（可选）
-     * @param timeout     自定义发送超时毫秒（可选）
-     * @return 异步响应，成功时 data 包含 message_id
-     */
-    CompletableFuture<ApiResponse<SendMsgData>> sendForwardMsg(long botQQ, JsonNode message, String messageType, String userId, long groupQQ,
-                                                                String source, JsonNode news, String summary, String prompt, Long timeout);
-
-    /**
-     * 发送群合并转发消息。
-     * <p>
-     * 在群聊中发送合并转发消息。
-     *
-     * @param botQQ   目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
-     * @param message 转发消息节点列表
-     * @param source  合并转发来源（可选）
-     * @param news    合并转发新闻列表（可选）
-     * @param summary 合并转发摘要（可选）
-     * @param prompt  合并转发提示（可选）
-     * @param timeout 自定义发送超时毫秒（可选）
-     * @return 异步响应，成功时 data 包含 message_id
-     */
-    CompletableFuture<ApiResponse<SendMsgData>> sendGroupForwardMsg(long botQQ, long groupQQ, JsonNode message,
-                                                                     String source, JsonNode news, String summary, String prompt, Long timeout);
-
-    /**
-     * 发送私聊合并转发消息。
-     * <p>
-     * 在私聊中发送合并转发消息。
-     *
-     * @param botQQ   目标 Bot 的 QQ 号
-     * @param userId  目标用户 QQ
-     * @param message 转发消息节点列表
-     * @param source  合并转发来源（可选）
-     * @param news    合并转发新闻列表（可选）
-     * @param summary 合并转发摘要（可选）
-     * @param prompt  合并转发提示（可选）
-     * @param timeout 自定义发送超时毫秒（可选）
-     * @return 异步响应，成功时 data 包含 message_id
-     */
-    CompletableFuture<ApiResponse<SendMsgData>> sendPrivateForwardMsg(long botQQ, String userId, JsonNode message,
-                                                                       String source, JsonNode news, String summary, String prompt, Long timeout);
-
-    /**
-     * 获取合并转发消息。
-     * <p>
-     * 根据消息 ID 获取合并转发消息的具体内容。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param messageId 消息 ID
-     * @param id        备用消息 ID（可选）
-     * @return 异步响应，data 包含消息节点列表
-     */
-    CompletableFuture<ApiResponse<ForwardMsgData>> getForwardMsg(long botQQ, String messageId, String id);
-
-    /**
-     * 转发好友单条消息。
-     * <p>
-     * 将一条消息转发给指定好友。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param userId    目标用户 QQ
-     * @param groupQQ   群号（可选，group_id）
-     * @param messageId 要转发的消息 ID
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> forwardFriendSingleMsg(long botQQ, String userId, long groupQQ, String messageId);
-
-    /**
-     * 转发群单条消息。
-     * <p>
-     * 将一条消息转发到指定群聊。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param groupQQ   目标群号
-     * @param userId    用户 QQ（可选）
-     * @param messageId 要转发的消息 ID（number|string）
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> forwardGroupSingleMsg(long botQQ, long groupQQ, String userId, String messageId);
-
-    // ==================== 历史消息 ====================
-
-    /**
-     * 获取群历史消息。
-     * <p>
-     * 获取指定群聊的历史消息记录。
-     *
-     * @param botQQ          目标 Bot 的 QQ 号
-     * @param groupQQ        目标群号
-     * @param messageSeq     起始消息序号
-     * @param count          获取消息数量
-     * @param reverseOrder   是否反向排序（最新的在前）
-     * @param disableGetUrl  是否禁用获取 URL
-     * @param parseMultMsg   是否解析合并消息
-     * @param quickReply     是否快速回复
-     * @param reverseOrderCompat 是否反向排序（旧版本兼容）
-     * @return 异步响应，包含消息列表
-     */
-    CompletableFuture<ApiResponse<HistoryMsgData>> getGroupMsgHistory(long botQQ, long groupQQ, long messageSeq, int count, boolean reverseOrder, boolean disableGetUrl, boolean parseMultMsg, boolean quickReply, boolean reverseOrderCompat);
-
-    /**
-     * 获取好友历史消息。
-     * <p>
-     * 获取指定好友的历史消息记录。
-     *
-     * @param botQQ             目标 Bot 的 QQ 号
-     * @param userId            目标用户 QQ
-     * @param messageSeq        起始消息序号
-     * @param count             获取消息数量
-     * @param reverseOrder      是否反向排序
-     * @param disableGetUrl     是否禁用获取 URL
-     * @param parseMultMsg      是否解析合并消息
-     * @param quickReply        是否快速回复
-     * @param reverseOrderCompat 是否反向排序（旧版本兼容）
-     * @return 异步响应，包含消息列表
-     */
-    CompletableFuture<ApiResponse<HistoryMsgData>> getFriendMsgHistory(long botQQ, String userId, long messageSeq, int count, boolean reverseOrder, boolean disableGetUrl, boolean parseMultMsg, boolean quickReply, boolean reverseOrderCompat);
-
-    // ==================== 标记已读 ====================
-
-    /**
-     * 标记消息已读（Go-CQHTTP 兼容）。
-     * <p>
-     * 将指定消息标记为已读。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param groupQQ   群号（群消息时必填）
-     * @param userId    用户 QQ（私聊时必填）
-     * @param messageId 消息 ID
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> markMsgAsRead(long botQQ, long groupQQ, String userId, String messageId);
-
-    /**
-     * 标记群聊已读。
-     * <p>
-     * 标记特定用户在群聊中的消息已读。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param groupQQ   目标群号
-     * @param userId    用户 QQ（可选）
-     * @param messageId 消息 ID（可选）
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> markGroupMsgAsRead(long botQQ, long groupQQ, String userId, String messageId);
-
-    /**
-     * 标记私聊已读。
-     * <p>
-     * 将指定私聊会话的未读消息标记为已读。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param userId    目标用户 QQ
-     * @param groupQQ   群号（可选）
-     * @param messageId 消息 ID（可选）
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> markPrivateMsgAsRead(long botQQ, String userId, long groupQQ, String messageId);
-
-    /**
-     * 标记全部已读。
-     * <p>
-     * 将所有会话的未读消息标记为已读。
-     *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> markAllAsRead(long botQQ);
-
-    // ==================== 戳一戳 ====================
-
-    /**
-     * 群戳一戳。
-     * <p>
-     * 在群聊中戳一戳（@）指定成员。
-     *
-     * @param botQQ    目标 Bot 的 QQ 号
-     * @param groupQQ  目标群号
-     * @param userId   用户 QQ
-     * @param targetId 目标 QQ（被戳的用户）
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> groupPoke(long botQQ, long groupQQ, String userId, String targetId);
-
-    /**
-     * 好友戳一戳。
-     * <p>
-     * 在私聊中戳一戳指定好友。
-     *
-     * @param botQQ    目标 Bot 的 QQ 号
-     * @param userId   用户 QQ
-     * @param groupQQ  群号（可选）
-     * @param targetId 目标 QQ（被戳的用户）
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> friendPoke(long botQQ, String userId, long groupQQ, String targetId);
-
-    /**
-     * 发送戳一戳（通用接口）。
-     * <p>
-     * 向指定用户发送戳一戳，自动判断群聊或私聊。
-     *
-     * @param botQQ   目标 Bot 的 QQ 号
-     * @param userId  目标用户 QQ
-     * @param groupQQ 群号（群聊戳一戳时必填）
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> sendPoke(long botQQ, String userId, long groupQQ);
-
-    // ==================== 表情/点赞 ====================
-
-    /**
-     * 获取表情点赞详情。
-     * <p>
-     * 获取指定消息的某个表情的点赞详细信息（JSON 字段为驼峰命名 emojiId / emojiType）。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param messageId 消息 ID
-     * @param emojiId   表情 ID
-     * @param emojiType 表情类型
-     * @param count     获取数量
-     * @param cookie    分页 cookie
-     * @return 异步响应，包含点赞详情
-     */
-    CompletableFuture<ApiResponse<EmojiLikeDetailData>> fetchEmojiLike(long botQQ, String messageId, String emojiId, String emojiType, String count, String cookie);
-
-    /**
-     * 获取消息表情点赞列表。
-     * <p>
-     * 获取指定消息的所有表情点赞信息。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param messageId 消息 ID
-     * @param emojiId   表情 ID（必填）
-     * @param emojiType 表情类型
-     * @param groupQQ   群号
-     * @param count     获取数量
-     * @return 异步响应，包含点赞列表
-     */
-    CompletableFuture<ApiResponse<EmojiLikesData>> getEmojiLikes(long botQQ, String messageId, String emojiId, String emojiType, long groupQQ, int count);
-
-    /**
-     * 设置消息表情点赞。
-     * <p>
-     * 对某条消息添加或取消表情回应（点赞）。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param messageId 消息 ID
-     * @param emojiId   表情 ID
-     * @param set       {@code true} 添加 / {@code false} 取消
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> setMsgEmojiLike(long botQQ, String messageId, String emojiId, boolean set);
-
-    /**
-     * 获取自定义表情。
-     * <p>
-     * 获取机器人的自定义表情列表。
-     *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @param count  获取数量
-     * @return 异步响应，包含自定义表情列表
-     */
-    CompletableFuture<ApiResponse<List<CustomFaceData>>> fetchCustomFace(long botQQ, int count);
-
-    /**
-     * 发送点赞。
-     * <p>
-     * 给指定用户点赞（QQ 空间的赞）。
-     *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param userId 目标用户 QQ
-     * @param times  点赞次数
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> sendLike(long botQQ, String userId, int times);
-
-    // ==================== 群相册 ====================
-
-    /**
-     * 获取群相册列表。
-     * <p>
-     * 获取指定群聊的所有相册列表。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param groupQQ   目标群号
-     * @param attachInfo 附加信息（可选，默认空字符串）
-     * @return 异步响应，包含群相册列表
-     */
-    CompletableFuture<ApiResponse<QunAlbumListData>> getQunAlbumList(long botQQ, long groupQQ, String attachInfo);
-
-    /**
-     * 获取群相册媒体列表。
-     * <p>
-     * 获取指定群相册中的媒体文件列表。
-     *
-     * @param botQQ      目标 Bot 的 QQ 号
-     * @param groupQQ    目标群号
-     * @param albumId    相册 ID
-     * @param attachInfo 附加信息（可选，默认空字符串）
-     * @return 异步响应，包含相册媒体列表
-     */
-    CompletableFuture<ApiResponse<GroupAlbumMediaListData>> getGroupAlbumMediaList(long botQQ, long groupQQ, String albumId, String attachInfo);
-
-    /**
-     * 删除群相册媒体。
-     * <p>
-     * 删除群相册中的指定媒体文件。
-     *
-     * @param botQQ   目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
-     * @param albumId 相册 ID
-     * @param lloc    媒体 ID
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> deleteGroupAlbumMedia(long botQQ, long groupQQ, String albumId, String lloc);
-
-    /**
-     * 点赞群相册媒体。
-     * <p>
-     * 对群相册中的媒体文件进行点赞操作。
-     *
-     * @param botQQ   目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
-     * @param albumId 相册 ID
-     * @param lloc    媒体 ID
-     * @param batchId 批次 ID
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> setGroupAlbumMediaLike(long botQQ, long groupQQ, String albumId, String lloc, String batchId);
-
-    /**
-     * 发表群相册评论。
-     * <p>
-     * 对群相册中的媒体文件发表评论。
-     *
-     * @param botQQ    目标 Bot 的 QQ 号
-     * @param groupQQ  目标群号
-     * @param albumId  相册 ID
-     * @param lloc     媒体 ID
-     * @param content  评论内容
-     * @param replyUid 回复目标的 UID（可选）
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> doGroupAlbumComment(long botQQ, long groupQQ, String albumId, String lloc, String content, String replyUid);
-
-    /**
-     * 上传图片到群相册。
-     * <p>
-     * 将本地图片上传到指定群聊的相册中。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param groupQQ   目标群号
-     * @param albumId   相册 ID
-     * @param albumName 相册名称
-     * @param file      图片文件路径
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> uploadImageToQunAlbum(long botQQ, long groupQQ, String albumId, String albumName, String file);
-
-    // ==================== 流式传输 ====================
-
-    /**
-     * 上传文件流（分块上传）。
-     * <p>
-     * 以分块方式上传文件流。
-     *
-     * @param botQQ          目标 Bot 的 QQ 号
-     * @param streamId       流 ID
-     * @param chunkData      分块数据（Base64 编码）
-     * @param chunkIndex     分块索引
-     * @param totalChunks    总分块数
-     * @param fileSize       文件总大小
-     * @param expectedSha256 期望的 SHA256 校验值（可选）
-     * @param isComplete     是否上传完成
-     * @param filename       文件名（可选）
-     * @param reset          是否重置流
-     * @param verifyOnly     是否仅验证
-     * @param fileRetention  文件保留时间（毫秒），默认 300000
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> uploadFileStream(long botQQ, String streamId, String chunkData, int chunkIndex, int totalChunks, long fileSize, String expectedSha256, boolean isComplete, String filename, boolean reset, boolean verifyOnly, long fileRetention);
-
-    /**
-     * 下载文件流（分块下载）。
-     * <p>
-     * 以分块方式下载文件流。
-     *
-     * @param botQQ    目标 Bot 的 QQ 号
-     * @param file     文件路径或 URL（可选）
-     * @param fileId   文件 ID（可选）
-     * @param chunkSize 分块大小（字节）
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> downloadFileStream(long botQQ, String file, String fileId, int chunkSize);
-
-    /**
-     * 下载语音文件流。
-     * <p>
-     * 以分块方式下载语音文件流。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param file      文件路径或 URL（可选）
-     * @param fileId    文件 ID（可选）
-     * @param chunkSize 分块大小（字节）
-     * @param outFormat 输出格式（如 {@code "mp3"}）
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> downloadFileRecordStream(long botQQ, String file, String fileId, int chunkSize, String outFormat);
-
-    /**
-     * 下载图片文件流。
-     * <p>
-     * 以分块方式下载图片文件流。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param file      文件路径或 URL（可选）
-     * @param fileId    文件 ID（可选）
-     * @param chunkSize 分块大小（字节）
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> downloadFileImageStream(long botQQ, String file, String fileId, int chunkSize);
-
     /**
      * 清理流式传输临时文件。
      * <p>
-     * 清理流式传输过程中产生的临时文件。
+     * 对应 NapCat API: {@code clean_stream_temp_file}
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
      */
     CompletableFuture<ApiResponse<VoidData>> cleanStreamTempFile(long botQQ);
 
     /**
+     * 下载语音文件流。
+     * <p>
+     * 对应 NapCat API: {@code download_file_record_stream}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param file 【可选】文件路径或 URL
+     * @param fileId 【可选】文件 ID
+     * @param chunkSize 【可选】分块大小 (字节)（默认 65536）
+     * @param outFormat 【可选】输出格式
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> downloadFileRecordStream(long botQQ, String file, String fileId, Integer chunkSize, String outFormat);
+
+    /**
+     * 下载图片文件流。
+     * <p>
+     * 对应 NapCat API: {@code download_file_image_stream}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param file 【可选】文件路径或 URL
+     * @param fileId 【可选】文件 ID
+     * @param chunkSize 【可选】分块大小 (字节)（默认 65536）
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> downloadFileImageStream(long botQQ, String file, String fileId, Integer chunkSize);
+
+    /**
      * 测试下载流。
      * <p>
-     * 测试流式下载功能是否正常。
+     * 对应 NapCat API: {@code test_download_stream}
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param error 是否触发测试错误
+     * @param error 【可选】是否触发测试错误（默认 False）
      * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> testDownloadStream(long botQQ, boolean error);
-
-    // ==================== OCR / 翻译 ====================
+    CompletableFuture<ApiResponse<VoidData>> testDownloadStream(long botQQ, Boolean error);
 
     /**
-     * 图片 OCR 识别。
+     * 下载文件流。
      * <p>
-     * 识别图片中的文字内容。
+     * 以流式方式从网络或本地下载文件
+     * <p>
+     * 对应 NapCat API: {@code download_file_stream}
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param image 图片文件路径或 URL
-     * @return 异步响应，data 包含 OCR 识别结果
+     * @param file 【可选】文件路径或 URL
+     * @param fileId 【可选】文件 ID
+     * @param chunkSize 【可选】分块大小 (字节)（默认 65536）
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
      */
-    CompletableFuture<ApiResponse<OcrResultData>> ocrImage(long botQQ, String image);
+    CompletableFuture<ApiResponse<VoidData>> downloadFileStream(long botQQ, String file, String fileId, Integer chunkSize);
 
     /**
-     * 英文单词翻译（英译中）。
+     * 上传文件流。
      * <p>
-     * 将英文单词或短语翻译为中文。
+     * 以流式方式上传文件数据到机器人
+     * <p>
+     * 对应 NapCat API: {@code upload_file_stream}
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param words 待翻译的英文单词列表
-     * @return 异步响应，data 包含翻译结果
+     * @param streamId 【必填】流 ID
+     * @param chunkData 【可选】分块数据 (Base64)
+     * @param chunkIndex 【可选】分块索引
+     * @param totalChunks 【可选】总分块数
+     * @param fileSize 【可选】文件总大小
+     * @param expectedSha256 【可选】期望的 SHA256
+     * @param isComplete 【可选】是否完成
+     * @param filename 【可选】文件名
+     * @param reset 【可选】是否重置
+     * @param verifyOnly 【可选】是否仅验证
+     * @param fileRetention 【必填】文件保留时间 (毫秒)（默认 300000）
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
      */
-    CompletableFuture<ApiResponse<TranslateResultData>> translateEn2zh(long botQQ, List<String> words);
+    CompletableFuture<ApiResponse<VoidData>> uploadFileStream(long botQQ, String streamId, String chunkData, Long chunkIndex, Long totalChunks, Integer fileSize, String expectedSha256, Boolean isComplete, String filename, Boolean reset, Boolean verifyOnly, Long fileRetention);
 
-    // ==================== 收藏 ====================
+    /**
+     * 批量踢出群成员。
+     * <p>
+     * 从指定群聊中批量踢出多个成员
+     * <p>
+     * 对应 NapCat API: {@code set_group_kick_members}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param userId 【必填】QQ号列表
+     * @param rejectAddRequest 【可选】是否拒绝加群请求
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> setGroupKickMembers(long botQQ, Long groupId, List<Long> userId, String rejectAddRequest);
 
     /**
      * 创建收藏。
      * <p>
-     * 将内容收藏到机器人的收藏夹中。
-     *
-     * @param botQQ   目标 Bot 的 QQ 号
-     * @param rawData 要收藏的原始数据
-     * @param brief   简要描述
-     * @return 异步响应，包含收藏结果
-     */
-    CompletableFuture<ApiResponse<CreateCollectionData>> createCollection(long botQQ, String rawData, String brief);
-
-    /**
-     * 获取收藏列表。
-     * <p>
-     * 获取指定分类的收藏列表。
-     *
-     * @param botQQ    目标 Bot 的 QQ 号
-     * @param category 分类 ID
-     * @param count    获取数量
-     * @return 异步响应，包含收藏列表
-     */
-    CompletableFuture<ApiResponse<CollectionListData>> getCollectionList(long botQQ, String category, String count);
-
-    // ==================== 频道/公会 ====================
-
-    /**
-     * 获取频道列表。
-     * <p>
-     * 获取机器人加入的 QQ 频道列表。
+     * 对应 NapCat API: {@code create_collection}
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @return 异步响应，包含频道列表
-     */
-    CompletableFuture<ApiResponse<List<GuildListData>>> getGuildList(long botQQ);
-
-    /**
-     * 获取频道服务资料。
-     * <p>
-     * 获取指定频道的服务资料信息。
-     *
-     * @param botQQ   目标 Bot 的 QQ 号
-     * @param guildId 频道 ID
-     * @return 异步响应，包含频道服务资料
-     */
-    CompletableFuture<ApiResponse<GuildServiceProfileData>> getGuildServiceProfile(long botQQ, String guildId);
-
-    // ==================== AI ====================
-
-    /**
-     * 获取 AI 语音。
-     * <p>
-     * 将文本转换为 AI 语音，返回语音 URL 字符串。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param character AI 角色名
-     * @param text      要转语音的文本
-     * @param groupQQ   群号（可选）
-     * @return 异步响应，data 为语音 URL 字符串
-     */
-    CompletableFuture<ApiResponse<String>> getAiRecord(long botQQ, String character, String text, long groupQQ);
-
-    /**
-     * 发送群 AI 语音。
-     * <p>
-     * 在群聊中发送一段 AI 生成的语音消息。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param groupQQ   目标群号
-     * @param character AI 角色名
-     * @param text      要转语音的文本
+     * @param rawData 【必填】原始数据
+     * @param brief 【必填】简要描述
      * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> sendGroupAiRecord(long botQQ, long groupQQ, String character, String text);
-
-    /**
-     * 获取 AI 角色列表。
      * <p>
-     * 获取可用的 AI 语音角色列表。
-     *
-     * @param botQQ   目标 Bot 的 QQ 号
-     * @param groupQQ 群号（可选）
-     * @param chatType 聊天类型（可选）
-     * @return 异步响应，包含 AI 角色列表
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
      */
-    CompletableFuture<ApiResponse<List<AiCharactersData>>> getAiCharacters(long botQQ, long groupQQ, String chatType);
-
-    // ==================== 闪传 ====================
+    CompletableFuture<ApiResponse<VoidData>> createCollection(long botQQ, String rawData, String brief);
 
     /**
-     * 创建闪传任务。
+     * 设置个性签名。
      * <p>
-     * 创建文件闪传任务，用于快速传输文件。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param files    要传输的文件
-     * @param name     任务名称
-     * @param thumbPath 缩略图路径
-     * @return 异步响应，包含闪传任务信息
-     */
-    CompletableFuture<ApiResponse<FlashTaskData>> createFlashTask(long botQQ, String files, String name, String thumbPath);
-
-    /**
-     * 获取闪传文件列表。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param filesetId 文件集 ID
-     * @return 异步响应，包含文件列表
-     */
-    CompletableFuture<ApiResponse<VoidData>> getFlashFileList(long botQQ, String filesetId);
-
-    /**
-     * 获取闪传文件 URL。
-     *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param taskId 任务 ID
-     * @param fileId 文件 ID
-     * @return 异步响应，包含文件下载 URL
-     */
-    CompletableFuture<ApiResponse<VoidData>> getFlashFileUrl(long botQQ, String taskId, String fileId);
-
-    /**
-     * 发送闪传消息。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param userId    用户 QQ（私聊时填）
-     * @param groupQQ   群号（群聊时填）
-     * @param filesetId 文件集 ID
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> sendFlashMsg(long botQQ, String userId, long groupQQ, String filesetId);
-
-    // ==================== 在线文件 ====================
-
-    /**
-     * 获取在线文件消息。
+     * 修改当前登录帐号的个性签名
      * <p>
-     * 获取指定用户的在线文件消息。
-     *
-     * @param botQQ  目标 Bot 的 QQ 号
-     * @param userId 用户 QQ
-     * @return 异步响应，包含在线文件消息信息
-     */
-    CompletableFuture<ApiResponse<OnlineFileMsgData>> getOnlineFileMsg(long botQQ, String userId);
-
-    /**
-     * 发送在线文件。
-     * <p>
-     * 向指定用户发送在线文件。
-     *
-     * @param botQQ    目标 Bot 的 QQ 号
-     * @param userId   用户 QQ
-     * @param filePath 本地文件路径
-     * @param fileName 文件名（可选）
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> sendOnlineFile(long botQQ, String userId, String filePath, String fileName);
-
-    /**
-     * 发送在线文件夹。
-     * <p>
-     * 向指定用户发送在线文件夹。
-     *
-     * @param botQQ      目标 Bot 的 QQ 号
-     * @param userId     用户 QQ
-     * @param folderPath 本地文件夹路径
-     * @param folderName 文件夹名称（可选）
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> sendOnlineFolder(long botQQ, String userId, String folderPath, String folderName);
-
-    /**
-     * 接收在线文件。
-     * <p>
-     * 接收指定用户发送的在线文件。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param userId    用户 QQ
-     * @param msgId     消息 ID
-     * @param elementId 元素 ID
-     * @param destPath  保存路径（可选）
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> receiveOnlineFile(long botQQ, String userId, String msgId, String elementId, String destPath);
-
-    /**
-     * 拒绝接收在线文件。
-     * <p>
-     * 拒绝指定用户发送的在线文件。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param userId    用户 QQ
-     * @param msgId     消息 ID
-     * @param elementId 元素 ID
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> refuseOnlineFile(long botQQ, String userId, String msgId, String elementId);
-
-    /**
-     * 取消在线文件传输。
-     * <p>
-     * 取消指定的在线文件传输。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param userId    用户 QQ
-     * @param msgId     消息 ID
-     * @param elementId 元素 ID
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> cancelOnlineFile(long botQQ, String userId, String msgId, String elementId);
-
-    // ==================== 其他扩展 ====================
-
-    /**
-     * 设置输入状态。
-     * <p>
-     * 设置机器人正在输入的状态提示。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param userId    用户 QQ
-     * @param eventType 事件类型
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> setInputStatus(long botQQ, String userId, int eventType);
-
-    /**
-     * 获取最近联系人。
-     * <p>
-     * 获取机器人最近联系过的用户列表。
+     * 对应 NapCat API: {@code set_self_longnick}
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param count 获取数量
-     * @return 异步响应，包含最近联系人列表
+     * @param longNick 【必填】签名内容
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
      */
-    CompletableFuture<ApiResponse<List<RecentContactData>>> getRecentContact(long botQQ, int count);
+    CompletableFuture<ApiResponse<VoidData>> setSelfLongnick(long botQQ, String longNick);
 
     /**
-     * 获取模型展示。
+     * 设置QQ头像。
      * <p>
-     * 获取指定模型的展示信息。
+     * 修改当前账号的QQ头像
+     * <p>
+     * 对应 NapCat API: {@code set_qq_avatar}
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param model 模型名称
-     * @return 异步响应，包含模型展示信息
-     */
-    CompletableFuture<ApiResponse<List<ModelShowData>>> getModelShow(long botQQ, String model);
-
-    /**
-     * 设置模型展示。
-     * <p>
-     * 设置指定模型的展示内容。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param model     模型名称
-     * @param modelShow 模型展示内容
+     * @param file 【必填】图片路径、URL或Base64
      * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> setModelShow(long botQQ, String model, String modelShow);
+    CompletableFuture<ApiResponse<VoidData>> setQqAvatar(long botQQ, String file);
 
     /**
-     * 获取小程序 Ark。
+     * 英文单词翻译。
      * <p>
-     * 获取小程序的分享 Ark 信息。
+     * 将英文单词列表翻译为中文
+     * <p>
+     * 对应 NapCat API: {@code translate_en2zh}
      *
-     * @param botQQ      目标 Bot 的 QQ 号
-     * @param appId      小程序 AppID
-     * @param appPath    小程序路径
-     * @param appVersion 小程序版本
-     * @param appQq      开发者 QQ（可选）
-     * @param appType    小程序类型（可选）
-     * @return 异步响应，包含小程序 Ark 信息
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param words 【必填】待翻译单词列表
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
      */
-    CompletableFuture<ApiResponse<MiniAppArkData>> getMiniAppArk(long botQQ, String appId, String appPath, String appVersion, String appQq, String appType);
+    CompletableFuture<ApiResponse<En2zhData>> translateEn2zh(long botQQ, List<String> words);
 
     /**
-     * 分享群（Ark 卡片）。
+     * 获取ClientKey。
      * <p>
-     * 获取群的 Ark 分享卡片内容（Ark JSON 字符串）。
+     * 获取当前登录帐号的ClientKey
+     * <p>
+     * 对应 NapCat API: {@code get_clientkey}
      *
-     * @param botQQ   目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
-     * @return 异步响应，data 为 Ark JSON 字符串
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
      */
-    CompletableFuture<ApiResponse<String>> ArkShareGroup(long botQQ, long groupQQ);
+    CompletableFuture<ApiResponse<ClientkeyData>> getClientkey(long botQQ);
 
     /**
-     * 分享用户（Ark 卡片）。
+     * 图片 OCR 识别。
      * <p>
-     * 获取用户的 Ark 分享卡片内容。
-     *
-     * @param botQQ       目标 Bot 的 QQ 号
-     * @param userId      用户 QQ（可选）
-     * @param phoneNumber 手机号（可选）
-     * @return 异步响应，data 包含 ark 字段（Ark JSON 字符串）
-     */
-    CompletableFuture<ApiResponse<ArkShareData>> ArkSharePeer(long botQQ, String userId, String phoneNumber);
-
-    /**
-     * 发送群 Ark 分享。
+     * 识别图片中的文字内容(仅Windows端支持)
      * <p>
-     * 获取群分享的 Ark 卡片内容，返回 Ark JSON 字符串。
+     * 对应 NapCat API: {@code ocr_image}
      *
-     * @param botQQ   目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
-     * @return 异步响应，data 为 Ark JSON 字符串
-     */
-    CompletableFuture<ApiResponse<String>> sendGroupArkShare(long botQQ, long groupQQ);
-
-    /**
-     * 发送 Ark 分享（通用）。
-     * <p>
-     * 获取用户推荐的 Ark 分享卡片内容。
-     *
-     * @param botQQ       目标 Bot 的 QQ 号
-     * @param userId      用户 QQ（可选）
-     * @param groupQQ     群号（可选）
-     * @param phoneNumber 手机号
-     * @return 异步响应，data 包含 ark 字段（Ark JSON 字符串）
-     */
-    CompletableFuture<ApiResponse<ArkShareData>> sendArkShare(long botQQ, String userId, long groupQQ, String phoneNumber);
-
-    /**
-     * 单击内联键盘按钮。
-     * <p>
-     * 模拟用户点击内联键盘上的某个按钮。
-     *
-     * @param botQQ        目标 Bot 的 QQ 号
-     * @param groupQQ      群号
-     * @param botAppid     机器人 AppID
-     * @param buttonId     按钮 ID
-     * @param callbackData 回调数据
-     * @param msgSeq       消息序列号
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param image 【必填】图片路径、URL或Base64
      * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> clickInlineKeyboardButton(long botQQ, long groupQQ, String botAppid, String buttonId, String callbackData, String msgSeq);
+    CompletableFuture<ApiResponse<VoidData>> ocrImage(long botQQ, String image);
+
+    /**
+     * 图片 OCR 识别 (内部)。
+     * <p>
+     * 识别图片中的文字内容(仅Windows端支持)
+     * <p>
+     * 对应 NapCat API: {@code ocr_image}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param image 【必填】图片路径、URL或Base64
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> ocrImageInternal(long botQQ, String image);
+
+    /**
+     * 设置专属头衔。
+     * <p>
+     * 设置群聊中指定成员的专属头衔
+     * <p>
+     * 对应 NapCat API: {@code set_group_special_title}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param userId 【必填】QQ号
+     * @param specialTitle 【必填】专属头衔（默认 ）
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> setGroupSpecialTitle(long botQQ, Long groupId, Long userId, String specialTitle);
+
+    /**
+     * 获取AI角色列表。
+     * <p>
+     * 获取群聊中的AI角色列表
+     * <p>
+     * 对应 NapCat API: {@code get_ai_characters}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param chatType 【必填】聊天类型（默认 1）
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<List<AiCharactersData>>> getAiCharacters(long botQQ, Long groupId, String chatType);
+
+    /**
+     * 设置QQ资料。
+     * <p>
+     * 修改当前账号的昵称、个性签名等资料
+     * <p>
+     * 对应 NapCat API: {@code set_qq_profile}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param nickname 【必填】昵称
+     * @param personalNote 【可选】个性签名
+     * @param sex 【可选】性别 (0: 未知, 1: 男, 2: 女)
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> setQqProfile(long botQQ, String nickname, String personalNote, String sex);
+
+    /**
+     * 获取群根目录文件列表。
+     * <p>
+     * 获取群文件根目录下的所有文件和文件夹
+     * <p>
+     * 对应 NapCat API: {@code get_group_root_files}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param fileCount 【必填】文件数量（默认 50）
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<GroupRootFilesData>> getGroupRootFiles(long botQQ, Long groupId, String fileCount);
+
+    /**
+     * 删除好友。
+     * <p>
+     * 从好友列表中删除指定用户
+     * <p>
+     * 对应 NapCat API: {@code delete_friend}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param friendId 【可选】好友 QQ 号
+     * @param userId 【可选】用户 QQ 号
+     * @param tempBlock 【可选】是否加入黑名单
+     * @param tempBothDel 【可选】是否双向删除
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<String>> deleteFriend(long botQQ, String friendId, Long userId, Boolean tempBlock, Boolean tempBothDel);
+
+    /**
+     * 检查URL安全性。
+     * <p>
+     * 检查指定URL的安全等级
+     * <p>
+     * 对应 NapCat API: {@code check_url_safely}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param url 【必填】要检查的 URL
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<UrlSafelyData>> checkUrlSafely(long botQQ, String url);
+
+    /**
+     * 获取在线客户端。
+     * <p>
+     * 获取当前登录账号的在线客户端列表
+     * <p>
+     * 对应 NapCat API: {@code get_online_clients}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<List<String>>> getOnlineClients(long botQQ);
+
+    /**
+     * 获取群荣誉信息。
+     * <p>
+     * 获取指定群聊的荣誉信息，如龙王等
+     * <p>
+     * 对应 NapCat API: {@code get_group_honor_info}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param type 【可选】荣誉类型
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<GroupHonorInfoData>> getGroupHonorInfo(long botQQ, Long groupId, String type);
+
+    /**
+     * 发送群公告。
+     * <p>
+     * 在指定群聊中发布新的公告
+     * <p>
+     * 对应 NapCat API: {@code _send_group_notice}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param content 【必填】公告内容
+     * @param image 【可选】公告图片路径或 URL
+     * @param pinned 【必填】是否置顶 (0/1)（默认 0）
+     * @param type 【必填】类型 (默认为 1)（默认 1）
+     * @param confirmRequired 【必填】是否需要确认 (0/1)（默认 1）
+     * @param isShowEditCard 【必填】是否显示修改群名片引导 (0/1)（默认 0）
+     * @param tipWindowType 【必填】弹窗类型 (默认为 0)（默认 0）
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> sendGroupNotice(long botQQ, Long groupId, String content, String image, String pinned, String type, String confirmRequired, String isShowEditCard, String tipWindowType);
+
+    /**
+     * 获取群艾特全体剩余次数。
+     * <p>
+     * 获取指定群聊中艾特全体成员的剩余次数
+     * <p>
+     * 对应 NapCat API: {@code get_group_at_all_remain}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<GroupAtAllRemainData>> getGroupAtAllRemain(long botQQ, Long groupId);
+
+    /**
+     * 发送合并转发消息。
+     * <p>
+     * 发送合并转发消息
+     * <p>
+     * 对应 NapCat API: {@code send_forward_msg}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param messageType 【可选】消息类型 (private/group)
+     * @param userId 【可选】用户QQ
+     * @param groupId 【可选】群号
+     * @param message 【必填】
+     * @param autoEscape 【可选】是否作为纯文本发送
+     * @param source 【可选】合并转发来源
+     * @param news 【可选】合并转发新闻
+     * @param summary 【可选】合并转发摘要
+     * @param prompt 【可选】合并转发提示
+     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<ForwardMsgData>> sendForwardMsg(long botQQ, String messageType, Long userId, Long groupId, String message, String autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout);
+
+    /**
+     * 发送群合并转发消息。
+     * <p>
+     * 对应 NapCat API: {@code send_group_forward_msg}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param messageType 【可选】消息类型 (private/group)
+     * @param userId 【可选】用户QQ
+     * @param groupId 【可选】群号
+     * @param message 【必填】
+     * @param autoEscape 【可选】是否作为纯文本发送
+     * @param source 【可选】合并转发来源
+     * @param news 【可选】合并转发新闻
+     * @param summary 【可选】合并转发摘要
+     * @param prompt 【可选】合并转发提示
+     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<ForwardMsgData>> sendGroupForwardMsg(long botQQ, String messageType, Long userId, Long groupId, String message, String autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout);
+
+    /**
+     * 发送私聊合并转发消息。
+     * <p>
+     * 对应 NapCat API: {@code send_private_forward_msg}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param messageType 【可选】消息类型 (private/group)
+     * @param userId 【可选】用户QQ
+     * @param groupId 【可选】群号
+     * @param message 【必填】
+     * @param autoEscape 【可选】是否作为纯文本发送
+     * @param source 【可选】合并转发来源
+     * @param news 【可选】合并转发新闻
+     * @param summary 【可选】合并转发摘要
+     * @param prompt 【可选】合并转发提示
+     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<ForwardMsgData>> sendPrivateForwardMsg(long botQQ, String messageType, Long userId, Long groupId, String message, String autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout);
+
+    /**
+     * 获取陌生人信息。
+     * <p>
+     * 获取指定非好友用户的信息
+     * <p>
+     * 对应 NapCat API: {@code get_stranger_info}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param userId 【必填】用户QQ
+     * @param noCache 【必填】是否不使用缓存（默认 False）
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<StrangerInfoData>> getStrangerInfo(long botQQ, Long userId, String noCache);
+
+    /**
+     * 下载文件。
+     * <p>
+     * 下载网络文件到本地临时目录
+     * <p>
+     * 对应 NapCat API: {@code download_file}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param url 【可选】下载链接
+     * @param base64 【可选】base64数据
+     * @param name 【可选】文件名
+     * @param headers 【可选】请求头
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<DownloadFileData>> downloadFile(long botQQ, String url, String base64, String name, String headers);
+
+    /**
+     * 上传群文件。
+     * <p>
+     * 上传资源路径或URL指定的文件到指定群聊的文件系统中
+     * <p>
+     * 对应 NapCat API: {@code upload_group_file}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param file 【必填】资源路径或URL
+     * @param name 【必填】文件名
+     * @param folder 【可选】父目录 ID
+     * @param folderId 【可选】父目录 ID (兼容性字段)
+     * @param uploadFile 【必填】是否执行上传（默认 True）
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<GroupFileData>> uploadGroupFile(long botQQ, Long groupId, String file, String name, String folder, String folderId, Boolean uploadFile);
+
+    /**
+     * 获取群历史消息。
+     * <p>
+     * 获取指定群聊的历史聊天记录
+     * <p>
+     * 对应 NapCat API: {@code get_group_msg_history}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param messageSeq 【可选】起始消息序号
+     * @param count 【必填】获取消息数量（默认 20）
+     * @param reverseOrder 【必填】是否反向排序（默认 False）
+     * @param disableGetUrl 【必填】是否禁用获取URL（默认 False）
+     * @param parseMultMsg 【必填】是否解析合并消息（默认 True）
+     * @param quickReply 【必填】是否快速回复（默认 False）
+     * @param reverseOrder2 【必填】是否反向排序(旧版本兼容)（默认 False）
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<GroupMsgHistoryData>> getGroupMsgHistory(long botQQ, Long groupId, String messageSeq, Integer count, Boolean reverseOrder, Boolean disableGetUrl, Boolean parseMultMsg, Boolean quickReply, Boolean reverseOrder2);
+
+    /**
+     * 获取好友历史消息。
+     * <p>
+     * 获取指定好友的历史聊天记录
+     * <p>
+     * 对应 NapCat API: {@code get_friend_msg_history}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param userId 【必填】用户QQ
+     * @param messageSeq 【可选】起始消息序号
+     * @param count 【必填】获取消息数量（默认 20）
+     * @param reverseOrder 【必填】是否反向排序（默认 False）
+     * @param disableGetUrl 【必填】是否禁用获取URL（默认 False）
+     * @param parseMultMsg 【必填】是否解析合并消息（默认 True）
+     * @param quickReply 【必填】是否快速回复（默认 False）
+     * @param reverseOrder2 【必填】是否反向排序(旧版本兼容)（默认 False）
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<GroupMsgHistoryData>> getFriendMsgHistory(long botQQ, Long userId, String messageSeq, Integer count, Boolean reverseOrder, Boolean disableGetUrl, Boolean parseMultMsg, Boolean quickReply, Boolean reverseOrder2);
 
     /**
      * 处理快速操作。
      * <p>
-     * 对事件上报中的快速操作进行处理。
-     *
-     * @param botQQ    目标 Bot 的 QQ 号
-     * @param context  事件上下文
-     * @param operation 快速操作内容
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> handleQuickOperation(long botQQ, JsonNode context, JsonNode operation);
-
-    // ==================== 新增方法 ====================
-
-    /**
-     * 取消点赞群相册媒体。
+     * 处理来自事件上报的快速操作请求
      * <p>
-     * 取消对群相册中媒体文件的点赞。
-     *
-     * @param botQQ   目标 Bot 的 QQ 号
-     * @param groupQQ 目标群号
-     * @param albumId 相册 ID
-     * @param batchId 批次 ID
-     * @param lloc    媒体 ID
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> cancelGroupAlbumMediaLike(long botQQ, long groupQQ, String albumId, String batchId, String lloc);
-
-    /**
-     * 获取语音转文字结果。
-     * <p>
-     * 获取指定语音消息的文字识别结果。
-     *
-     * @param botQQ     目标 Bot 的 QQ 号
-     * @param messageId 消息 ID（类型为 number|string）
-     * @return 异步响应，包含语音转文字结果
-     */
-    CompletableFuture<ApiResponse<PttTextData>> fetchPttText(long botQQ, String messageId);
-
-    /**
-     * 添加自定义表情。
-     * <p>
-     * 向表情收藏中添加新的自定义表情。
-     *
-     * @param botQQ      目标 Bot 的 QQ 号
-     * @param file       表情文件路径
-     * @param emojiId    表情 ID
-     * @param packageId  表情包 ID
-     * @param fileName   文件名
-     * @param fileSize   文件大小
-     * @param md5        文件 MD5
-     * @param isMarkFace 是否为贴图表情
-     * @param isOrigin   是否为原图
-     * @return 异步响应，无业务数据
-     */
-    CompletableFuture<ApiResponse<VoidData>> addCustomFace(long botQQ, String file, String emojiId, String packageId, String fileName, long fileSize, String md5, boolean isMarkFace, boolean isOrigin);
-
-    /**
-     * 删除自定义表情。
-     * <p>
-     * 从表情收藏中删除自定义表情。
+     * 对应 NapCat API: {@code handle_quick_operation}
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param resId 资源 ID
-     * @param ids   表情 ID 列表
-     * @param md5   文件 MD5
+     * @param context 【必填】事件上下文
+     * @param operation 【必填】快速操作内容
      * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> deleteCustomFace(long botQQ, String resId, String ids, String md5);
+    CompletableFuture<ApiResponse<VoidData>> handleQuickOperationInternal(long botQQ, JsonNode context, JsonNode operation);
 
     /**
-     * 获取自定义表情详情。
+     * 设置群头像。
      * <p>
-     * 获取自定义表情的详细信息。
+     * 修改指定群聊的头像
+     * <p>
+     * 对应 NapCat API: {@code set_group_portrait}
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param count 获取数量
-     * @return 异步响应，包含自定义表情详情
+     * @param file 【必填】头像文件路径或 URL
+     * @param groupId 【必填】群号
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
      */
-    CompletableFuture<ApiResponse<CustomFaceDetailData>> fetchCustomFaceDetail(long botQQ, int count);
+    CompletableFuture<ApiResponse<GroupPortraitData>> setGroupPortrait(long botQQ, String file, Long groupId);
 
     /**
-     * 修改自定义表情描述。
+     * 上传私聊文件。
      * <p>
-     * 修改指定自定义表情的描述信息。
+     * 上传本地文件到指定私聊会话中
+     * <p>
+     * 对应 NapCat API: {@code upload_private_file}
      *
-     * @param botQQ   目标 Bot 的 QQ 号
-     * @param emojiId 表情 ID
-     * @param resId   资源 ID
-     * @param md5     文件 MD5
-     * @param desc    描述内容
-     * @return 异步响应，无业务数据
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param userId 【必填】用户 QQ
+     * @param file 【必填】资源路径或URL
+     * @param name 【必填】文件名
+     * @param uploadFile 【必填】是否执行上传（默认 True）
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> setCustomFaceDesc(long botQQ, String emojiId, String resId, String md5, String desc);
+    CompletableFuture<ApiResponse<GroupFileData>> uploadPrivateFile(long botQQ, Long userId, String file, String name, Boolean uploadFile);
+
+    /**
+     * 获取机型显示。
+     * <p>
+     * 获取当前账号可用的设备机型显示名称列表
+     * <p>
+     * 对应 NapCat API: {@code _get_model_show}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param model 【可选】模型名称
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<List<ModelShowData>>> getModelShow(long botQQ, String model);
+
+    /**
+     * 设置机型。
+     * <p>
+     * 设置当前账号的设备机型名称
+     * <p>
+     * 对应 NapCat API: {@code _set_model_show}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> setModelShow(long botQQ);
+
+    /**
+     * 删除群文件。
+     * <p>
+     * 在群文件系统中删除指定的文件
+     * <p>
+     * 对应 NapCat API: {@code delete_group_file}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param fileId 【必填】文件ID
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> deleteGroupFile(long botQQ, Long groupId, String fileId);
+
+    /**
+     * 创建群文件目录。
+     * <p>
+     * 在群文件系统中创建新的文件夹
+     * <p>
+     * 对应 NapCat API: {@code create_group_file_folder}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param folderName 【可选】文件夹名称
+     * @param name 【可选】文件夹名称
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<GroupFileFolderData>> createGroupFileFolder(long botQQ, Long groupId, String folderName, String name);
+
+    /**
+     * 删除群文件目录。
+     * <p>
+     * 在群文件系统中删除指定的文件夹
+     * <p>
+     * 对应 NapCat API: {@code delete_group_folder}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param folderId 【可选】文件夹ID
+     * @param folder 【可选】文件夹ID
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> deleteGroupFolder(long botQQ, Long groupId, String folderId, String folder);
+
+    /**
+     * 获取群文件系统信息。
+     * <p>
+     * 获取群聊文件系统的空间及状态信息
+     * <p>
+     * 对应 NapCat API: {@code get_group_file_system_info}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<GroupFileSystemInfoData>> getGroupFileSystemInfo(long botQQ, Long groupId);
+
+    /**
+     * 获取群文件夹文件列表。
+     * <p>
+     * 获取指定群文件夹下的文件及子文件夹列表
+     * <p>
+     * 对应 NapCat API: {@code get_group_files_by_folder}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param folderId 【可选】文件夹ID
+     * @param folder 【可选】文件夹ID
+     * @param fileCount 【必填】文件数量（默认 50）
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<GroupRootFilesData>> getGroupFilesByFolder(long botQQ, Long groupId, String folderId, String folder, String fileCount);
+
+    /**
+     * 获取频道列表。
+     * <p>
+     * 获取当前帐号已加入的频道列表
+     * <p>
+     * 对应 NapCat API: {@code get_guild_list}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> getGuildList(long botQQ);
+
+    /**
+     * 获取频道个人信息。
+     * <p>
+     * 获取当前帐号在频道中的个人资料
+     * <p>
+     * 对应 NapCat API: {@code get_guild_service_profile}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> getGuildServiceProfile(long botQQ);
+
+    /**
+     * 获取 AI 语音。
+     * <p>
+     * 通过 AI 语音引擎获取指定文本的语音 URL
+     * <p>
+     * 对应 NapCat API: {@code get_ai_record}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param character 【必填】角色ID
+     * @param groupId 【必填】群号
+     * @param text 【必填】语音文本内容
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<String>> getAiRecord(long botQQ, String character, Long groupId, String text);
+
+    /**
+     * 发送群 AI 语音。
+     * <p>
+     * 发送 AI 生成的语音到指定群聊
+     * <p>
+     * 对应 NapCat API: {@code send_group_ai_record}
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param character 【必填】角色ID
+     * @param groupId 【必填】群号
+     * @param text 【必填】语音文本内容
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<GroupAiRecordData>> sendGroupAiRecord(long botQQ, String character, Long groupId, String text);
 }

@@ -1,28 +1,35 @@
 package com.github.zhygtx.napcat.api.response.group;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 
 /**
- * 群公告响应数据。
  * <p>
- * 对应 <code>/get_group_notice</code> 的 data 数组条目。
  */
 @Data
 public class GroupNoticeData {
 
-    /** 公告 ID */
-    private String noticeId;
-
-    /** 发送者 QQ */
-    private long senderId;
+    /** 发送者QQ */
+    @JsonProperty("sender_id")
+    private Long senderId;
 
     /** 发布时间 */
-    private long publishTime;
+    @JsonProperty("publish_time")
+    private Long publishTime;
 
-    /** 公告消息（含 text 和 images） */
-    private JsonNode message;
+    /** 公告ID */
+    @JsonProperty("notice_id")
+    private String noticeId;
 
-    /** 是否置顶 */
-    private boolean pinned;
+    /** 公告内容 */
+    private GroupNoticeMessageData message;
+
+    /** 设置项 */
+    private JsonNode settings;
+
+    /** 阅读数 */
+    @JsonProperty("read_num")
+    private Long readNum;
+
 }

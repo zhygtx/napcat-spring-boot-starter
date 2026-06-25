@@ -1,28 +1,25 @@
 package com.github.zhygtx.napcat.api.response.system;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * 版本信息响应数据。
+ * 获取版本信息
  * <p>
- * 对应 <code>/get_version_info</code> 的 data 字段。
- * <pre>
- * {
- *   "app_name": "NapCat.Onebot",
- *   "protocol_version": "v11",
- *   "app_version": "1.0.0"
- * }
- * </pre>
  */
 @Data
 public class VersionInfoData {
 
     /** 应用名称 */
+    @JsonProperty("app_name")
     private String appName;
 
     /** 协议版本 */
+    @JsonProperty("protocol_version")
     private String protocolVersion;
 
     /** 应用版本 */
+    @JsonProperty("app_version")
     private String appVersion;
+
 }

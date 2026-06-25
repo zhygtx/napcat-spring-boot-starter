@@ -1,16 +1,25 @@
 package com.github.zhygtx.napcat.api.response.system;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * RKey 响应数据。
  * <p>
- * 对应 <code>/get_rkey</code> 的 data 字段。
  */
 @Data
-public class RKeyData {
+public class RkeyData {
 
-    /** RKey 映射 */
-    private JsonNode rkey;
+    /** 类型 (private/group) */
+    private String type;
+
+    /** RKey */
+    private String rkey;
+
+    /** 创建时间 */
+    @JsonProperty("created_at")
+    private Long createdAt;
+
+    /** 有效期 */
+    private Long ttl;
+
 }
