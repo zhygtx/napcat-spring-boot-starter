@@ -91,7 +91,7 @@ public class NapCatWebSocketConfig implements WebSocketConfigurer {
         container.setMaxTextMessageBufferSize(ws.getMaxTextBufferSize());
         container.setMaxBinaryMessageBufferSize(ws.getMaxBinaryBufferSize());
 
-        log.info("WebSocket 容器配置: idleTimeout={}s, textBuffer={}, binaryBuffer={}",
+        log.info("WebSocket 容器配置: 超时时间={}s, 文本消息缓冲={}, 二进制消息缓冲上限={}",
                 ws.getTimeout(), ws.getMaxTextBufferSize(), ws.getMaxBinaryBufferSize());
 
         return container;
