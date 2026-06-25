@@ -30,7 +30,7 @@ public interface ApiGroup {
      * @param groupId 【必填】群号
      * @param albumId 【必填】相册ID
      * @param lloc 【必填】媒体ID (lloc)
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -39,7 +39,7 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> delGroupAlbumMedia(long botQQ, Long groupId, String albumId, String lloc);
+    CompletableFuture<ApiResponse<DelGroupAlbumMediaData>> delGroupAlbumMedia(long botQQ, Long groupId, String albumId, String lloc);
 
     /**
      * 点赞群相册媒体。
@@ -53,7 +53,7 @@ public interface ApiGroup {
      * @param albumId 【必填】相册ID
      * @param batchId 【必填】batch_id
      * @param lloc 【可选】lloc，若对整个上传操作则不填
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -62,7 +62,7 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> setGroupAlbumMediaLike(long botQQ, Long groupId, String albumId, String batchId, String lloc);
+    CompletableFuture<ApiResponse<DelGroupAlbumMediaData>> setGroupAlbumMediaLike(long botQQ, Long groupId, String albumId, String batchId, String lloc);
 
     /**
      * 取消点赞群相册媒体。
@@ -76,7 +76,7 @@ public interface ApiGroup {
      * @param albumId 【必填】相册ID
      * @param batchId 【必填】batch_id
      * @param lloc 【可选】lloc，若对整个上传操作则不填
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -85,7 +85,7 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> cancelGroupAlbumMediaLike(long botQQ, Long groupId, String albumId, String batchId, String lloc);
+    CompletableFuture<ApiResponse<DelGroupAlbumMediaData>> cancelGroupAlbumMediaLike(long botQQ, Long groupId, String albumId, String batchId, String lloc);
 
     /**
      * 发表群相册评论。
@@ -99,7 +99,7 @@ public interface ApiGroup {
      * @param albumId 【必填】相册 ID
      * @param lloc 【必填】图片 ID
      * @param content 【必填】评论内容
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -108,7 +108,7 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> doGroupAlbumComment(long botQQ, Long groupId, String albumId, String lloc, String content);
+    CompletableFuture<ApiResponse<DelGroupAlbumMediaData>> doGroupAlbumComment(long botQQ, Long groupId, String albumId, String lloc, String content);
 
     /**
      * 获取群相册媒体列表。
@@ -121,7 +121,7 @@ public interface ApiGroup {
      * @param groupId 【必填】群号
      * @param albumId 【必填】相册ID
      * @param attachInfo 【可选】附加信息（用于分页）（默认 ）
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -130,7 +130,7 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> getGroupAlbumMediaList(long botQQ, Long groupId, String albumId, String attachInfo);
+    CompletableFuture<ApiResponse<GroupAlbumMediaData>> getGroupAlbumMediaList(long botQQ, Long groupId, String albumId, String attachInfo);
 
     /**
      * 获取群相册列表。
@@ -165,7 +165,7 @@ public interface ApiGroup {
      * @param albumId 【必填】相册ID
      * @param albumName 【必填】相册名称
      * @param file 【必填】图片路径、URL或Base64
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -174,7 +174,29 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> uploadImageToQunAlbum(long botQQ, Long groupId, String albumId, String albumName, String file);
+    CompletableFuture<ApiResponse<ImageToQunAlbumData>> uploadImageToQunAlbum(long botQQ, Long groupId, String albumId, String albumName, String file);
+
+    /**
+     * 获取群详细信息。
+     * <p>
+     * 获取群聊的详细信息，包括成员数、最大成员数等
+     * <p>
+     * 对应 NapCat API: {@code get_group_detail_info}
+     * <p>
+     * 分类：群组接口
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<GroupDetailInfoData>> getGroupDetailInfo(long botQQ, Long groupId);
 
     /**
      * 设置群加群选项。
@@ -275,7 +297,7 @@ public interface ApiGroup {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -284,7 +306,7 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> getGroupInfoEx(long botQQ, Long groupId);
+    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> getGroupInfoEx(long botQQ, Long groupId);
 
     /**
      * 群打卡。
@@ -347,28 +369,6 @@ public interface ApiGroup {
     CompletableFuture<ApiResponse<List<GroupSignedData>>> getGroupSignedList(long botQQ, Long groupId);
 
     /**
-     * 获取群详细信息。
-     * <p>
-     * 获取群聊的详细信息，包括成员数、最大成员数等
-     * <p>
-     * 对应 NapCat API: {@code get_group_detail_info}
-     * <p>
-     * 分类：群组接口
-     *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @param groupId 【必填】群号
-     * @return 异步响应，成功时 data 包含业务数据
-     * <p>
-     * <b>可能的错误情况：</b>
-     * <ul>
-     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
-     *   <li>{@code retcode=1401: 权限不足}</li>
-     *   <li>{@code retcode=1404: 资源不存在}</li>
-     * </ul>
-     */
-    CompletableFuture<ApiResponse<GroupDetailInfoData>> getGroupDetailInfo(long botQQ, Long groupId);
-
-    /**
      * 获取群列表。
      * <p>
      * 获取当前帐号的群聊列表
@@ -388,7 +388,7 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<List<String>>> getGroupList(long botQQ, String noCache);
+    CompletableFuture<ApiResponse<List<String>>> getGroupList(long botQQ, Boolean noCache);
 
     /**
      * 获取群信息。
@@ -433,7 +433,7 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<List<String>>> getGroupMemberList(long botQQ, Long groupId, String noCache);
+    CompletableFuture<ApiResponse<List<GroupMemberData>>> getGroupMemberList(long botQQ, Long groupId, Boolean noCache);
 
     /**
      * 获取群成员信息。
@@ -457,7 +457,38 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<String>> getGroupMemberInfo(long botQQ, Long groupId, Long userId, String noCache);
+    CompletableFuture<ApiResponse<String>> getGroupMemberInfo(long botQQ, Long groupId, Long userId, Boolean noCache);
+
+    /**
+     * 发送群消息。
+     * <p>
+     * 发送群消息
+     * <p>
+     * 对应 NapCat API: {@code send_group_msg}
+     * <p>
+     * 分类：群组接口
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param messageType 【可选】消息类型 (private/group)
+     * @param userId 【可选】用户QQ
+     * @param groupId 【可选】群号
+     * @param message 【必填】OneBot 11 消息混合类型
+     * @param autoEscape 【可选】是否作为纯文本发送
+     * @param source 【可选】合并转发来源
+     * @param news 【可选】合并转发新闻
+     * @param summary 【可选】合并转发摘要
+     * @param prompt 【可选】合并转发提示
+     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<GroupMsgData>> sendGroupMsg(long botQQ, String messageType, Long userId, Long groupId, String message, Boolean autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout);
 
     /**
      * 处理加群请求。
@@ -482,7 +513,7 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> setGroupAddRequest(long botQQ, String flag, String approve, String reason, Integer count);
+    CompletableFuture<ApiResponse<VoidData>> setGroupAddRequest(long botQQ, String flag, Boolean approve, String reason, Integer count);
 
     /**
      * 退出群组。
@@ -505,7 +536,102 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> setGroupLeave(long botQQ, Long groupId, String isDismiss);
+    CompletableFuture<ApiResponse<VoidData>> setGroupLeave(long botQQ, Long groupId, Boolean isDismiss);
+
+    /**
+     * 全员禁言。
+     * <p>
+     * 开启或关闭指定群聊的全员禁言
+     * <p>
+     * 对应 NapCat API: {@code set_group_whole_ban}
+     * <p>
+     * 分类：群组接口
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param enable 【可选】是否开启全员禁言
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> setGroupWholeBan(long botQQ, Long groupId, Boolean enable);
+
+    /**
+     * 群组禁言。
+     * <p>
+     * 禁言群聊中的指定成员
+     * <p>
+     * 对应 NapCat API: {@code set_group_ban}
+     * <p>
+     * 分类：群组接口
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param userId 【必填】用户QQ
+     * @param duration 【必填】禁言时长(秒)（默认 0）
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> setGroupBan(long botQQ, Long groupId, Long userId, Long duration);
+
+    /**
+     * 群组踢人。
+     * <p>
+     * 将指定成员踢出群聊
+     * <p>
+     * 对应 NapCat API: {@code set_group_kick}
+     * <p>
+     * 分类：群组接口
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param userId 【必填】用户QQ
+     * @param rejectAddRequest 【可选】是否拒绝加群请求
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> setGroupKick(long botQQ, Long groupId, Long userId, Boolean rejectAddRequest);
+
+    /**
+     * 设置群管理员。
+     * <p>
+     * 设置或取消群聊中的管理员
+     * <p>
+     * 对应 NapCat API: {@code set_group_admin}
+     * <p>
+     * 分类：群组接口
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param groupId 【必填】群号
+     * @param userId 【必填】用户QQ
+     * @param enable 【可选】是否设置为管理员
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> setGroupAdmin(long botQQ, Long groupId, Long userId, Boolean enable);
 
     /**
      * 设置群名称。
@@ -633,7 +759,7 @@ public interface ApiGroup {
      * @param msgSeq 【可选】消息序号
      * @param msgRandom 【可选】消息随机数
      * @param groupId 【可选】群号
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -642,7 +768,7 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> deleteEssenceMsg(long botQQ, String messageId, String msgSeq, String msgRandom, Long groupId);
+    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> deleteEssenceMsg(long botQQ, Long messageId, String msgSeq, String msgRandom, Long groupId);
 
     /**
      * 设置精华消息。
@@ -655,7 +781,7 @@ public interface ApiGroup {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【必填】消息ID
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -664,7 +790,7 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> setEssenceMsg(long botQQ, String messageId);
+    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> setEssenceMsg(long botQQ, Long messageId);
 
     /**
      * 删除群公告。
@@ -678,7 +804,7 @@ public interface ApiGroup {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param noticeId 【必填】公告ID
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -687,7 +813,7 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> delGroupNotice(long botQQ, Long groupId, String noticeId);
+    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> delGroupNotice(long botQQ, Long groupId, String noticeId);
 
     /**
      * 获取群禁言列表。
@@ -707,7 +833,7 @@ public interface ApiGroup {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<List<String>>> getGroupShutList(long botQQ, Long groupId);
+    CompletableFuture<ApiResponse<List<GroupShutData>>> getGroupShutList(long botQQ, Long groupId);
 
     /**
      * 获取群被忽略的加群请求。

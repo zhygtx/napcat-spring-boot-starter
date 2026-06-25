@@ -1,14 +1,14 @@
-package com.github.zhygtx.napcat.api.response.extra;
+package com.github.zhygtx.napcat.api.response.group;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * 发送合并转发消息
+ * 发送群消息
  * <p>
  */
 @Data
-public class ForwardMsgData {
+public class GroupMsgData {
 
     /** 消息ID */
     @JsonProperty("message_id")

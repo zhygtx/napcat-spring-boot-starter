@@ -53,7 +53,7 @@ public interface ApiSystem {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param count 【必填】获取数量（默认 50）
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -62,7 +62,45 @@ public interface ApiSystem {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> getDoubtFriendsAddRequest(long botQQ, Integer count);
+    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> getDoubtFriendsAddRequest(long botQQ, Integer count);
+
+    /**
+     * 获取扩展 RKey。
+     * <p>
+     * 对应 NapCat API: {@code get_rkey}
+     * <p>
+     * 分类：系统扩展
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<List<RkeyData>>> getRkey(long botQQ);
+
+    /**
+     * 获取 RKey 服务器。
+     * <p>
+     * 对应 NapCat API: {@code get_rkey_server}
+     * <p>
+     * 分类：系统扩展
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<RkeyServerData>> getRkeyServer(long botQQ);
 
     /**
      * 获取登录号信息。
@@ -168,172 +206,6 @@ public interface ApiSystem {
      * </ul>
      */
     CompletableFuture<ApiResponse<StatusData>> getStatus(long botQQ);
-
-    /**
-     * 获取 CSRF Token。
-     * <p>
-     * 获取 CSRF Token
-     * <p>
-     * 对应 NapCat API: {@code get_csrf_token}
-     * <p>
-     * 分类：系统接口
-     *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @return 异步响应，成功时 data 包含业务数据
-     * <p>
-     * <b>可能的错误情况：</b>
-     * <ul>
-     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
-     *   <li>{@code retcode=1401: 权限不足}</li>
-     *   <li>{@code retcode=1404: 资源不存在}</li>
-     * </ul>
-     */
-    CompletableFuture<ApiResponse<CsrfTokenData>> getCsrfToken(long botQQ);
-
-    /**
-     * 获取登录凭证。
-     * <p>
-     * 获取登录凭证
-     * <p>
-     * 对应 NapCat API: {@code get_credentials}
-     * <p>
-     * 分类：系统接口
-     *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @param domain 【必填】需要获取 cookies 的域名
-     * @return 异步响应，成功时 data 包含业务数据
-     * <p>
-     * <b>可能的错误情况：</b>
-     * <ul>
-     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
-     *   <li>{@code retcode=1401: 权限不足}</li>
-     *   <li>{@code retcode=1404: 资源不存在}</li>
-     * </ul>
-     */
-    CompletableFuture<ApiResponse<CredentialsData>> getCredentials(long botQQ, String domain);
-
-    /**
-     * 获取Packet状态。
-     * <p>
-     * 获取底层Packet服务的运行状态
-     * <p>
-     * 对应 NapCat API: {@code nc_get_packet_status}
-     * <p>
-     * 分类：系统接口
-     *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @return 异步响应，无业务数据
-     * <p>
-     * <b>可能的错误情况：</b>
-     * <ul>
-     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
-     *   <li>{@code retcode=1401: 权限不足}</li>
-     *   <li>{@code retcode=1404: 资源不存在}</li>
-     * </ul>
-     */
-    CompletableFuture<ApiResponse<VoidData>> ncGetPacketStatus(long botQQ);
-
-    /**
-     * 重启服务。
-     * <p>
-     * 重启服务
-     * <p>
-     * 对应 NapCat API: {@code set_restart}
-     * <p>
-     * 分类：系统接口
-     *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @return 异步响应，无业务数据
-     * <p>
-     * <b>可能的错误情况：</b>
-     * <ul>
-     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
-     *   <li>{@code retcode=1401: 权限不足}</li>
-     *   <li>{@code retcode=1404: 资源不存在}</li>
-     * </ul>
-     */
-    CompletableFuture<ApiResponse<VoidData>> setRestart(long botQQ);
-
-    /**
-     * 获取群系统消息。
-     * <p>
-     * 获取群系统消息
-     * <p>
-     * 对应 NapCat API: {@code get_group_system_msg}
-     * <p>
-     * 分类：系统接口
-     *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @param count 【必填】获取的消息数量（默认 50）
-     * @return 异步响应，成功时 data 包含业务数据
-     * <p>
-     * <b>可能的错误情况：</b>
-     * <ul>
-     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
-     *   <li>{@code retcode=1401: 权限不足}</li>
-     *   <li>{@code retcode=1404: 资源不存在}</li>
-     * </ul>
-     */
-    CompletableFuture<ApiResponse<GroupIgnoredNotifiesData>> getGroupSystemMsg(long botQQ, String count);
-
-    /**
-     * 清理缓存。
-     * <p>
-     * 清理缓存
-     * <p>
-     * 对应 NapCat API: {@code clean_cache}
-     * <p>
-     * 分类：系统接口
-     *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @return 异步响应，无业务数据
-     * <p>
-     * <b>可能的错误情况：</b>
-     * <ul>
-     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
-     *   <li>{@code retcode=1401: 权限不足}</li>
-     *   <li>{@code retcode=1404: 资源不存在}</li>
-     * </ul>
-     */
-    CompletableFuture<ApiResponse<VoidData>> cleanCache(long botQQ);
-
-    /**
-     * 获取扩展 RKey。
-     * <p>
-     * 对应 NapCat API: {@code get_rkey}
-     * <p>
-     * 分类：系统扩展
-     *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @return 异步响应，成功时 data 包含业务数据
-     * <p>
-     * <b>可能的错误情况：</b>
-     * <ul>
-     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
-     *   <li>{@code retcode=1401: 权限不足}</li>
-     *   <li>{@code retcode=1404: 资源不存在}</li>
-     * </ul>
-     */
-    CompletableFuture<ApiResponse<List<RkeyData>>> getRkey(long botQQ);
-
-    /**
-     * 获取 RKey 服务器。
-     * <p>
-     * 对应 NapCat API: {@code get_rkey_server}
-     * <p>
-     * 分类：系统扩展
-     *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @return 异步响应，成功时 data 包含业务数据
-     * <p>
-     * <b>可能的错误情况：</b>
-     * <ul>
-     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
-     *   <li>{@code retcode=1401: 权限不足}</li>
-     *   <li>{@code retcode=1404: 资源不存在}</li>
-     * </ul>
-     */
-    CompletableFuture<ApiResponse<RkeyServerData>> getRkeyServer(long botQQ);
 
     /**
      * 设置在线状态。
@@ -525,7 +397,7 @@ public interface ApiSystem {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> setOnlineStatus(long botQQ, String status, String extStatus, String batteryStatus);
+    CompletableFuture<ApiResponse<VoidData>> setOnlineStatus(long botQQ, Long status, Long extStatus, Long batteryStatus);
 
     /**
      * 获取机器人 UIN 范围。
@@ -544,7 +416,7 @@ public interface ApiSystem {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<List<String>>> getRobotUinRange(long botQQ);
+    CompletableFuture<ApiResponse<List<RobotUinRangeData>>> getRobotUinRange(long botQQ);
 
     /**
      * 获取自定义表情。
@@ -564,7 +436,7 @@ public interface ApiSystem {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<List<String>>> fetchCustomFace(long botQQ, String count);
+    CompletableFuture<ApiResponse<List<String>>> fetchCustomFace(long botQQ, Integer count);
 
     /**
      * 获取自定义表情详情。
@@ -575,7 +447,7 @@ public interface ApiSystem {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param count 【必填】获取数量（默认 48）
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -584,7 +456,7 @@ public interface ApiSystem {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> fetchCustomFaceDetail(long botQQ, String count);
+    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> fetchCustomFaceDetail(long botQQ, Integer count);
 
     /**
      * 添加自定义表情。
@@ -602,7 +474,7 @@ public interface ApiSystem {
      * @param md5 【可选】文件MD5，未提供时读取本地文件计算
      * @param isMarkFace 【可选】是否商城表情
      * @param isOrigin 【可选】是否原图
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -611,7 +483,7 @@ public interface ApiSystem {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> addCustomFace(long botQQ, String file, String emojiId, String packageId, String fileName, String fileSize, String md5, Boolean isMarkFace, Boolean isOrigin);
+    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> addCustomFace(long botQQ, String file, String emojiId, String packageId, String fileName, String fileSize, String md5, Boolean isMarkFace, Boolean isOrigin);
 
     /**
      * 删除自定义表情。
@@ -625,7 +497,7 @@ public interface ApiSystem {
      * @param id 【可选】native deleteFavEmoji字符串ID，通常为resId
      * @param ids 【可选】native deleteFavEmoji字符串ID列表，通常为resId列表
      * @param md5 【可选】表情MD5，不能直接删除，请先通过fetch_custom_face_detail获取resId
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -634,7 +506,7 @@ public interface ApiSystem {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> deleteCustomFace(long botQQ, String resId, String id, List<String> ids, String md5);
+    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> deleteCustomFace(long botQQ, String resId, String id, List<String> ids, String md5);
 
     /**
      * 修改自定义表情描述。
@@ -648,7 +520,7 @@ public interface ApiSystem {
      * @param resId 【必填】资源ID
      * @param md5 【必填】表情MD5
      * @param desc 【必填】新的表情描述
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -657,7 +529,7 @@ public interface ApiSystem {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> setCustomFaceDesc(long botQQ, String emojiId, String resId, String md5, String desc);
+    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> setCustomFaceDesc(long botQQ, Long emojiId, String resId, String md5, String desc);
 
     /**
      * 设置输入状态。
@@ -669,6 +541,70 @@ public interface ApiSystem {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】QQ号
      * @param eventType 【必填】事件类型
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> setInputStatus(long botQQ, Long userId, Long eventType);
+
+    /**
+     * 获取 CSRF Token。
+     * <p>
+     * 获取 CSRF Token
+     * <p>
+     * 对应 NapCat API: {@code get_csrf_token}
+     * <p>
+     * 分类：系统接口
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<CsrfTokenData>> getCsrfToken(long botQQ);
+
+    /**
+     * 获取登录凭证。
+     * <p>
+     * 获取登录凭证
+     * <p>
+     * 对应 NapCat API: {@code get_credentials}
+     * <p>
+     * 分类：系统接口
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param domain 【必填】需要获取 cookies 的域名
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<CredentialsData>> getCredentials(long botQQ, String domain);
+
+    /**
+     * 获取Packet状态。
+     * <p>
+     * 获取底层Packet服务的运行状态
+     * <p>
+     * 对应 NapCat API: {@code nc_get_packet_status}
+     * <p>
+     * 分类：系统接口
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -678,7 +614,28 @@ public interface ApiSystem {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> setInputStatus(long botQQ, Long userId, Long eventType);
+    CompletableFuture<ApiResponse<VoidData>> ncGetPacketStatus(long botQQ);
+
+    /**
+     * 重启服务。
+     * <p>
+     * 重启服务
+     * <p>
+     * 对应 NapCat API: {@code set_restart}
+     * <p>
+     * 分类：系统接口
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> setRestart(long botQQ);
 
     /**
      * 获取用户在线状态。
@@ -717,7 +674,7 @@ public interface ApiSystem {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<List<String>>> ncGetRkey(long botQQ);
+    CompletableFuture<ApiResponse<List<RkeyData>>> ncGetRkey(long botQQ);
 
     /**
      * 获取小程序 Ark。
@@ -761,11 +718,54 @@ public interface ApiSystem {
     CompletableFuture<ApiResponse<String>> sendPacket(long botQQ, String cmd, String data, String rsp);
 
     /**
+     * 获取群系统消息。
+     * <p>
+     * 获取群系统消息
+     * <p>
+     * 对应 NapCat API: {@code get_group_system_msg}
+     * <p>
+     * 分类：系统接口
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param count 【必填】获取的消息数量（默认 50）
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<GroupIgnoredNotifiesData>> getGroupSystemMsg(long botQQ, Integer count);
+
+    /**
      * 退出登录。
      * <p>
      * 对应 NapCat API: {@code bot_exit}
      * <p>
      * 分类：系统扩展
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<DoubtFriendsAddRequestData>> botExit(long botQQ);
+
+    /**
+     * 清理缓存。
+     * <p>
+     * 清理缓存
+     * <p>
+     * 对应 NapCat API: {@code clean_cache}
+     * <p>
+     * 分类：系统接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @return 异步响应，无业务数据
@@ -777,7 +777,7 @@ public interface ApiSystem {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> botExit(long botQQ);
+    CompletableFuture<ApiResponse<VoidData>> cleanCache(long botQQ);
 
     /**
      * 获取收藏列表。
@@ -789,7 +789,7 @@ public interface ApiSystem {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param category 【必填】分类ID
      * @param count 【必填】获取数量（默认 50）
-     * @return 异步响应，无业务数据
+     * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
      * <ul>
@@ -798,5 +798,5 @@ public interface ApiSystem {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> getCollectionList(long botQQ, String category, String count);
+    CompletableFuture<ApiResponse<CollectionData>> getCollectionList(long botQQ, String category, String count);
 }

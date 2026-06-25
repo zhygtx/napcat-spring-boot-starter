@@ -3,13 +3,12 @@ package com.github.zhygtx.napcat.api.response.extra;
 import lombok.Data;
 
 /**
- * 下载文件
+ * 测试下载流
  * <p>
  */
 @Data
-public class DownloadFileData {
+public class DownloadStreamData {
 
-    /** 文件路径 */
-    private String file;
+    private Boolean success;
 
 }

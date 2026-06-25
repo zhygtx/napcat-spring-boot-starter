@@ -41,6 +41,27 @@ public interface ApiFriend {
     CompletableFuture<ApiResponse<VoidData>> setFriendRemark(long botQQ, Long userId, String remark);
 
     /**
+     * 点赞。
+     * <p>
+     * 给指定用户点赞
+     * <p>
+     * 对应 NapCat API: {@code send_like}
+     * <p>
+     * 分类：用户接口
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @param userId 【必填】对方 QQ 号
+     * @param times 【必填】点赞次数（默认 1）
+     * @return 异步响应，无业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 点赞失败（频率过快或用户不存在）}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<VoidData>> sendLike(long botQQ, Long userId, Long times);
+
+    /**
      * 获取好友列表。
      * <p>
      * 获取当前帐号的好友列表
@@ -60,7 +81,7 @@ public interface ApiFriend {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<List<String>>> getFriendList(long botQQ, String noCache);
+    CompletableFuture<ApiResponse<List<String>>> getFriendList(long botQQ, Boolean noCache);
 
     /**
      * 处理加好友请求。
@@ -109,6 +130,25 @@ public interface ApiFriend {
     CompletableFuture<ApiResponse<CookiesData>> getCookies(long botQQ, String domain);
 
     /**
+     * 获取带分组的好友列表。
+     * <p>
+     * 对应 NapCat API: {@code get_friends_with_category}
+     * <p>
+     * 分类：用户扩展
+     *
+     * @param botQQ 目标 Bot 的 QQ 号
+     * @return 异步响应，成功时 data 包含业务数据
+     * <p>
+     * <b>可能的错误情况：</b>
+     * <ul>
+     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
+     *   <li>{@code retcode=1401: 权限不足}</li>
+     *   <li>{@code retcode=1404: 资源不存在}</li>
+     * </ul>
+     */
+    CompletableFuture<ApiResponse<List<FriendsWithCategoryData>>> getFriendsWithCategory(long botQQ);
+
+    /**
      * 获取最近会话。
      * <p>
      * 获取最近会话
@@ -128,26 +168,7 @@ public interface ApiFriend {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<List<RecentContactData>>> getRecentContact(long botQQ, String count);
-
-    /**
-     * 获取带分组的好友列表。
-     * <p>
-     * 对应 NapCat API: {@code get_friends_with_category}
-     * <p>
-     * 分类：用户扩展
-     *
-     * @param botQQ 目标 Bot 的 QQ 号
-     * @return 异步响应，成功时 data 包含业务数据
-     * <p>
-     * <b>可能的错误情况：</b>
-     * <ul>
-     *   <li>{@code retcode=1400: 请求参数错误或业务逻辑执行失败}</li>
-     *   <li>{@code retcode=1401: 权限不足}</li>
-     *   <li>{@code retcode=1404: 资源不存在}</li>
-     * </ul>
-     */
-    CompletableFuture<ApiResponse<List<FriendsWithCategoryData>>> getFriendsWithCategory(long botQQ);
+    CompletableFuture<ApiResponse<List<RecentContactData>>> getRecentContact(long botQQ, Integer count);
 
     /**
      * 获取资料点赞。
@@ -169,7 +190,7 @@ public interface ApiFriend {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<ProfileLikeData>> getProfileLike(long botQQ, Long userId, String start, String count);
+    CompletableFuture<ApiResponse<ProfileLikeData>> getProfileLike(long botQQ, Long userId, Long start, Integer count);
 
     /**
      * 设置自定义在线状态。
@@ -193,7 +214,7 @@ public interface ApiFriend {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<String>> setDiyOnlineStatus(long botQQ, String faceId, String faceType, String wording);
+    CompletableFuture<ApiResponse<String>> setDiyOnlineStatus(long botQQ, Long faceId, Long faceType, String wording);
 
     /**
      * 获取单向好友列表。
