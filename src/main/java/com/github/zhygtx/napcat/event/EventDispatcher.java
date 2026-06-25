@@ -380,6 +380,203 @@ public class EventDispatcher {
 
     // ==================== OneBotEventListener 分发 ====================
 
+    /**
+     * 事件处理器，负责将特定类型的事件分发给监听器。
+     */
+    @FunctionalInterface
+    private interface EventHandler {
+        void handle(OneBotEventListener listener, Long botQQ, BaseEvent event);
+    }
+
+    /**
+     * 事件类型 → 处理器注册表。
+     * 通过类层级向上查找（从具体子类开始），保证继承语义：
+     * 子类事件同时触发对应父类回调。
+     */
+    private static final Map<Class<? extends BaseEvent>, EventHandler> EVENT_HANDLERS = new HashMap<>();
+
+    static {
+        // ===== 元事件 =====
+        register(LifecycleConnectMetaEvent.class, (l, qq, e) -> {
+            LifecycleConnectMetaEvent ev = (LifecycleConnectMetaEvent) e;
+            l.onLifecycleConnect(qq, ev);
+            l.onLifecycle(qq, ev);
+        });
+        register(LifecycleMetaEvent.class, (l, qq, e) ->
+                l.onLifecycle(qq, (LifecycleMetaEvent) e));
+        register(HeartbeatMetaEvent.class, (l, qq, e) ->
+                l.onHeartbeat(qq, (HeartbeatMetaEvent) e));
+
+        // ===== 消息事件 =====
+        register(PrivateFriendMessageEvent.class, (l, qq, e) -> {
+            PrivateFriendMessageEvent ev = (PrivateFriendMessageEvent) e;
+            l.onPrivateFriendMessage(qq, ev);
+            l.onPrivateMessage(qq, ev);
+        });
+        register(PrivateGroupMessageEvent.class, (l, qq, e) -> {
+            PrivateGroupMessageEvent ev = (PrivateGroupMessageEvent) e;
+            l.onPrivateGroupMessage(qq, ev);
+            l.onPrivateMessage(qq, ev);
+        });
+        register(PrivateMessageEvent.class, (l, qq, e) ->
+                l.onPrivateMessage(qq, (PrivateMessageEvent) e));
+        register(GroupNormalMessageEvent.class, (l, qq, e) -> {
+            GroupNormalMessageEvent ev = (GroupNormalMessageEvent) e;
+            l.onGroupNormalMessage(qq, ev);
+            l.onGroupMessage(qq, ev);
+        });
+        register(GroupMessageEvent.class, (l, qq, e) ->
+                l.onGroupMessage(qq, (GroupMessageEvent) e));
+
+        // ===== 消息发送事件 =====
+        register(PrivateFriendMessageSentEvent.class, (l, qq, e) -> {
+            PrivateFriendMessageSentEvent ev = (PrivateFriendMessageSentEvent) e;
+            l.onPrivateFriendMessageSent(qq, ev);
+            l.onPrivateMessageSent(qq, ev);
+            l.onMessageSent(qq, ev);
+        });
+        register(PrivateGroupMessageSentEvent.class, (l, qq, e) -> {
+            PrivateGroupMessageSentEvent ev = (PrivateGroupMessageSentEvent) e;
+            l.onPrivateGroupMessageSent(qq, ev);
+            l.onPrivateMessageSent(qq, ev);
+            l.onMessageSent(qq, ev);
+        });
+        register(PrivateMessageSentEvent.class, (l, qq, e) -> {
+            PrivateMessageSentEvent ev = (PrivateMessageSentEvent) e;
+            l.onPrivateMessageSent(qq, ev);
+            l.onMessageSent(qq, ev);
+        });
+        register(GroupNormalMessageSentEvent.class, (l, qq, e) -> {
+            GroupNormalMessageSentEvent ev = (GroupNormalMessageSentEvent) e;
+            l.onGroupNormalMessageSent(qq, ev);
+            l.onGroupMessageSent(qq, ev);
+            l.onMessageSent(qq, ev);
+        });
+        register(GroupMessageSentEvent.class, (l, qq, e) -> {
+            GroupMessageSentEvent ev = (GroupMessageSentEvent) e;
+            l.onGroupMessageSent(qq, ev);
+            l.onMessageSent(qq, ev);
+        });
+        register(MessageSentEvent.class, (l, qq, e) ->
+                l.onMessageSent(qq, (MessageSentEvent) e));
+
+        // ===== 通知事件 - 好友 =====
+        register(FriendAddNoticeEvent.class, (l, qq, e) ->
+                l.onFriendAdd(qq, (FriendAddNoticeEvent) e));
+        register(FriendRecallNoticeEvent.class, (l, qq, e) ->
+                l.onFriendRecall(qq, (FriendRecallNoticeEvent) e));
+
+        // ===== 通知事件 - 群管理员 =====
+        register(GroupAdminSetNoticeEvent.class, (l, qq, e) -> {
+            GroupAdminSetNoticeEvent ev = (GroupAdminSetNoticeEvent) e;
+            l.onGroupAdminSet(qq, ev);
+            l.onGroupAdmin(qq, ev);
+        });
+        register(GroupAdminUnsetNoticeEvent.class, (l, qq, e) -> {
+            GroupAdminUnsetNoticeEvent ev = (GroupAdminUnsetNoticeEvent) e;
+            l.onGroupAdminUnset(qq, ev);
+            l.onGroupAdmin(qq, ev);
+        });
+        register(GroupAdminNoticeEvent.class, (l, qq, e) ->
+                l.onGroupAdmin(qq, (GroupAdminNoticeEvent) e));
+
+        // ===== 通知事件 - 群禁言 =====
+        register(GroupBanBanNoticeEvent.class, (l, qq, e) -> {
+            GroupBanBanNoticeEvent ev = (GroupBanBanNoticeEvent) e;
+            l.onGroupBanBan(qq, ev);
+            l.onGroupBan(qq, ev);
+        });
+        register(GroupBanLiftBanNoticeEvent.class, (l, qq, e) -> {
+            GroupBanLiftBanNoticeEvent ev = (GroupBanLiftBanNoticeEvent) e;
+            l.onGroupBanLiftBan(qq, ev);
+            l.onGroupBan(qq, ev);
+        });
+        register(GroupBanNoticeEvent.class, (l, qq, e) ->
+                l.onGroupBan(qq, (GroupBanNoticeEvent) e));
+
+        // ===== 通知事件 - 群成员减少 =====
+        register(GroupDecreaseKickMeNoticeEvent.class, (l, qq, e) -> {
+            GroupDecreaseKickMeNoticeEvent ev = (GroupDecreaseKickMeNoticeEvent) e;
+            l.onGroupDecreaseKickMe(qq, ev);
+            l.onGroupDecrease(qq, ev);
+        });
+        register(GroupDecreaseKickNoticeEvent.class, (l, qq, e) -> {
+            GroupDecreaseKickNoticeEvent ev = (GroupDecreaseKickNoticeEvent) e;
+            l.onGroupDecreaseKick(qq, ev);
+            l.onGroupDecrease(qq, ev);
+        });
+        register(GroupDecreaseLeaveNoticeEvent.class, (l, qq, e) -> {
+            GroupDecreaseLeaveNoticeEvent ev = (GroupDecreaseLeaveNoticeEvent) e;
+            l.onGroupDecreaseLeave(qq, ev);
+            l.onGroupDecrease(qq, ev);
+        });
+        register(GroupDecreaseNoticeEvent.class, (l, qq, e) ->
+                l.onGroupDecrease(qq, (GroupDecreaseNoticeEvent) e));
+
+        // ===== 通知事件 - 群成员增加 =====
+        register(GroupIncreaseApproveNoticeEvent.class, (l, qq, e) -> {
+            GroupIncreaseApproveNoticeEvent ev = (GroupIncreaseApproveNoticeEvent) e;
+            l.onGroupIncreaseApprove(qq, ev);
+            l.onGroupIncrease(qq, ev);
+        });
+        register(GroupIncreaseInviteNoticeEvent.class, (l, qq, e) -> {
+            GroupIncreaseInviteNoticeEvent ev = (GroupIncreaseInviteNoticeEvent) e;
+            l.onGroupIncreaseInvite(qq, ev);
+            l.onGroupIncrease(qq, ev);
+        });
+        register(GroupIncreaseNoticeEvent.class, (l, qq, e) ->
+                l.onGroupIncrease(qq, (GroupIncreaseNoticeEvent) e));
+
+        // ===== 通知事件 - 其他群聊 =====
+        register(GroupEssenceAddNoticeEvent.class, (l, qq, e) -> {
+            GroupEssenceAddNoticeEvent ev = (GroupEssenceAddNoticeEvent) e;
+            l.onGroupEssenceAdd(qq, ev);
+            l.onGroupEssence(qq, ev);
+        });
+        register(GroupEssenceNoticeEvent.class, (l, qq, e) ->
+                l.onGroupEssence(qq, (GroupEssenceNoticeEvent) e));
+        register(GroupRecallNoticeEvent.class, (l, qq, e) ->
+                l.onGroupRecall(qq, (GroupRecallNoticeEvent) e));
+        register(GroupUploadNoticeEvent.class, (l, qq, e) ->
+                l.onGroupUpload(qq, (GroupUploadNoticeEvent) e));
+        register(GroupCardNoticeEvent.class, (l, qq, e) ->
+                l.onGroupCard(qq, (GroupCardNoticeEvent) e));
+        register(GroupMsgEmojiLikeNoticeEvent.class, (l, qq, e) ->
+                l.onGroupMsgEmojiLike(qq, (GroupMsgEmojiLikeNoticeEvent) e));
+        register(TitleNoticeEvent.class, (l, qq, e) ->
+                l.onGroupTitle(qq, (TitleNoticeEvent) e));
+
+        // ===== 通知事件 - 其他 =====
+        register(PokeNoticeEvent.class, (l, qq, e) ->
+                l.onPoke(qq, (PokeNoticeEvent) e));
+        register(InputStatusNoticeEvent.class, (l, qq, e) ->
+                l.onInputStatus(qq, (InputStatusNoticeEvent) e));
+        register(ProfileLikeNoticeEvent.class, (l, qq, e) ->
+                l.onProfileLike(qq, (ProfileLikeNoticeEvent) e));
+        register(BotOfflineNoticeEvent.class, (l, qq, e) ->
+                l.onBotOffline(qq, (BotOfflineNoticeEvent) e));
+
+        // ===== 请求事件 =====
+        register(GroupAddRequestEvent.class, (l, qq, e) -> {
+            GroupAddRequestEvent ev = (GroupAddRequestEvent) e;
+            l.onGroupAddRequest(qq, ev);
+            l.onGroupRequest(qq, ev);
+        });
+        register(GroupInviteRequestEvent.class, (l, qq, e) -> {
+            GroupInviteRequestEvent ev = (GroupInviteRequestEvent) e;
+            l.onGroupInviteRequest(qq, ev);
+            l.onGroupRequest(qq, ev);
+        });
+        register(GroupRequestEvent.class, (l, qq, e) ->
+                l.onGroupRequest(qq, (GroupRequestEvent) e));
+        register(FriendRequestEvent.class, (l, qq, e) ->
+                l.onFriendRequest(qq, (FriendRequestEvent) e));
+    }
+
+    private static <T extends BaseEvent> void register(Class<T> type, EventHandler handler) {
+        EVENT_HANDLERS.put(type, handler);
+    }
+
     private void scanListeners() {
         Map<String, OneBotEventListener> beans = context.getBeansOfType(OneBotEventListener.class);
         listeners = new ArrayList<>(beans.values());
@@ -388,164 +585,43 @@ public class EventDispatcher {
     /**
      * 将事件分发给所有 OneBotEventListener Bean。
      * <p>
-     * 使用 instanceof 链按继承层级分发，最具体的子类优先匹配，保证接口中
-     * 既会调用父级方法（如 onGroupAdmin），也会调用子级方法（如 onGroupAdminSet）。
+     * 通过注册表 + 类层级查找替代长 instanceof 链，
+     * 自动匹配最具体的事件处理器，保证继承层级语义
+     * （如 onGroupAdminSet 触发时也会调用 onGroupAdmin）。
      */
     private void dispatchToOneBotEventListener(Long botQQ, BaseEvent event) {
         if (listeners.isEmpty()) return;
 
+        EventHandler handler = findEventHandler(event.getClass());
+        if (handler == null) {
+            log.warn("未注册的事件类型: {}", event.getClass().getSimpleName());
+            return;
+        }
+
         for (OneBotEventListener listener : listeners) {
             try {
-                // ===== 元事件 =====
-                if (event instanceof LifecycleConnectMetaEvent) {
-                    listener.onLifecycleConnect(botQQ, (LifecycleConnectMetaEvent) event);
-                    listener.onLifecycle(botQQ, (LifecycleMetaEvent) event);
-                } else if (event instanceof LifecycleMetaEvent) {
-                    listener.onLifecycle(botQQ, (LifecycleMetaEvent) event);
-                } else if (event instanceof HeartbeatMetaEvent) {
-                    listener.onHeartbeat(botQQ, (HeartbeatMetaEvent) event);
-                }
-
-                // ===== 消息事件 =====
-                else if (event instanceof PrivateFriendMessageEvent) {
-                    listener.onPrivateFriendMessage(botQQ, (PrivateFriendMessageEvent) event);
-                    listener.onPrivateMessage(botQQ, (PrivateMessageEvent) event);
-                } else if (event instanceof PrivateGroupMessageEvent) {
-                    listener.onPrivateGroupMessage(botQQ, (PrivateGroupMessageEvent) event);
-                    listener.onPrivateMessage(botQQ, (PrivateMessageEvent) event);
-                } else if (event instanceof PrivateMessageEvent) {
-                    listener.onPrivateMessage(botQQ, (PrivateMessageEvent) event);
-                } else if (event instanceof GroupNormalMessageEvent) {
-                    listener.onGroupNormalMessage(botQQ, (GroupNormalMessageEvent) event);
-                    listener.onGroupMessage(botQQ, (GroupMessageEvent) event);
-                } else if (event instanceof GroupMessageEvent) {
-                    listener.onGroupMessage(botQQ, (GroupMessageEvent) event);
-                }
-
-                // ===== 消息发送事件 =====
-                else if (event instanceof PrivateFriendMessageSentEvent) {
-                    listener.onPrivateFriendMessageSent(botQQ, (PrivateFriendMessageSentEvent) event);
-                    listener.onPrivateMessageSent(botQQ, (PrivateMessageSentEvent) event);
-                    listener.onMessageSent(botQQ, (MessageSentEvent) event);
-                } else if (event instanceof PrivateGroupMessageSentEvent) {
-                    listener.onPrivateGroupMessageSent(botQQ, (PrivateGroupMessageSentEvent) event);
-                    listener.onPrivateMessageSent(botQQ, (PrivateMessageSentEvent) event);
-                    listener.onMessageSent(botQQ, (MessageSentEvent) event);
-                } else if (event instanceof PrivateMessageSentEvent) {
-                    listener.onPrivateMessageSent(botQQ, (PrivateMessageSentEvent) event);
-                    listener.onMessageSent(botQQ, (MessageSentEvent) event);
-                } else if (event instanceof GroupNormalMessageSentEvent) {
-                    listener.onGroupNormalMessageSent(botQQ, (GroupNormalMessageSentEvent) event);
-                    listener.onGroupMessageSent(botQQ, (GroupMessageSentEvent) event);
-                    listener.onMessageSent(botQQ, (MessageSentEvent) event);
-                } else if (event instanceof GroupMessageSentEvent) {
-                    listener.onGroupMessageSent(botQQ, (GroupMessageSentEvent) event);
-                    listener.onMessageSent(botQQ, (MessageSentEvent) event);
-                } else if (event instanceof MessageSentEvent) {
-                    listener.onMessageSent(botQQ, (MessageSentEvent) event);
-                }
-
-                // ===== 通知事件 - 好友 =====
-                else if (event instanceof FriendAddNoticeEvent) {
-                    listener.onFriendAdd(botQQ, (FriendAddNoticeEvent) event);
-                } else if (event instanceof FriendRecallNoticeEvent) {
-                    listener.onFriendRecall(botQQ, (FriendRecallNoticeEvent) event);
-                }
-
-                // ===== 通知事件 - 群管理员 =====
-                else if (event instanceof GroupAdminSetNoticeEvent) {
-                    listener.onGroupAdminSet(botQQ, (GroupAdminSetNoticeEvent) event);
-                    listener.onGroupAdmin(botQQ, (GroupAdminNoticeEvent) event);
-                } else if (event instanceof GroupAdminUnsetNoticeEvent) {
-                    listener.onGroupAdminUnset(botQQ, (GroupAdminUnsetNoticeEvent) event);
-                    listener.onGroupAdmin(botQQ, (GroupAdminNoticeEvent) event);
-                } else if (event instanceof GroupAdminNoticeEvent) {
-                    listener.onGroupAdmin(botQQ, (GroupAdminNoticeEvent) event);
-                }
-
-                // ===== 通知事件 - 群禁言 =====
-                else if (event instanceof GroupBanBanNoticeEvent) {
-                    listener.onGroupBanBan(botQQ, (GroupBanBanNoticeEvent) event);
-                    listener.onGroupBan(botQQ, (GroupBanNoticeEvent) event);
-                } else if (event instanceof GroupBanLiftBanNoticeEvent) {
-                    listener.onGroupBanLiftBan(botQQ, (GroupBanLiftBanNoticeEvent) event);
-                    listener.onGroupBan(botQQ, (GroupBanNoticeEvent) event);
-                } else if (event instanceof GroupBanNoticeEvent) {
-                    listener.onGroupBan(botQQ, (GroupBanNoticeEvent) event);
-                }
-
-                // ===== 通知事件 - 群成员减少 =====
-                else if (event instanceof GroupDecreaseKickMeNoticeEvent) {
-                    listener.onGroupDecreaseKickMe(botQQ, (GroupDecreaseKickMeNoticeEvent) event);
-                    listener.onGroupDecrease(botQQ, (GroupDecreaseNoticeEvent) event);
-                } else if (event instanceof GroupDecreaseKickNoticeEvent) {
-                    listener.onGroupDecreaseKick(botQQ, (GroupDecreaseKickNoticeEvent) event);
-                    listener.onGroupDecrease(botQQ, (GroupDecreaseNoticeEvent) event);
-                } else if (event instanceof GroupDecreaseLeaveNoticeEvent) {
-                    listener.onGroupDecreaseLeave(botQQ, (GroupDecreaseLeaveNoticeEvent) event);
-                    listener.onGroupDecrease(botQQ, (GroupDecreaseNoticeEvent) event);
-                } else if (event instanceof GroupDecreaseNoticeEvent) {
-                    listener.onGroupDecrease(botQQ, (GroupDecreaseNoticeEvent) event);
-                }
-
-                // ===== 通知事件 - 群成员增加 =====
-                else if (event instanceof GroupIncreaseApproveNoticeEvent) {
-                    listener.onGroupIncreaseApprove(botQQ, (GroupIncreaseApproveNoticeEvent) event);
-                    listener.onGroupIncrease(botQQ, (GroupIncreaseNoticeEvent) event);
-                } else if (event instanceof GroupIncreaseInviteNoticeEvent) {
-                    listener.onGroupIncreaseInvite(botQQ, (GroupIncreaseInviteNoticeEvent) event);
-                    listener.onGroupIncrease(botQQ, (GroupIncreaseNoticeEvent) event);
-                } else if (event instanceof GroupIncreaseNoticeEvent) {
-                    listener.onGroupIncrease(botQQ, (GroupIncreaseNoticeEvent) event);
-                }
-
-                // ===== 通知事件 - 其他群聊 =====
-                else if (event instanceof GroupEssenceAddNoticeEvent) {
-                    listener.onGroupEssenceAdd(botQQ, (GroupEssenceAddNoticeEvent) event);
-                    listener.onGroupEssence(botQQ, (GroupEssenceNoticeEvent) event);
-                } else if (event instanceof GroupEssenceNoticeEvent) {
-                    listener.onGroupEssence(botQQ, (GroupEssenceNoticeEvent) event);
-                } else if (event instanceof GroupRecallNoticeEvent) {
-                    listener.onGroupRecall(botQQ, (GroupRecallNoticeEvent) event);
-                } else if (event instanceof GroupUploadNoticeEvent) {
-                    listener.onGroupUpload(botQQ, (GroupUploadNoticeEvent) event);
-                } else if (event instanceof GroupCardNoticeEvent) {
-                    listener.onGroupCard(botQQ, (GroupCardNoticeEvent) event);
-                } else if (event instanceof GroupMsgEmojiLikeNoticeEvent) {
-                    listener.onGroupMsgEmojiLike(botQQ, (GroupMsgEmojiLikeNoticeEvent) event);
-                } else if (event instanceof TitleNoticeEvent) {
-                    listener.onGroupTitle(botQQ, (TitleNoticeEvent) event);
-                }
-
-                // ===== 通知事件 - 其他 =====
-                else if (event instanceof PokeNoticeEvent) {
-                    listener.onPoke(botQQ, (PokeNoticeEvent) event);
-                } else if (event instanceof InputStatusNoticeEvent) {
-                    listener.onInputStatus(botQQ, (InputStatusNoticeEvent) event);
-                } else if (event instanceof ProfileLikeNoticeEvent) {
-                    listener.onProfileLike(botQQ, (ProfileLikeNoticeEvent) event);
-                } else if (event instanceof BotOfflineNoticeEvent) {
-                    listener.onBotOffline(botQQ, (BotOfflineNoticeEvent) event);
-                }
-
-                // ===== 请求事件 =====
-                else if (event instanceof GroupAddRequestEvent) {
-                    listener.onGroupAddRequest(botQQ, (GroupAddRequestEvent) event);
-                    listener.onGroupRequest(botQQ, (GroupRequestEvent) event);
-                } else if (event instanceof GroupInviteRequestEvent) {
-                    listener.onGroupInviteRequest(botQQ, (GroupInviteRequestEvent) event);
-                    listener.onGroupRequest(botQQ, (GroupRequestEvent) event);
-                } else if (event instanceof GroupRequestEvent) {
-                    listener.onGroupRequest(botQQ, (GroupRequestEvent) event);
-                } else if (event instanceof FriendRequestEvent) {
-                    listener.onFriendRequest(botQQ, (FriendRequestEvent) event);
-                }
-
+                handler.handle(listener, botQQ, event);
             } catch (Exception e) {
                 log.error("OneBotEventListener 分发异常, listener: {}, event: {}",
                         listener.getClass().getSimpleName(), event.getClass().getSimpleName(), e);
             }
         }
+    }
+
+    /**
+     * 沿类层级向上查找最匹配的事件处理器。
+     * 从具体事件类开始逐级遍历父类，找到注册的处理器即返回。
+     */
+    @SuppressWarnings("unchecked")
+    private EventHandler findEventHandler(Class<? extends BaseEvent> eventType) {
+        Class<?> clazz = eventType;
+        while (clazz != null) {
+            EventHandler handler = EVENT_HANDLERS.get(clazz);
+            if (handler != null) return handler;
+            if (clazz == BaseEvent.class) break;
+            clazz = clazz.getSuperclass();
+        }
+        return null;
     }
 
     // ==================== @OnEvent 注解扫描与分发 ====================

@@ -2897,10 +2897,10 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 删除自定义表情。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param resId 【可选】
-     * @param id 【可选】
-     * @param ids 【可选】
-     * @param md5 【可选】
+     * @param resId 【可选】fetch_custom_face_detail返回的resId
+     * @param id 【可选】native deleteFavEmoji字符串ID，通常为resId
+     * @param ids 【可选】native deleteFavEmoji字符串ID列表，通常为resId列表
+     * @param md5 【可选】表情MD5，不能直接删除，请先通过fetch_custom_face_detail获取resId
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
