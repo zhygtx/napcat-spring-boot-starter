@@ -124,18 +124,33 @@ public class NapCatWebSocketHandler extends AbstractWebSocketHandler {
     /**
      * 处理连接关闭。
      * <p>
-     * 从注册中心移除 Bot，并取消该 Bot 的所有待处理 API 请求。
+     * 验证关闭的 session 与注册中心当前 session 一致后才移除 Bot，
+     * 防止旧连接的关闭回调误删已由新连接替换的 Bot 注册信息。
+     * <p>
+     * 场景：同一 BotQQ 建立新连接时，register() 会关闭旧连接，
+     * 旧连接的 afterConnectionClosed 回调不应影响新连接的注册状态。
      */
     @Override
     public void afterConnectionClosed(WebSocketSession session, @NonNull CloseStatus status) {
         Long botQQ = (Long) session.getAttributes().get(NapCatConstants.ATTR_BOT_QQ);
+        String sessionId = session.getId();
         if (botQQ != null) {
-            botRegistry.remove(botQQ);
-            // 取消该 Bot 所有待处理的 API 请求
-            apiClient.cancelPendingRequestsForBot(botQQ);
+            Bot currentBot = botRegistry.getBot(botQQ);
+            // 仅当关闭的 session 是注册中心当前记录的 session 时才执行移除
+            if (currentBot != null
+                    && currentBot.getSession() != null
+                    && currentBot.getSession().getId().equals(sessionId)) {
+                botRegistry.remove(botQQ);
+                apiClient.cancelPendingRequestsForBot(botQQ);
+            } else {
+                log.debug("连接关闭但 Bot [{}] 已有新会话，跳过移除 | 关闭会话: {} | 当前会话: {}",
+                        botQQ, sessionId,
+                        currentBot != null && currentBot.getSession() != null
+                                ? currentBot.getSession().getId() : "null");
+            }
         }
         log.info("连接关闭 | BotQQ: {} | 会话: {} | 状态码: {} | 关闭原因: {}",
-                botQQ, session.getId(), status.getCode(), status.getReason());
+                botQQ, sessionId, status.getCode(), status.getReason());
     }
 
     /**
