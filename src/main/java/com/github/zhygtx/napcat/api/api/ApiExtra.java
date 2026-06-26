@@ -50,8 +50,6 @@ public interface ApiExtra {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径或 URL
-     * @param fileId 【可选】文件 ID
-     * @param chunkSize 【可选】分块大小 (字节)（默认 65536）
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -61,7 +59,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<FileStreamData>> downloadFileStream(long botQQ, String file, String fileId, Integer chunkSize);
+    CompletableFuture<ApiResponse<FileStreamData>> downloadFileStream(long botQQ, String file);
 
     /**
      * 下载语音文件流。
@@ -72,9 +70,6 @@ public interface ApiExtra {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径或 URL
-     * @param fileId 【可选】文件 ID
-     * @param chunkSize 【可选】分块大小 (字节)（默认 65536）
-     * @param outFormat 【可选】输出格式
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -84,7 +79,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<FileRecordStreamData>> downloadFileRecordStream(long botQQ, String file, String fileId, Integer chunkSize, String outFormat);
+    CompletableFuture<ApiResponse<FileRecordStreamData>> downloadFileRecordStream(long botQQ, String file);
 
     /**
      * 下载图片文件流。
@@ -95,8 +90,6 @@ public interface ApiExtra {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径或 URL
-     * @param fileId 【可选】文件 ID
-     * @param chunkSize 【可选】分块大小 (字节)（默认 65536）
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -106,7 +99,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<FileRecordStreamData>> downloadFileImageStream(long botQQ, String file, String fileId, Integer chunkSize);
+    CompletableFuture<ApiResponse<FileRecordStreamData>> downloadFileImageStream(long botQQ, String file);
 
     /**
      * 测试下载流。
@@ -116,7 +109,6 @@ public interface ApiExtra {
      * 分类：流式传输扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param error 【可选】是否触发测试错误（默认 False）
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -126,7 +118,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<DownloadStreamData>> testDownloadStream(long botQQ, Boolean error);
+    CompletableFuture<ApiResponse<DownloadStreamData>> testDownloadStream(long botQQ);
 
     /**
      * 上传文件流。
@@ -143,11 +135,6 @@ public interface ApiExtra {
      * @param chunkIndex 【可选】分块索引
      * @param totalChunks 【可选】总分块数
      * @param fileSize 【可选】文件总大小
-     * @param expectedSha256 【可选】期望的 SHA256
-     * @param isComplete 【可选】是否完成
-     * @param filename 【可选】文件名
-     * @param reset 【可选】是否重置
-     * @param verifyOnly 【可选】是否仅验证
      * @param fileRetention 【必填】文件保留时间 (毫秒)（默认 300000）
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
@@ -158,7 +145,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<FileStreamData>> uploadFileStream(long botQQ, String streamId, String chunkData, Long chunkIndex, Long totalChunks, Integer fileSize, String expectedSha256, Boolean isComplete, String filename, Boolean reset, Boolean verifyOnly, Long fileRetention);
+    CompletableFuture<ApiResponse<FileStreamData>> uploadFileStream(long botQQ, String streamId, String chunkData, Long chunkIndex, Long totalChunks, Integer fileSize, Long fileRetention);
 
     /**
      * 批量踢出群成员。
@@ -196,7 +183,6 @@ public interface ApiExtra {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param nickname 【必填】昵称
      * @param personalNote 【可选】个性签名
-     * @param sex 【可选】性别 (0: 未知, 1: 男, 2: 女)
      * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -206,7 +192,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> setQqProfile(long botQQ, String nickname, String personalNote, Long sex);
+    CompletableFuture<ApiResponse<VoidData>> setQqProfile(long botQQ, String nickname, String personalNote);
 
     /**
      * 创建收藏。
@@ -349,10 +335,7 @@ public interface ApiExtra {
      * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param friendId 【可选】好友 QQ 号
      * @param userId 【可选】用户 QQ 号
-     * @param tempBlock 【可选】是否加入黑名单
-     * @param tempBothDel 【可选】是否双向删除
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -362,7 +345,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<String>> deleteFriend(long botQQ, String friendId, Long userId, Boolean tempBlock, Boolean tempBothDel);
+    CompletableFuture<ApiResponse<String>> deleteFriend(long botQQ, Long userId);
 
     /**
      * 检查URL安全性。
@@ -535,16 +518,8 @@ public interface ApiExtra {
      * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param messageType 【可选】消息类型 (private/group)
-     * @param userId 【可选】用户QQ
      * @param groupId 【可选】群号
      * @param message 【必填】OneBot 11 消息混合类型
-     * @param autoEscape 【可选】是否作为纯文本发送
-     * @param source 【可选】合并转发来源
-     * @param news 【可选】合并转发新闻
-     * @param summary 【可选】合并转发摘要
-     * @param prompt 【可选】合并转发提示
-     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -554,7 +529,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<GroupMsgData>> sendForwardMsg(long botQQ, String messageType, Long userId, Long groupId, String message, Boolean autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout);
+    CompletableFuture<ApiResponse<GroupMsgData>> sendForwardMsg(long botQQ, Long groupId, String message);
 
     /**
      * 发送群合并转发消息。
@@ -564,16 +539,8 @@ public interface ApiExtra {
      * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param messageType 【可选】消息类型 (private/group)
-     * @param userId 【可选】用户QQ
      * @param groupId 【可选】群号
      * @param message 【必填】OneBot 11 消息混合类型
-     * @param autoEscape 【可选】是否作为纯文本发送
-     * @param source 【可选】合并转发来源
-     * @param news 【可选】合并转发新闻
-     * @param summary 【可选】合并转发摘要
-     * @param prompt 【可选】合并转发提示
-     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -583,7 +550,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<GroupMsgData>> sendGroupForwardMsg(long botQQ, String messageType, Long userId, Long groupId, String message, Boolean autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout);
+    CompletableFuture<ApiResponse<GroupMsgData>> sendGroupForwardMsg(long botQQ, Long groupId, String message);
 
     /**
      * 发送私聊合并转发消息。
@@ -593,16 +560,8 @@ public interface ApiExtra {
      * 分类：Go-CQHTTP
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param messageType 【可选】消息类型 (private/group)
      * @param userId 【可选】用户QQ
-     * @param groupId 【可选】群号
      * @param message 【必填】OneBot 11 消息混合类型
-     * @param autoEscape 【可选】是否作为纯文本发送
-     * @param source 【可选】合并转发来源
-     * @param news 【可选】合并转发新闻
-     * @param summary 【可选】合并转发摘要
-     * @param prompt 【可选】合并转发提示
-     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -612,7 +571,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<GroupMsgData>> sendPrivateForwardMsg(long botQQ, String messageType, Long userId, Long groupId, String message, Boolean autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout);
+    CompletableFuture<ApiResponse<GroupMsgData>> sendPrivateForwardMsg(long botQQ, Long userId, String message);
 
     /**
      * 获取陌生人信息。
@@ -648,8 +607,6 @@ public interface ApiExtra {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param url 【可选】下载链接
-     * @param base64 【可选】base64数据
-     * @param name 【可选】文件名
      * @param headers 【可选】请求头
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
@@ -660,7 +617,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<FileRecordStreamData>> downloadFile(long botQQ, String url, String base64, String name, String headers);
+    CompletableFuture<ApiResponse<FileRecordStreamData>> downloadFile(long botQQ, String url, String headers);
 
     /**
      * 获取频道列表。
@@ -696,8 +653,6 @@ public interface ApiExtra {
      * @param groupId 【必填】群号
      * @param file 【必填】资源路径或URL
      * @param name 【必填】文件名
-     * @param folder 【可选】父目录 ID
-     * @param folderId 【可选】父目录 ID (兼容性字段)
      * @param uploadFile 【必填】是否执行上传（默认 True）
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
@@ -708,7 +663,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<GroupFileData>> uploadGroupFile(long botQQ, Long groupId, String file, String name, String folder, String folderId, Boolean uploadFile);
+    CompletableFuture<ApiResponse<GroupFileData>> uploadGroupFile(long botQQ, Long groupId, String file, String name, Boolean uploadFile);
 
     /**
      * 获取群历史消息。
@@ -750,7 +705,6 @@ public interface ApiExtra {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【可选】消息ID
-     * @param id 【可选】消息ID
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -760,7 +714,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<GroupMsgHistoryData>> getForwardMsg(long botQQ, String messageId, String id);
+    CompletableFuture<ApiResponse<GroupMsgHistoryData>> getForwardMsg(long botQQ, String messageId);
 
     /**
      * 获取好友历史消息。
@@ -961,7 +915,6 @@ public interface ApiExtra {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param folderName 【可选】文件夹名称
-     * @param name 【可选】文件夹名称
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -971,7 +924,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<GroupFileFolderData>> createGroupFileFolder(long botQQ, Long groupId, String folderName, String name);
+    CompletableFuture<ApiResponse<GroupFileFolderData>> createGroupFileFolder(long botQQ, Long groupId, String folderName);
 
     /**
      * 删除群文件目录。
@@ -985,7 +938,6 @@ public interface ApiExtra {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param folderId 【可选】文件夹ID
-     * @param folder 【可选】文件夹ID
      * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -995,7 +947,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> deleteGroupFolder(long botQQ, Long groupId, String folderId, String folder);
+    CompletableFuture<ApiResponse<VoidData>> deleteGroupFolder(long botQQ, Long groupId, String folderId);
 
     /**
      * 获取群文件系统信息。
@@ -1031,7 +983,6 @@ public interface ApiExtra {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param folderId 【可选】文件夹ID
-     * @param folder 【可选】文件夹ID
      * @param fileCount 【必填】文件数量（默认 50）
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
@@ -1042,7 +993,7 @@ public interface ApiExtra {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<GroupRootFilesData>> getGroupFilesByFolder(long botQQ, Long groupId, String folderId, String folder, Integer fileCount);
+    CompletableFuture<ApiResponse<GroupRootFilesData>> getGroupFilesByFolder(long botQQ, Long groupId, String folderId, Integer fileCount);
 
     /**
      * 设置专属头衔。

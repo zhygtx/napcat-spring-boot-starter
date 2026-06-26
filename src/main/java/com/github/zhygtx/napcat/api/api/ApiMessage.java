@@ -1,12 +1,12 @@
 package com.github.zhygtx.napcat.api.api;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.zhygtx.napcat.api.response.ApiResponse;
-import com.github.zhygtx.napcat.api.response.VoidData;
-import com.github.zhygtx.napcat.api.response.group.GroupMsgData;
+import com.github.zhygtx.napcat.api.response.*;
+import com.github.zhygtx.napcat.api.response.extra.*;
+import com.github.zhygtx.napcat.api.response.file.*;
+import com.github.zhygtx.napcat.api.response.friend.*;
+import com.github.zhygtx.napcat.api.response.group.*;
 import com.github.zhygtx.napcat.api.response.message.*;
-
-import java.util.List;
+import com.github.zhygtx.napcat.api.response.system.*;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -30,7 +30,6 @@ public interface ApiMessage {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param messageId 【可选】消息ID
-     * @param messageSeq 【可选】消息Seq (可选)
      * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -40,7 +39,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> setGroupTodo(long botQQ, Long groupId, String messageId, String messageSeq);
+    CompletableFuture<ApiResponse<VoidData>> setGroupTodo(long botQQ, Long groupId, String messageId);
 
     /**
      * 完成群待办。
@@ -54,7 +53,6 @@ public interface ApiMessage {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param messageId 【可选】消息ID
-     * @param messageSeq 【可选】消息Seq (可选)
      * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -64,7 +62,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> completeGroupTodo(long botQQ, Long groupId, String messageId, String messageSeq);
+    CompletableFuture<ApiResponse<VoidData>> completeGroupTodo(long botQQ, Long groupId, String messageId);
 
     /**
      * 取消群待办。
@@ -78,7 +76,6 @@ public interface ApiMessage {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param messageId 【可选】消息ID
-     * @param messageSeq 【可选】消息Seq (可选)
      * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -88,7 +85,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> cancelGroupTodo(long botQQ, Long groupId, String messageId, String messageSeq);
+    CompletableFuture<ApiResponse<VoidData>> cancelGroupTodo(long botQQ, Long groupId, String messageId);
 
     /**
      * 获取表情点赞详情。
@@ -122,10 +119,8 @@ public interface ApiMessage {
      * 分类：消息扩展
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param groupId 【可选】群号，短ID可不传
      * @param messageId 【必填】消息ID，可以传递长ID或短ID
      * @param emojiId 【必填】表情ID
-     * @param emojiType 【可选】表情类型
      * @param count 【必填】数量，0代表全部（默认 0）
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
@@ -136,7 +131,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<EmojiLikesData>> getEmojiLikes(long botQQ, Long groupId, String messageId, String emojiId, String emojiType, Integer count);
+    CompletableFuture<ApiResponse<EmojiLikesData>> getEmojiLikes(long botQQ, String messageId, String emojiId, Integer count);
 
     /**
      * 获取语音转文字结果。
@@ -191,7 +186,6 @@ public interface ApiMessage {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【可选】QQ号
-     * @param groupId 【可选】群号
      * @param phoneNumber 【必填】手机号（默认 ）
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
@@ -202,7 +196,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<ArksharepeerData>> arksharepeer(long botQQ, Long userId, Long groupId, String phoneNumber);
+    CompletableFuture<ApiResponse<ArksharepeerData>> arksharepeer(long botQQ, Long userId, String phoneNumber);
 
     /**
      * 分享群 (Ark)。
@@ -237,7 +231,6 @@ public interface ApiMessage {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【可选】QQ号
-     * @param groupId 【可选】群号
      * @param phoneNumber 【必填】手机号（默认 ）
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
@@ -248,7 +241,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<ArksharepeerData>> sendArkShare(long botQQ, Long userId, Long groupId, String phoneNumber);
+    CompletableFuture<ApiResponse<ArksharepeerData>> sendArkShare(long botQQ, Long userId, String phoneNumber);
 
     /**
      * 转发单条消息。
@@ -262,7 +255,6 @@ public interface ApiMessage {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【必填】消息ID
      * @param groupId 【可选】目标群号
-     * @param userId 【可选】目标用户QQ
      * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -272,7 +264,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> forwardFriendSingleMsg(long botQQ, Long messageId, Long groupId, Long userId);
+    CompletableFuture<ApiResponse<VoidData>> forwardFriendSingleMsg(long botQQ, Long messageId, Long groupId);
 
     /**
      * 转发单条消息。
@@ -286,7 +278,6 @@ public interface ApiMessage {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【必填】消息ID
      * @param groupId 【可选】目标群号
-     * @param userId 【可选】目标用户QQ
      * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -296,7 +287,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> forwardGroupSingleMsg(long botQQ, Long messageId, Long groupId, Long userId);
+    CompletableFuture<ApiResponse<VoidData>> forwardGroupSingleMsg(long botQQ, Long messageId, Long groupId);
 
     /**
      * 标记群聊已读。
@@ -308,8 +299,6 @@ public interface ApiMessage {
      * 分类：消息接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param userId 【可选】用户QQ
-     * @param groupId 【可选】群号
      * @param messageId 【可选】消息ID
      * @return 异步响应，无业务数据
      * <p>
@@ -320,7 +309,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> markGroupMsgAsRead(long botQQ, Long userId, Long groupId, String messageId);
+    CompletableFuture<ApiResponse<VoidData>> markGroupMsgAsRead(long botQQ, String messageId);
 
     /**
      * 标记私聊已读。
@@ -332,8 +321,6 @@ public interface ApiMessage {
      * 分类：消息接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param userId 【可选】用户QQ
-     * @param groupId 【可选】群号
      * @param messageId 【可选】消息ID
      * @return 异步响应，无业务数据
      * <p>
@@ -344,7 +331,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> markPrivateMsgAsRead(long botQQ, Long userId, Long groupId, String messageId);
+    CompletableFuture<ApiResponse<VoidData>> markPrivateMsgAsRead(long botQQ, String messageId);
 
     /**
      * 获取消息。
@@ -378,16 +365,8 @@ public interface ApiMessage {
      * 分类：消息接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param messageType 【可选】消息类型 (private/group)
      * @param userId 【可选】用户QQ
-     * @param groupId 【可选】群号
      * @param message 【必填】OneBot 11 消息混合类型
-     * @param autoEscape 【可选】是否作为纯文本发送
-     * @param source 【可选】合并转发来源
-     * @param news 【可选】合并转发新闻
-     * @param summary 【可选】合并转发摘要
-     * @param prompt 【可选】合并转发提示
-     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -397,7 +376,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<GroupMsgData>> sendPrivateMsg(long botQQ, String messageType, Long userId, Long groupId, String message, Boolean autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout);
+    CompletableFuture<ApiResponse<GroupMsgData>> sendPrivateMsg(long botQQ, Long userId, String message);
 
     /**
      * 发送消息。
@@ -410,15 +389,8 @@ public interface ApiMessage {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageType 【可选】消息类型 (private/group)
-     * @param userId 【可选】用户QQ
      * @param groupId 【可选】群号
      * @param message 【必填】OneBot 11 消息混合类型
-     * @param autoEscape 【可选】是否作为纯文本发送
-     * @param source 【可选】合并转发来源
-     * @param news 【可选】合并转发新闻
-     * @param summary 【可选】合并转发摘要
-     * @param prompt 【可选】合并转发提示
-     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -428,7 +400,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<GroupMsgData>> sendMsg(long botQQ, String messageType, Long userId, Long groupId, String message, Boolean autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout);
+    CompletableFuture<ApiResponse<GroupMsgData>> sendMsg(long botQQ, String messageType, Long groupId, String message);
 
     /**
      * 撤回消息。
@@ -484,8 +456,6 @@ public interface ApiMessage {
      * 分类：消息接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param userId 【可选】用户QQ
-     * @param groupId 【可选】群号
      * @param messageId 【可选】消息ID
      * @return 异步响应，无业务数据
      * <p>
@@ -496,7 +466,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> markMsgAsRead(long botQQ, Long userId, Long groupId, String messageId);
+    CompletableFuture<ApiResponse<VoidData>> markMsgAsRead(long botQQ, String messageId);
 
     /**
      * 标记所有消息已读。
@@ -527,9 +497,7 @@ public interface ApiMessage {
      * 分类：核心接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param groupId 【可选】群号
      * @param userId 【必填】用户QQ
-     * @param targetId 【可选】目标QQ
      * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -539,7 +507,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> groupPoke(long botQQ, Long groupId, Long userId, String targetId);
+    CompletableFuture<ApiResponse<VoidData>> groupPoke(long botQQ, Long userId);
 
     /**
      * 发送戳一戳。
@@ -551,9 +519,7 @@ public interface ApiMessage {
      * 分类：核心接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param groupId 【可选】群号
      * @param userId 【必填】用户QQ
-     * @param targetId 【可选】目标QQ
      * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -563,7 +529,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> friendPoke(long botQQ, Long groupId, Long userId, String targetId);
+    CompletableFuture<ApiResponse<VoidData>> friendPoke(long botQQ, Long userId);
 
     /**
      * 发送戳一戳。
@@ -575,9 +541,7 @@ public interface ApiMessage {
      * 分类：核心接口
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param groupId 【可选】群号
      * @param userId 【必填】用户QQ
-     * @param targetId 【可选】目标QQ
      * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -587,7 +551,7 @@ public interface ApiMessage {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> sendPoke(long botQQ, Long groupId, Long userId, String targetId);
+    CompletableFuture<ApiResponse<VoidData>> sendPoke(long botQQ, Long userId);
 
     /**
      * 点击内联键盘按钮。

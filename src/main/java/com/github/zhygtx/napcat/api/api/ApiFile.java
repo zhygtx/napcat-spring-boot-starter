@@ -30,7 +30,6 @@ public interface ApiFile {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径、URL或Base64
-     * @param fileId 【可选】文件ID
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -40,7 +39,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<FileData>> getFile(long botQQ, String file, String fileId);
+    CompletableFuture<ApiResponse<FileData>> getFile(long botQQ, String file);
 
     /**
      * 移动群文件。
@@ -120,7 +119,6 @@ public interface ApiFile {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径、URL或Base64
-     * @param fileId 【可选】文件ID
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -130,7 +128,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<FileData>> getImage(long botQQ, String file, String fileId);
+    CompletableFuture<ApiResponse<FileData>> getImage(long botQQ, String file);
 
     /**
      * 获取语音。
@@ -143,7 +141,6 @@ public interface ApiFile {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径、URL或Base64
-     * @param fileId 【可选】文件ID
      * @param outFormat 【必填】输出格式
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
@@ -154,7 +151,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<FileData>> getRecord(long botQQ, String file, String fileId, String outFormat);
+    CompletableFuture<ApiResponse<FileData>> getRecord(long botQQ, String file, String outFormat);
 
     /**
      * 获取群文件URL。
@@ -211,7 +208,6 @@ public interface ApiFile {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param files 【必填】文件列表或单个文件路径
      * @param name 【可选】任务名称
-     * @param thumbPath 【可选】缩略图路径
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -221,7 +217,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<FlashTaskData>> createFlashTask(long botQQ, List<String> files, String name, String thumbPath);
+    CompletableFuture<ApiResponse<FlashTaskData>> createFlashTask(long botQQ, List<String> files, String name);
 
     /**
      * 获取闪传文件列表。
@@ -252,8 +248,6 @@ public interface ApiFile {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param filesetId 【必填】文件集 ID
-     * @param fileName 【可选】文件名
-     * @param fileIndex 【可选】文件索引
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -263,7 +257,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<GroupFileUrlData>> getFlashFileUrl(long botQQ, String filesetId, String fileName, Long fileIndex);
+    CompletableFuture<ApiResponse<GroupFileUrlData>> getFlashFileUrl(long botQQ, String filesetId);
 
     /**
      * 发送闪传消息。
@@ -275,7 +269,6 @@ public interface ApiFile {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param filesetId 【必填】文件集 ID
      * @param userId 【可选】用户 QQ
-     * @param groupId 【可选】群号
      * @return 异步响应，成功时 data 包含业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -285,7 +278,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<GroupAiRecordData>> sendFlashMsg(long botQQ, String filesetId, Long userId, Long groupId);
+    CompletableFuture<ApiResponse<GroupAiRecordData>> sendFlashMsg(long botQQ, String filesetId, Long userId);
 
     /**
      * 获取文件分享链接。
@@ -379,7 +372,6 @@ public interface ApiFile {
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】用户 QQ
      * @param folderPath 【必填】本地文件夹路径
-     * @param folderName 【可选】文件夹名称 (可选)
      * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -389,7 +381,7 @@ public interface ApiFile {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> sendOnlineFolder(long botQQ, Long userId, String folderPath, String folderName);
+    CompletableFuture<ApiResponse<VoidData>> sendOnlineFolder(long botQQ, Long userId, String folderPath);
 
     /**
      * 接收在线文件。

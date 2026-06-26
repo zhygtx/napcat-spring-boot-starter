@@ -467,12 +467,6 @@ public interface ApiSystem {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【必填】本地表情文件路径
-     * @param emojiId 【可选】表情ID，未提供时传空字符串
-     * @param packageId 【可选】表情包ID，未提供时传0
-     * @param fileName 【可选】文件名，未提供时从file路径取basename
-     * @param fileSize 【可选】文件大小，未提供时读取本地文件
-     * @param md5 【可选】文件MD5，未提供时读取本地文件计算
-     * @param isMarkFace 【可选】是否商城表情
      * @param isOrigin 【可选】是否原图
      * @return 异步响应，无业务数据
      * <p>
@@ -483,7 +477,7 @@ public interface ApiSystem {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> addCustomFace(long botQQ, String file, String emojiId, String packageId, String fileName, String fileSize, String md5, Boolean isMarkFace, Boolean isOrigin);
+    CompletableFuture<ApiResponse<VoidData>> addCustomFace(long botQQ, String file, Boolean isOrigin);
 
     /**
      * 删除自定义表情。
@@ -494,9 +488,6 @@ public interface ApiSystem {
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param resId 【可选】fetch_custom_face_detail返回的resId
-     * @param id 【可选】native deleteFavEmoji字符串ID，通常为resId
-     * @param ids 【可选】native deleteFavEmoji字符串ID列表，通常为resId列表
-     * @param md5 【可选】表情MD5，不能直接删除，请先通过fetch_custom_face_detail获取resId
      * @return 异步响应，无业务数据
      * <p>
      * <b>可能的错误情况：</b>
@@ -506,7 +497,7 @@ public interface ApiSystem {
      *   <li>{@code retcode=1404: 资源不存在}</li>
      * </ul>
      */
-    CompletableFuture<ApiResponse<VoidData>> deleteCustomFace(long botQQ, String resId, String id, List<String> ids, String md5);
+    CompletableFuture<ApiResponse<VoidData>> deleteCustomFace(long botQQ, String resId);
 
     /**
      * 修改自定义表情描述。

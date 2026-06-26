@@ -68,18 +68,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径或 URL
-     * @param fileId 【可选】文件 ID
-     * @param chunkSize 【可选】分块大小 (字节)
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<FileStreamData>> downloadFileStream(long botQQ, String file, String fileId, Integer chunkSize) {
+    public CompletableFuture<ApiResponse<FileStreamData>> downloadFileStream(long botQQ, String file) {
         ObjectNode p = mapper.createObjectNode();
         if (file != null) p.put("file", file);
-        if (fileId != null) p.put("file_id", fileId);
-        if (chunkSize != null) p.put("chunk_size", chunkSize);
         return req(botQQ, "download_file_stream", p, FileStreamData.class);
     }
 
@@ -88,20 +84,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径或 URL
-     * @param fileId 【可选】文件 ID
-     * @param chunkSize 【可选】分块大小 (字节)
-     * @param outFormat 【可选】输出格式
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<FileRecordStreamData>> downloadFileRecordStream(long botQQ, String file, String fileId, Integer chunkSize, String outFormat) {
+    public CompletableFuture<ApiResponse<FileRecordStreamData>> downloadFileRecordStream(long botQQ, String file) {
         ObjectNode p = mapper.createObjectNode();
         if (file != null) p.put("file", file);
-        if (fileId != null) p.put("file_id", fileId);
-        if (chunkSize != null) p.put("chunk_size", chunkSize);
-        if (outFormat != null) p.put("out_format", outFormat);
         return req(botQQ, "download_file_record_stream", p, FileRecordStreamData.class);
     }
 
@@ -110,18 +100,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径或 URL
-     * @param fileId 【可选】文件 ID
-     * @param chunkSize 【可选】分块大小 (字节)
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<FileRecordStreamData>> downloadFileImageStream(long botQQ, String file, String fileId, Integer chunkSize) {
+    public CompletableFuture<ApiResponse<FileRecordStreamData>> downloadFileImageStream(long botQQ, String file) {
         ObjectNode p = mapper.createObjectNode();
         if (file != null) p.put("file", file);
-        if (fileId != null) p.put("file_id", fileId);
-        if (chunkSize != null) p.put("chunk_size", chunkSize);
         return req(botQQ, "download_file_image_stream", p, FileRecordStreamData.class);
     }
 
@@ -129,15 +115,13 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 测试下载流。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param error 【可选】是否触发测试错误
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<DownloadStreamData>> testDownloadStream(long botQQ, Boolean error) {
+    public CompletableFuture<ApiResponse<DownloadStreamData>> testDownloadStream(long botQQ) {
         ObjectNode p = mapper.createObjectNode();
-        if (error != null && error) p.put("error", true);
         return req(botQQ, "test_download_stream", p, DownloadStreamData.class);
     }
 
@@ -150,29 +134,19 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param chunkIndex 【可选】分块索引
      * @param totalChunks 【可选】总分块数
      * @param fileSize 【可选】文件总大小
-     * @param expectedSha256 【可选】期望的 SHA256
-     * @param isComplete 【可选】是否完成
-     * @param filename 【可选】文件名
-     * @param reset 【可选】是否重置
-     * @param verifyOnly 【可选】是否仅验证
      * @param fileRetention 【必填】文件保留时间 (毫秒)
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<FileStreamData>> uploadFileStream(long botQQ, String streamId, String chunkData, Long chunkIndex, Long totalChunks, Integer fileSize, String expectedSha256, Boolean isComplete, String filename, Boolean reset, Boolean verifyOnly, Long fileRetention) {
+    public CompletableFuture<ApiResponse<FileStreamData>> uploadFileStream(long botQQ, String streamId, String chunkData, Long chunkIndex, Long totalChunks, Integer fileSize, Long fileRetention) {
         ObjectNode p = mapper.createObjectNode();
         p.put("stream_id", streamId);
         if (chunkData != null) p.put("chunk_data", chunkData);
         if (chunkIndex != null) p.put("chunk_index", chunkIndex);
         if (totalChunks != null) p.put("total_chunks", totalChunks);
         if (fileSize != null) p.put("file_size", fileSize);
-        if (expectedSha256 != null) p.put("expected_sha256", expectedSha256);
-        if (isComplete != null && isComplete) p.put("is_complete", true);
-        if (filename != null) p.put("filename", filename);
-        if (reset != null && reset) p.put("reset", true);
-        if (verifyOnly != null && verifyOnly) p.put("verify_only", true);
         p.put("file_retention", fileRetention);
         return req(botQQ, "upload_file_stream", p, FileStreamData.class);
     }
@@ -203,17 +177,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param nickname 【必填】昵称
      * @param personalNote 【可选】个性签名
-     * @param sex 【可选】性别 (0: 未知, 1: 男, 2: 女)
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> setQqProfile(long botQQ, String nickname, String personalNote, Long sex) {
+    public CompletableFuture<ApiResponse<VoidData>> setQqProfile(long botQQ, String nickname, String personalNote) {
         ObjectNode p = mapper.createObjectNode();
         p.put("nickname", nickname);
         if (personalNote != null) p.put("personal_note", personalNote);
-        if (sex != null) p.put("sex", sex);
         return req(botQQ, "set_qq_profile", p, VoidData.class);
     }
 
@@ -319,21 +291,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 删除好友。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param friendId 【可选】好友 QQ 号
      * @param userId 【可选】用户 QQ 号
-     * @param tempBlock 【可选】是否加入黑名单
-     * @param tempBothDel 【可选】是否双向删除
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<String>> deleteFriend(long botQQ, String friendId, Long userId, Boolean tempBlock, Boolean tempBothDel) {
+    public CompletableFuture<ApiResponse<String>> deleteFriend(long botQQ, Long userId) {
         ObjectNode p = mapper.createObjectNode();
-        if (friendId != null) p.put("friend_id", friendId);
         if (userId != null) p.put("user_id", Long.toString(userId));
-        if (tempBlock != null && tempBlock) p.put("temp_block", true);
-        if (tempBothDel != null && tempBothDel) p.put("temp_both_del", true);
         return req(botQQ, "delete_friend", p, String.class);
     }
 
@@ -467,33 +433,17 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 发送合并转发消息。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param messageType 【可选】消息类型 (private/group)
-     * @param userId 【可选】用户QQ
      * @param groupId 【可选】群号
      * @param message 【必填】OneBot 11 消息混合类型
-     * @param autoEscape 【可选】是否作为纯文本发送
-     * @param source 【可选】合并转发来源
-     * @param news 【可选】合并转发新闻
-     * @param summary 【可选】合并转发摘要
-     * @param prompt 【可选】合并转发提示
-     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<GroupMsgData>> sendForwardMsg(long botQQ, String messageType, Long userId, Long groupId, String message, Boolean autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout) {
+    public CompletableFuture<ApiResponse<GroupMsgData>> sendForwardMsg(long botQQ, Long groupId, String message) {
         ObjectNode p = mapper.createObjectNode();
-        if (messageType != null) p.put("message_type", messageType);
-        if (userId != null) p.put("user_id", Long.toString(userId));
         if (groupId != null) p.put("group_id", Long.toString(groupId));
         p.put("message", message);
-        if (autoEscape != null && autoEscape) p.put("auto_escape", true);
-        if (source != null) p.put("source", source);
-        if (news != null) p.set("news", mapper.valueToTree(news));
-        if (summary != null) p.put("summary", summary);
-        if (prompt != null) p.put("prompt", prompt);
-        if (timeout != null) p.put("timeout", timeout);
         return req(botQQ, "send_forward_msg", p, GroupMsgData.class);
     }
 
@@ -501,33 +451,17 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 发送群合并转发消息。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param messageType 【可选】消息类型 (private/group)
-     * @param userId 【可选】用户QQ
      * @param groupId 【可选】群号
      * @param message 【必填】OneBot 11 消息混合类型
-     * @param autoEscape 【可选】是否作为纯文本发送
-     * @param source 【可选】合并转发来源
-     * @param news 【可选】合并转发新闻
-     * @param summary 【可选】合并转发摘要
-     * @param prompt 【可选】合并转发提示
-     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<GroupMsgData>> sendGroupForwardMsg(long botQQ, String messageType, Long userId, Long groupId, String message, Boolean autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout) {
+    public CompletableFuture<ApiResponse<GroupMsgData>> sendGroupForwardMsg(long botQQ, Long groupId, String message) {
         ObjectNode p = mapper.createObjectNode();
-        if (messageType != null) p.put("message_type", messageType);
-        if (userId != null) p.put("user_id", Long.toString(userId));
         if (groupId != null) p.put("group_id", Long.toString(groupId));
         p.put("message", message);
-        if (autoEscape != null && autoEscape) p.put("auto_escape", true);
-        if (source != null) p.put("source", source);
-        if (news != null) p.set("news", mapper.valueToTree(news));
-        if (summary != null) p.put("summary", summary);
-        if (prompt != null) p.put("prompt", prompt);
-        if (timeout != null) p.put("timeout", timeout);
         return req(botQQ, "send_group_forward_msg", p, GroupMsgData.class);
     }
 
@@ -535,33 +469,17 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 发送私聊合并转发消息。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param messageType 【可选】消息类型 (private/group)
      * @param userId 【可选】用户QQ
-     * @param groupId 【可选】群号
      * @param message 【必填】OneBot 11 消息混合类型
-     * @param autoEscape 【可选】是否作为纯文本发送
-     * @param source 【可选】合并转发来源
-     * @param news 【可选】合并转发新闻
-     * @param summary 【可选】合并转发摘要
-     * @param prompt 【可选】合并转发提示
-     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<GroupMsgData>> sendPrivateForwardMsg(long botQQ, String messageType, Long userId, Long groupId, String message, Boolean autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout) {
+    public CompletableFuture<ApiResponse<GroupMsgData>> sendPrivateForwardMsg(long botQQ, Long userId, String message) {
         ObjectNode p = mapper.createObjectNode();
-        if (messageType != null) p.put("message_type", messageType);
         if (userId != null) p.put("user_id", Long.toString(userId));
-        if (groupId != null) p.put("group_id", Long.toString(groupId));
         p.put("message", message);
-        if (autoEscape != null && autoEscape) p.put("auto_escape", true);
-        if (source != null) p.put("source", source);
-        if (news != null) p.set("news", mapper.valueToTree(news));
-        if (summary != null) p.put("summary", summary);
-        if (prompt != null) p.put("prompt", prompt);
-        if (timeout != null) p.put("timeout", timeout);
         return req(botQQ, "send_private_forward_msg", p, GroupMsgData.class);
     }
 
@@ -588,19 +506,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param url 【可选】下载链接
-     * @param base64 【可选】base64数据
-     * @param name 【可选】文件名
      * @param headers 【可选】请求头
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<FileRecordStreamData>> downloadFile(long botQQ, String url, String base64, String name, String headers) {
+    public CompletableFuture<ApiResponse<FileRecordStreamData>> downloadFile(long botQQ, String url, String headers) {
         ObjectNode p = mapper.createObjectNode();
         if (url != null) p.put("url", url);
-        if (base64 != null) p.put("base64", base64);
-        if (name != null) p.put("name", name);
         if (headers != null) p.put("headers", headers);
         return req(botQQ, "download_file", p, FileRecordStreamData.class);
     }
@@ -626,21 +540,17 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param groupId 【必填】群号
      * @param file 【必填】资源路径或URL
      * @param name 【必填】文件名
-     * @param folder 【可选】父目录 ID
-     * @param folderId 【可选】父目录 ID (兼容性字段)
      * @param uploadFile 【必填】是否执行上传
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<GroupFileData>> uploadGroupFile(long botQQ, Long groupId, String file, String name, String folder, String folderId, Boolean uploadFile) {
+    public CompletableFuture<ApiResponse<GroupFileData>> uploadGroupFile(long botQQ, Long groupId, String file, String name, Boolean uploadFile) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupId));
         p.put("file", file);
         p.put("name", name);
-        if (folder != null) p.put("folder", folder);
-        if (folderId != null) p.put("folder_id", folderId);
         p.put("upload_file", uploadFile);
         return req(botQQ, "upload_group_file", p, GroupFileData.class);
     }
@@ -680,16 +590,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【可选】消息ID
-     * @param id 【可选】消息ID
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<GroupMsgHistoryData>> getForwardMsg(long botQQ, String messageId, String id) {
+    public CompletableFuture<ApiResponse<GroupMsgHistoryData>> getForwardMsg(long botQQ, String messageId) {
         ObjectNode p = mapper.createObjectNode();
         if (messageId != null) p.put("message_id", messageId);
-        if (id != null) p.put("id", id);
         return req(botQQ, "get_forward_msg", p, GroupMsgHistoryData.class);
     }
 
@@ -849,17 +757,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param folderName 【可选】文件夹名称
-     * @param name 【可选】文件夹名称
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<GroupFileFolderData>> createGroupFileFolder(long botQQ, Long groupId, String folderName, String name) {
+    public CompletableFuture<ApiResponse<GroupFileFolderData>> createGroupFileFolder(long botQQ, Long groupId, String folderName) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupId));
         if (folderName != null) p.put("folder_name", folderName);
-        if (name != null) p.put("name", name);
         return req(botQQ, "create_group_file_folder", p, GroupFileFolderData.class);
     }
 
@@ -869,17 +775,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param folderId 【可选】文件夹ID
-     * @param folder 【可选】文件夹ID
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> deleteGroupFolder(long botQQ, Long groupId, String folderId, String folder) {
+    public CompletableFuture<ApiResponse<VoidData>> deleteGroupFolder(long botQQ, Long groupId, String folderId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupId));
         if (folderId != null) p.put("folder_id", folderId);
-        if (folder != null) p.put("folder", folder);
         return req(botQQ, "delete_group_folder", p, VoidData.class);
     }
 
@@ -905,18 +809,16 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param folderId 【可选】文件夹ID
-     * @param folder 【可选】文件夹ID
      * @param fileCount 【必填】文件数量
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<GroupRootFilesData>> getGroupFilesByFolder(long botQQ, Long groupId, String folderId, String folder, Integer fileCount) {
+    public CompletableFuture<ApiResponse<GroupRootFilesData>> getGroupFilesByFolder(long botQQ, Long groupId, String folderId, Integer fileCount) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupId));
         if (folderId != null) p.put("folder_id", folderId);
-        if (folder != null) p.put("folder", folder);
         p.put("file_count", fileCount);
         return req(botQQ, "get_group_files_by_folder", p, GroupRootFilesData.class);
     }
@@ -1008,16 +910,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径、URL或Base64
-     * @param fileId 【可选】文件ID
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<FileData>> getFile(long botQQ, String file, String fileId) {
+    public CompletableFuture<ApiResponse<FileData>> getFile(long botQQ, String file) {
         ObjectNode p = mapper.createObjectNode();
         if (file != null) p.put("file", file);
-        if (fileId != null) p.put("file_id", fileId);
         return req(botQQ, "get_file", p, FileData.class);
     }
 
@@ -1088,16 +988,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径、URL或Base64
-     * @param fileId 【可选】文件ID
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<FileData>> getImage(long botQQ, String file, String fileId) {
+    public CompletableFuture<ApiResponse<FileData>> getImage(long botQQ, String file) {
         ObjectNode p = mapper.createObjectNode();
         if (file != null) p.put("file", file);
-        if (fileId != null) p.put("file_id", fileId);
         return req(botQQ, "get_image", p, FileData.class);
     }
 
@@ -1106,17 +1004,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【可选】文件路径、URL或Base64
-     * @param fileId 【可选】文件ID
      * @param outFormat 【必填】输出格式
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<FileData>> getRecord(long botQQ, String file, String fileId, String outFormat) {
+    public CompletableFuture<ApiResponse<FileData>> getRecord(long botQQ, String file, String outFormat) {
         ObjectNode p = mapper.createObjectNode();
         if (file != null) p.put("file", file);
-        if (fileId != null) p.put("file_id", fileId);
         p.put("out_format", outFormat);
         return req(botQQ, "get_record", p, FileData.class);
     }
@@ -1161,17 +1057,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param files 【必填】文件列表或单个文件路径
      * @param name 【可选】任务名称
-     * @param thumbPath 【可选】缩略图路径
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<FlashTaskData>> createFlashTask(long botQQ, List<String> files, String name, String thumbPath) {
+    public CompletableFuture<ApiResponse<FlashTaskData>> createFlashTask(long botQQ, List<String> files, String name) {
         ObjectNode p = mapper.createObjectNode();
         if (files != null) p.set("files", mapper.valueToTree(files));
         if (name != null) p.put("name", name);
-        if (thumbPath != null) p.put("thumb_path", thumbPath);
         return req(botQQ, "create_flash_task", p, FlashTaskData.class);
     }
 
@@ -1196,18 +1090,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param filesetId 【必填】文件集 ID
-     * @param fileName 【可选】文件名
-     * @param fileIndex 【可选】文件索引
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<GroupFileUrlData>> getFlashFileUrl(long botQQ, String filesetId, String fileName, Long fileIndex) {
+    public CompletableFuture<ApiResponse<GroupFileUrlData>> getFlashFileUrl(long botQQ, String filesetId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("fileset_id", filesetId);
-        if (fileName != null) p.put("file_name", fileName);
-        if (fileIndex != null) p.put("file_index", fileIndex);
         return req(botQQ, "get_flash_file_url", p, GroupFileUrlData.class);
     }
 
@@ -1217,17 +1107,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param filesetId 【必填】文件集 ID
      * @param userId 【可选】用户 QQ
-     * @param groupId 【可选】群号
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<GroupAiRecordData>> sendFlashMsg(long botQQ, String filesetId, Long userId, Long groupId) {
+    public CompletableFuture<ApiResponse<GroupAiRecordData>> sendFlashMsg(long botQQ, String filesetId, Long userId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("fileset_id", filesetId);
         if (userId != null) p.put("user_id", Long.toString(userId));
-        if (groupId != null) p.put("group_id", Long.toString(groupId));
         return req(botQQ, "send_flash_msg", p, GroupAiRecordData.class);
     }
 
@@ -1305,17 +1193,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【必填】用户 QQ
      * @param folderPath 【必填】本地文件夹路径
-     * @param folderName 【可选】文件夹名称 (可选)
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> sendOnlineFolder(long botQQ, Long userId, String folderPath, String folderName) {
+    public CompletableFuture<ApiResponse<VoidData>> sendOnlineFolder(long botQQ, Long userId, String folderPath) {
         ObjectNode p = mapper.createObjectNode();
         p.put("user_id", Long.toString(userId));
         p.put("folder_path", folderPath);
-        if (folderName != null) p.put("folder_name", folderName);
         return req(botQQ, "send_online_folder", p, VoidData.class);
     }
 
@@ -1681,17 +1567,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param albumId 【必填】相册ID
-     * @param attachInfo 【可选】附加信息（用于分页）
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<GroupAlbumMediaData>> getGroupAlbumMediaList(long botQQ, Long groupId, String albumId, String attachInfo) {
+    public CompletableFuture<ApiResponse<GroupAlbumMediaData>> getGroupAlbumMediaList(long botQQ, Long groupId, String albumId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupId));
         p.put("album_id", albumId);
-        if (attachInfo != null) p.put("attach_info", attachInfo);
         return req(botQQ, "get_group_album_media_list", p, GroupAlbumMediaData.class);
     }
 
@@ -1757,19 +1641,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param addType 【必填】加群方式
-     * @param groupQuestion 【可选】加群问题
-     * @param groupAnswer 【可选】加群答案
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> setGroupAddOption(long botQQ, Long groupId, Long addType, String groupQuestion, String groupAnswer) {
+    public CompletableFuture<ApiResponse<VoidData>> setGroupAddOption(long botQQ, Long groupId, Long addType) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupId));
         p.put("add_type", addType);
-        if (groupQuestion != null) p.put("group_question", groupQuestion);
-        if (groupAnswer != null) p.put("group_answer", groupAnswer);
         return req(botQQ, "set_group_add_option", p, VoidData.class);
     }
 
@@ -1778,18 +1658,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
-     * @param robotMemberSwitch 【可选】机器人成员开关
-     * @param robotMemberExamine 【可选】机器人成员审核
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> setGroupRobotAddOption(long botQQ, Long groupId, Long robotMemberSwitch, Long robotMemberExamine) {
+    public CompletableFuture<ApiResponse<VoidData>> setGroupRobotAddOption(long botQQ, Long groupId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupId));
-        if (robotMemberSwitch != null) p.put("robot_member_switch", robotMemberSwitch);
-        if (robotMemberExamine != null) p.put("robot_member_examine", robotMemberExamine);
         return req(botQQ, "set_group_robot_add_option", p, VoidData.class);
     }
 
@@ -1798,18 +1674,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
-     * @param noCodeFingerOpen 【可选】未知
-     * @param noFingerOpen 【可选】未知
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> setGroupSearch(long botQQ, Long groupId, Long noCodeFingerOpen, Long noFingerOpen) {
+    public CompletableFuture<ApiResponse<VoidData>> setGroupSearch(long botQQ, Long groupId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupId));
-        if (noCodeFingerOpen != null) p.put("no_code_finger_open", noCodeFingerOpen);
-        if (noFingerOpen != null) p.put("no_finger_open", noFingerOpen);
         return req(botQQ, "set_group_search", p, VoidData.class);
     }
 
@@ -1932,16 +1804,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
-     * @param noCache 【可选】是否不使用缓存
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<List<GroupMemberData>>> getGroupMemberList(long botQQ, Long groupId, Boolean noCache) {
+    public CompletableFuture<ApiResponse<List<GroupMemberData>>> getGroupMemberList(long botQQ, Long groupId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupId));
-        if (noCache != null && noCache) p.put("no_cache", true);
         return reqList(botQQ, "get_group_member_list", p, GroupMemberData.class);
     }
 
@@ -1951,17 +1821,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param userId 【必填】QQ号
-     * @param noCache 【可选】是否不使用缓存
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<GroupMemberInfoData>> getGroupMemberInfo(long botQQ, Long groupId, Long userId, Boolean noCache) {
+    public CompletableFuture<ApiResponse<GroupMemberInfoData>> getGroupMemberInfo(long botQQ, Long groupId, Long userId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupId));
         p.put("user_id", Long.toString(userId));
-        if (noCache != null && noCache) p.put("no_cache", true);
         return req(botQQ, "get_group_member_info", p, GroupMemberInfoData.class);
     }
 
@@ -1969,33 +1837,17 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 发送群消息。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param messageType 【可选】消息类型 (private/group)
-     * @param userId 【可选】用户QQ
      * @param groupId 【可选】群号
      * @param message 【必填】OneBot 11 消息混合类型
-     * @param autoEscape 【可选】是否作为纯文本发送
-     * @param source 【可选】合并转发来源
-     * @param news 【可选】合并转发新闻
-     * @param summary 【可选】合并转发摘要
-     * @param prompt 【可选】合并转发提示
-     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<GroupMsgData>> sendGroupMsg(long botQQ, String messageType, Long userId, Long groupId, String message, Boolean autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout) {
+    public CompletableFuture<ApiResponse<GroupMsgData>> sendGroupMsg(long botQQ, Long groupId, String message) {
         ObjectNode p = mapper.createObjectNode();
-        if (messageType != null) p.put("message_type", messageType);
-        if (userId != null) p.put("user_id", Long.toString(userId));
         if (groupId != null) p.put("group_id", Long.toString(groupId));
         p.put("message", message);
-        if (autoEscape != null && autoEscape) p.put("auto_escape", true);
-        if (source != null) p.put("source", source);
-        if (news != null) p.set("news", mapper.valueToTree(news));
-        if (summary != null) p.put("summary", summary);
-        if (prompt != null) p.put("prompt", prompt);
-        if (timeout != null) p.put("timeout", timeout);
         return req(botQQ, "send_group_msg", p, GroupMsgData.class);
     }
 
@@ -2005,19 +1857,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param flag 【必填】请求flag
      * @param approve 【可选】是否同意
-     * @param reason 【可选】拒绝理由
-     * @param count 【可选】搜索通知数量
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> setGroupAddRequest(long botQQ, String flag, Boolean approve, String reason, Integer count) {
+    public CompletableFuture<ApiResponse<VoidData>> setGroupAddRequest(long botQQ, String flag, Boolean approve) {
         ObjectNode p = mapper.createObjectNode();
         p.put("flag", flag);
         if (approve != null && approve) p.put("approve", true);
-        if (reason != null) p.put("reason", reason);
-        if (count != null) p.put("count", count);
         return req(botQQ, "set_group_add_request", p, VoidData.class);
     }
 
@@ -2206,20 +2054,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【可选】消息ID
-     * @param msgSeq 【可选】消息序号
-     * @param msgRandom 【可选】消息随机数
-     * @param groupId 【可选】群号
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> deleteEssenceMsg(long botQQ, Long messageId, String msgSeq, String msgRandom, Long groupId) {
+    public CompletableFuture<ApiResponse<VoidData>> deleteEssenceMsg(long botQQ, Long messageId) {
         ObjectNode p = mapper.createObjectNode();
         if (messageId != null) p.put("message_id", Long.toString(messageId));
-        if (msgSeq != null) p.put("msg_seq", msgSeq);
-        if (msgRandom != null) p.put("msg_random", msgRandom);
-        if (groupId != null) p.put("group_id", Long.toString(groupId));
         return req(botQQ, "delete_essence_msg", p, VoidData.class);
     }
 
@@ -2297,17 +2139,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param messageId 【可选】消息ID
-     * @param messageSeq 【可选】消息Seq (可选)
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> setGroupTodo(long botQQ, Long groupId, String messageId, String messageSeq) {
+    public CompletableFuture<ApiResponse<VoidData>> setGroupTodo(long botQQ, Long groupId, String messageId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupId));
         if (messageId != null) p.put("message_id", messageId);
-        if (messageSeq != null) p.put("message_seq", messageSeq);
         return req(botQQ, "set_group_todo", p, VoidData.class);
     }
 
@@ -2317,17 +2157,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param messageId 【可选】消息ID
-     * @param messageSeq 【可选】消息Seq (可选)
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> completeGroupTodo(long botQQ, Long groupId, String messageId, String messageSeq) {
+    public CompletableFuture<ApiResponse<VoidData>> completeGroupTodo(long botQQ, Long groupId, String messageId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupId));
         if (messageId != null) p.put("message_id", messageId);
-        if (messageSeq != null) p.put("message_seq", messageSeq);
         return req(botQQ, "complete_group_todo", p, VoidData.class);
     }
 
@@ -2337,17 +2175,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param groupId 【必填】群号
      * @param messageId 【可选】消息ID
-     * @param messageSeq 【可选】消息Seq (可选)
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> cancelGroupTodo(long botQQ, Long groupId, String messageId, String messageSeq) {
+    public CompletableFuture<ApiResponse<VoidData>> cancelGroupTodo(long botQQ, Long groupId, String messageId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("group_id", Long.toString(groupId));
         if (messageId != null) p.put("message_id", messageId);
-        if (messageSeq != null) p.put("message_seq", messageSeq);
         return req(botQQ, "cancel_group_todo", p, VoidData.class);
     }
 
@@ -2379,22 +2215,18 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 获取消息表情点赞列表。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param groupId 【可选】群号，短ID可不传
      * @param messageId 【必填】消息ID，可以传递长ID或短ID
      * @param emojiId 【必填】表情ID
-     * @param emojiType 【可选】表情类型
      * @param count 【必填】数量，0代表全部
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<EmojiLikesData>> getEmojiLikes(long botQQ, Long groupId, String messageId, String emojiId, String emojiType, Integer count) {
+    public CompletableFuture<ApiResponse<EmojiLikesData>> getEmojiLikes(long botQQ, String messageId, String emojiId, Integer count) {
         ObjectNode p = mapper.createObjectNode();
-        if (groupId != null) p.put("group_id", Long.toString(groupId));
         p.put("message_id", messageId);
         p.put("emoji_id", emojiId);
-        if (emojiType != null) p.put("emoji_type", emojiType);
         p.put("count", count);
         return req(botQQ, "get_emoji_likes", p, EmojiLikesData.class);
     }
@@ -2436,17 +2268,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【可选】QQ号
-     * @param groupId 【可选】群号
      * @param phoneNumber 【必填】手机号
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<ArksharepeerData>> arksharepeer(long botQQ, Long userId, Long groupId, String phoneNumber) {
+    public CompletableFuture<ApiResponse<ArksharepeerData>> arksharepeer(long botQQ, Long userId, String phoneNumber) {
         ObjectNode p = mapper.createObjectNode();
         if (userId != null) p.put("user_id", Long.toString(userId));
-        if (groupId != null) p.put("group_id", Long.toString(groupId));
         p.put("phone_number", phoneNumber);
         return req(botQQ, "ArkSharePeer", p, ArksharepeerData.class);
     }
@@ -2472,17 +2302,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param userId 【可选】QQ号
-     * @param groupId 【可选】群号
      * @param phoneNumber 【必填】手机号
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<ArksharepeerData>> sendArkShare(long botQQ, Long userId, Long groupId, String phoneNumber) {
+    public CompletableFuture<ApiResponse<ArksharepeerData>> sendArkShare(long botQQ, Long userId, String phoneNumber) {
         ObjectNode p = mapper.createObjectNode();
         if (userId != null) p.put("user_id", Long.toString(userId));
-        if (groupId != null) p.put("group_id", Long.toString(groupId));
         p.put("phone_number", phoneNumber);
         return req(botQQ, "send_ark_share", p, ArksharepeerData.class);
     }
@@ -2493,17 +2321,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【必填】消息ID
      * @param groupId 【可选】目标群号
-     * @param userId 【可选】目标用户QQ
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> forwardFriendSingleMsg(long botQQ, Long messageId, Long groupId, Long userId) {
+    public CompletableFuture<ApiResponse<VoidData>> forwardFriendSingleMsg(long botQQ, Long messageId, Long groupId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("message_id", Long.toString(messageId));
         if (groupId != null) p.put("group_id", Long.toString(groupId));
-        if (userId != null) p.put("user_id", Long.toString(userId));
         return req(botQQ, "forward_friend_single_msg", p, VoidData.class);
     }
 
@@ -2513,17 +2339,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageId 【必填】消息ID
      * @param groupId 【可选】目标群号
-     * @param userId 【可选】目标用户QQ
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> forwardGroupSingleMsg(long botQQ, Long messageId, Long groupId, Long userId) {
+    public CompletableFuture<ApiResponse<VoidData>> forwardGroupSingleMsg(long botQQ, Long messageId, Long groupId) {
         ObjectNode p = mapper.createObjectNode();
         p.put("message_id", Long.toString(messageId));
         if (groupId != null) p.put("group_id", Long.toString(groupId));
-        if (userId != null) p.put("user_id", Long.toString(userId));
         return req(botQQ, "forward_group_single_msg", p, VoidData.class);
     }
 
@@ -2531,18 +2355,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 标记群聊已读。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param userId 【可选】用户QQ
-     * @param groupId 【可选】群号
      * @param messageId 【可选】消息ID
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> markGroupMsgAsRead(long botQQ, Long userId, Long groupId, String messageId) {
+    public CompletableFuture<ApiResponse<VoidData>> markGroupMsgAsRead(long botQQ, String messageId) {
         ObjectNode p = mapper.createObjectNode();
-        if (userId != null) p.put("user_id", Long.toString(userId));
-        if (groupId != null) p.put("group_id", Long.toString(groupId));
         if (messageId != null) p.put("message_id", messageId);
         return req(botQQ, "mark_group_msg_as_read", p, VoidData.class);
     }
@@ -2551,18 +2371,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 标记私聊已读。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param userId 【可选】用户QQ
-     * @param groupId 【可选】群号
      * @param messageId 【可选】消息ID
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> markPrivateMsgAsRead(long botQQ, Long userId, Long groupId, String messageId) {
+    public CompletableFuture<ApiResponse<VoidData>> markPrivateMsgAsRead(long botQQ, String messageId) {
         ObjectNode p = mapper.createObjectNode();
-        if (userId != null) p.put("user_id", Long.toString(userId));
-        if (groupId != null) p.put("group_id", Long.toString(groupId));
         if (messageId != null) p.put("message_id", messageId);
         return req(botQQ, "mark_private_msg_as_read", p, VoidData.class);
     }
@@ -2587,33 +2403,17 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 发送私聊消息。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param messageType 【可选】消息类型 (private/group)
      * @param userId 【可选】用户QQ
-     * @param groupId 【可选】群号
      * @param message 【必填】OneBot 11 消息混合类型
-     * @param autoEscape 【可选】是否作为纯文本发送
-     * @param source 【可选】合并转发来源
-     * @param news 【可选】合并转发新闻
-     * @param summary 【可选】合并转发摘要
-     * @param prompt 【可选】合并转发提示
-     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<GroupMsgData>> sendPrivateMsg(long botQQ, String messageType, Long userId, Long groupId, String message, Boolean autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout) {
+    public CompletableFuture<ApiResponse<GroupMsgData>> sendPrivateMsg(long botQQ, Long userId, String message) {
         ObjectNode p = mapper.createObjectNode();
-        if (messageType != null) p.put("message_type", messageType);
         if (userId != null) p.put("user_id", Long.toString(userId));
-        if (groupId != null) p.put("group_id", Long.toString(groupId));
         p.put("message", message);
-        if (autoEscape != null && autoEscape) p.put("auto_escape", true);
-        if (source != null) p.put("source", source);
-        if (news != null) p.set("news", mapper.valueToTree(news));
-        if (summary != null) p.put("summary", summary);
-        if (prompt != null) p.put("prompt", prompt);
-        if (timeout != null) p.put("timeout", timeout);
         return req(botQQ, "send_private_msg", p, GroupMsgData.class);
     }
 
@@ -2622,32 +2422,18 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param messageType 【可选】消息类型 (private/group)
-     * @param userId 【可选】用户QQ
      * @param groupId 【可选】群号
      * @param message 【必填】OneBot 11 消息混合类型
-     * @param autoEscape 【可选】是否作为纯文本发送
-     * @param source 【可选】合并转发来源
-     * @param news 【可选】合并转发新闻
-     * @param summary 【可选】合并转发摘要
-     * @param prompt 【可选】合并转发提示
-     * @param timeout 【可选】自定义发送超时(毫秒)，覆盖自动计算值
      * @return 异步响应，成功时 data 包含业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<GroupMsgData>> sendMsg(long botQQ, String messageType, Long userId, Long groupId, String message, Boolean autoEscape, String source, List<JsonNode> news, String summary, String prompt, Long timeout) {
+    public CompletableFuture<ApiResponse<GroupMsgData>> sendMsg(long botQQ, String messageType, Long groupId, String message) {
         ObjectNode p = mapper.createObjectNode();
         if (messageType != null) p.put("message_type", messageType);
-        if (userId != null) p.put("user_id", Long.toString(userId));
         if (groupId != null) p.put("group_id", Long.toString(groupId));
         p.put("message", message);
-        if (autoEscape != null && autoEscape) p.put("auto_escape", true);
-        if (source != null) p.put("source", source);
-        if (news != null) p.set("news", mapper.valueToTree(news));
-        if (summary != null) p.put("summary", summary);
-        if (prompt != null) p.put("prompt", prompt);
-        if (timeout != null) p.put("timeout", timeout);
         return req(botQQ, "send_msg", p, GroupMsgData.class);
     }
 
@@ -2691,18 +2477,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 标记消息已读 (Go-CQHTTP)。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param userId 【可选】用户QQ
-     * @param groupId 【可选】群号
      * @param messageId 【可选】消息ID
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> markMsgAsRead(long botQQ, Long userId, Long groupId, String messageId) {
+    public CompletableFuture<ApiResponse<VoidData>> markMsgAsRead(long botQQ, String messageId) {
         ObjectNode p = mapper.createObjectNode();
-        if (userId != null) p.put("user_id", Long.toString(userId));
-        if (groupId != null) p.put("group_id", Long.toString(groupId));
         if (messageId != null) p.put("message_id", messageId);
         return req(botQQ, "mark_msg_as_read", p, VoidData.class);
     }
@@ -2725,19 +2507,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 发送戳一戳。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param groupId 【可选】群号
      * @param userId 【必填】用户QQ
-     * @param targetId 【可选】目标QQ
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> groupPoke(long botQQ, Long groupId, Long userId, String targetId) {
+    public CompletableFuture<ApiResponse<VoidData>> groupPoke(long botQQ, Long userId) {
         ObjectNode p = mapper.createObjectNode();
-        if (groupId != null) p.put("group_id", Long.toString(groupId));
         p.put("user_id", Long.toString(userId));
-        if (targetId != null) p.put("target_id", targetId);
         return req(botQQ, "group_poke", p, VoidData.class);
     }
 
@@ -2745,19 +2523,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 发送戳一戳。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param groupId 【可选】群号
      * @param userId 【必填】用户QQ
-     * @param targetId 【可选】目标QQ
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> friendPoke(long botQQ, Long groupId, Long userId, String targetId) {
+    public CompletableFuture<ApiResponse<VoidData>> friendPoke(long botQQ, Long userId) {
         ObjectNode p = mapper.createObjectNode();
-        if (groupId != null) p.put("group_id", Long.toString(groupId));
         p.put("user_id", Long.toString(userId));
-        if (targetId != null) p.put("target_id", targetId);
         return req(botQQ, "friend_poke", p, VoidData.class);
     }
 
@@ -2765,19 +2539,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      * 发送戳一戳。
      *
      * @param botQQ 目标 Bot 的 QQ 号
-     * @param groupId 【可选】群号
      * @param userId 【必填】用户QQ
-     * @param targetId 【可选】目标QQ
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> sendPoke(long botQQ, Long groupId, Long userId, String targetId) {
+    public CompletableFuture<ApiResponse<VoidData>> sendPoke(long botQQ, Long userId) {
         ObjectNode p = mapper.createObjectNode();
-        if (groupId != null) p.put("group_id", Long.toString(groupId));
         p.put("user_id", Long.toString(userId));
-        if (targetId != null) p.put("target_id", targetId);
         return req(botQQ, "send_poke", p, VoidData.class);
     }
 
@@ -3012,27 +2782,15 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param file 【必填】本地表情文件路径
-     * @param emojiId 【可选】表情ID，未提供时传空字符串
-     * @param packageId 【可选】表情包ID，未提供时传0
-     * @param fileName 【可选】文件名，未提供时从file路径取basename
-     * @param fileSize 【可选】文件大小，未提供时读取本地文件
-     * @param md5 【可选】文件MD5，未提供时读取本地文件计算
-     * @param isMarkFace 【可选】是否商城表情
      * @param isOrigin 【可选】是否原图
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> addCustomFace(long botQQ, String file, String emojiId, String packageId, String fileName, String fileSize, String md5, Boolean isMarkFace, Boolean isOrigin) {
+    public CompletableFuture<ApiResponse<VoidData>> addCustomFace(long botQQ, String file, Boolean isOrigin) {
         ObjectNode p = mapper.createObjectNode();
         p.put("file", file);
-        if (emojiId != null) p.put("emoji_id", emojiId);
-        if (packageId != null) p.put("package_id", packageId);
-        if (fileName != null) p.put("file_name", fileName);
-        if (fileSize != null) p.put("file_size", fileSize);
-        if (md5 != null) p.put("md5", md5);
-        if (isMarkFace != null && isMarkFace) p.put("is_mark_face", true);
         if (isOrigin != null && isOrigin) p.put("is_origin", true);
         return req(botQQ, "add_custom_face", p, VoidData.class);
     }
@@ -3042,20 +2800,14 @@ public class NapCat implements ApiExtra, ApiFile, ApiFriend, ApiGroup, ApiMessag
      *
      * @param botQQ 目标 Bot 的 QQ 号
      * @param resId 【可选】fetch_custom_face_detail返回的resId
-     * @param id 【可选】native deleteFavEmoji字符串ID，通常为resId
-     * @param ids 【可选】native deleteFavEmoji字符串ID列表，通常为resId列表
-     * @param md5 【可选】表情MD5，不能直接删除，请先通过fetch_custom_face_detail获取resId
      * @return 异步响应，无业务数据
      *
      * 可能的错误 retcode: 1400, 1401, 1404；详见返回的 ApiResponse.message
      */
     @Override
-    public CompletableFuture<ApiResponse<VoidData>> deleteCustomFace(long botQQ, String resId, String id, List<String> ids, String md5) {
+    public CompletableFuture<ApiResponse<VoidData>> deleteCustomFace(long botQQ, String resId) {
         ObjectNode p = mapper.createObjectNode();
         if (resId != null) p.put("res_id", resId);
-        if (id != null) p.put("id", id);
-        if (ids != null) p.set("ids", mapper.valueToTree(ids));
-        if (md5 != null) p.put("md5", md5);
         return req(botQQ, "delete_custom_face", p, VoidData.class);
     }
 
