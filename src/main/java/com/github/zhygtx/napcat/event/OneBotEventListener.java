@@ -10,6 +10,8 @@ import com.github.zhygtx.napcat.event.request.GroupAddRequestEvent;
 import com.github.zhygtx.napcat.event.request.GroupInviteRequestEvent;
 import com.github.zhygtx.napcat.event.request.GroupRequestEvent;
 
+import java.util.List;
+
 /**
  * OneBot 事件统一监听器接口。
  * <p>
@@ -39,22 +41,31 @@ public interface OneBotEventListener {
      * 此方法在具体事件回调（如 {@link #onGroupMessage}）之后触发，
      * 适合用于统一日志记录、事件监控等横切关注点。
      * <p>
+     * {@code triggeredTypes} 列出当前事件按类层级会触发的所有回调类型，
+     * 从具体子类排列到父类。例如收到 {@code GroupNormalMessageEvent} 时：
+     * {@code [GroupNormalMessageEvent, GroupMessageEvent]}，表示会依次调用
+     * {@code onGroupNormalMessage} 和 {@code onGroupMessage}。
+     * <p>
      * 使用示例：
      * <pre>{@code
      * @Override
-     * public void onAnyEvent(Long botQQ, BaseEvent event) {
-     *     log.info("[Bot:{}] 事件: {} | postType: {} | 内容: {}",
+     * public void onAnyEvent(Long botQQ, BaseEvent event,
+     *                        List<Class<? extends BaseEvent>> triggeredTypes) {
+     *     log.info("[Bot:{}] 事件: {} | 将触发: {}",
      *             botQQ,
      *             event.getClass().getSimpleName(),
-     *             event.getPostType(),
-     *             event);
+     *             triggeredTypes.stream()
+     *                 .map(Class::getSimpleName)
+     *                 .collect(Collectors.joining(" → ")));
      * }
      * }</pre>
      *
-     * @param botQQ 收到事件的 Bot QQ 号
-     * @param event 事件对象（具体子类）
+     * @param botQQ          收到事件的 Bot QQ 号
+     * @param event          事件对象（具体子类）
+     * @param triggeredTypes 当前事件会触发的回调类型列表（从具体到泛化），不可变且非空
      */
-    default void onAnyEvent(Long botQQ, BaseEvent event) {}
+    default void onAnyEvent(Long botQQ, BaseEvent event,
+                            List<Class<? extends BaseEvent>> triggeredTypes) {}
 
     // ====================================================
     //  元事件 (Meta Event)

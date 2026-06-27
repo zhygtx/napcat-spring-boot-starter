@@ -592,12 +592,15 @@ public class EventDispatcher {
     private void dispatchToOneBotEventListener(Long botQQ, BaseEvent event) {
         if (listeners.isEmpty()) return;
 
+        // 提前收集当前事件会触发的回调类型列表，供 onAnyEvent 使用
+        List<Class<? extends BaseEvent>> triggeredTypes = collectTriggeredTypes(event);
+
         EventHandler handler = findEventHandler(event.getClass());
         if (handler == null) {
             log.warn("未注册的事件类型: {}", event.getClass().getSimpleName());
             // 即使没有特定处理器，仍然触发 onAnyEvent
             for (OneBotEventListener listener : listeners) {
-                invokeOnAnyEventSafely(listener, botQQ, event);
+                invokeOnAnyEventSafely(listener, botQQ, event, triggeredTypes);
             }
             return;
         }
@@ -609,8 +612,34 @@ public class EventDispatcher {
                 log.error("OneBotEventListener 分发异常, listener: {}, event: {}",
                         listener.getClass().getSimpleName(), event.getClass().getSimpleName(), e);
             }
-            invokeOnAnyEventSafely(listener, botQQ, event);
+            invokeOnAnyEventSafely(listener, botQQ, event, triggeredTypes);
         }
+    }
+
+    /**
+     * 收集当前事件按类层级会触发的所有回调类型列表。
+     * <p>
+     * 从具体事件类开始沿父类层级向上遍历，收集在 {@link #EVENT_HANDLERS} 中
+     * 注册过的类型，返回从具体到泛化的有序列表。
+     * <p>
+     * 例如 {@code GroupNormalMessageEvent → GroupMessageEvent}，
+     * 对应回调链 {@code onGroupNormalMessage → onGroupMessage}。
+     *
+     * @param event 事件对象
+     * @return 触发类型列表（不可变，至少包含事件自身类型）
+     */
+    @SuppressWarnings("unchecked")
+    private List<Class<? extends BaseEvent>> collectTriggeredTypes(BaseEvent event) {
+        List<Class<? extends BaseEvent>> types = new ArrayList<>();
+        Class<?> clazz = event.getClass();
+        while (clazz != null && BaseEvent.class.isAssignableFrom(clazz)) {
+            if (EVENT_HANDLERS.containsKey(clazz)) {
+                types.add((Class<? extends BaseEvent>) clazz);
+            }
+            if (clazz == BaseEvent.class) break;
+            clazz = clazz.getSuperclass();
+        }
+        return types;
     }
 
     /**
@@ -618,12 +647,13 @@ public class EventDispatcher {
      * <p>
      * 心跳事件直接跳过，避免调试日志被高频心跳淹没。
      */
-    private void invokeOnAnyEventSafely(OneBotEventListener listener, Long botQQ, BaseEvent event) {
+    private void invokeOnAnyEventSafely(OneBotEventListener listener, Long botQQ,
+                                        BaseEvent event, List<Class<? extends BaseEvent>> triggeredTypes) {
         if (event instanceof HeartbeatMetaEvent) {
             return;
         }
         try {
-            listener.onAnyEvent(botQQ, event);
+            listener.onAnyEvent(botQQ, event, triggeredTypes);
         } catch (Exception e) {
             log.error("OneBotEventListener.onAnyEvent 异常, listener: {}, event: {}",
                     listener.getClass().getSimpleName(), event.getClass().getSimpleName(), e);
