@@ -39,18 +39,9 @@ public abstract class BaseEvent {
     @JsonProperty("post_type")
     private String postType;
 
-    /**
-     * 当前事件按类层级会触发的回调类型列表（从具体到泛化）。
-     * <p>
-     * 此字段由 SDK 内部分发前设置，不参与 JSON 序列化/反序列化。
-     * 非分发路径上该字段为 {@code null}。
-     * <p>
-     * 例如 {@code GroupNormalMessageEvent} 的值为
-     * {@code [GroupNormalMessageEvent.class, GroupMessageEvent.class]}，
-     * 表示会依次调用 {@code onGroupNormalMessage} 和 {@code onGroupMessage}。
-     */
+    /** 当前事件会触发的回调类型列表 */
     @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private transient List<Class<? extends BaseEvent>> triggeredTypes;
+    private List<Class<? extends BaseEvent>> triggeredTypes;
 }
