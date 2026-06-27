@@ -30,6 +30,33 @@ import com.github.zhygtx.napcat.event.request.GroupRequestEvent;
 public interface OneBotEventListener {
 
     // ====================================================
+    //  全局事件（所有事件类型均会触发）
+    // ====================================================
+
+    /**
+     * 收到任何类型的 OneBot 事件时调用。
+     * <p>
+     * 此方法在具体事件回调（如 {@link #onGroupMessage}）之后触发，
+     * 适合用于统一日志记录、事件监控等横切关注点。
+     * <p>
+     * 使用示例：
+     * <pre>{@code
+     * @Override
+     * public void onAnyEvent(Long botQQ, BaseEvent event) {
+     *     log.info("[Bot:{}] 事件: {} | postType: {} | 内容: {}",
+     *             botQQ,
+     *             event.getClass().getSimpleName(),
+     *             event.getPostType(),
+     *             event);
+     * }
+     * }</pre>
+     *
+     * @param botQQ 收到事件的 Bot QQ 号
+     * @param event 事件对象（具体子类）
+     */
+    default void onAnyEvent(Long botQQ, BaseEvent event) {}
+
+    // ====================================================
     //  元事件 (Meta Event)
     // ====================================================
 

@@ -595,6 +595,10 @@ public class EventDispatcher {
         EventHandler handler = findEventHandler(event.getClass());
         if (handler == null) {
             log.warn("未注册的事件类型: {}", event.getClass().getSimpleName());
+            // 即使没有特定处理器，仍然触发 onAnyEvent
+            for (OneBotEventListener listener : listeners) {
+                invokeOnAnyEventSafely(listener, botQQ, event);
+            }
             return;
         }
 
@@ -605,6 +609,19 @@ public class EventDispatcher {
                 log.error("OneBotEventListener 分发异常, listener: {}, event: {}",
                         listener.getClass().getSimpleName(), event.getClass().getSimpleName(), e);
             }
+            invokeOnAnyEventSafely(listener, botQQ, event);
+        }
+    }
+
+    /**
+     * 安全调用 {@link OneBotEventListener#onAnyEvent}，异常不影响后续监听器。
+     */
+    private void invokeOnAnyEventSafely(OneBotEventListener listener, Long botQQ, BaseEvent event) {
+        try {
+            listener.onAnyEvent(botQQ, event);
+        } catch (Exception e) {
+            log.error("OneBotEventListener.onAnyEvent 异常, listener: {}, event: {}",
+                    listener.getClass().getSimpleName(), event.getClass().getSimpleName(), e);
         }
     }
 
