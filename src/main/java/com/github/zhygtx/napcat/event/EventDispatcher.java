@@ -615,8 +615,13 @@ public class EventDispatcher {
 
     /**
      * 安全调用 {@link OneBotEventListener#onAnyEvent}，异常不影响后续监听器。
+     * <p>
+     * 心跳事件直接跳过，避免调试日志被高频心跳淹没。
      */
     private void invokeOnAnyEventSafely(OneBotEventListener listener, Long botQQ, BaseEvent event) {
+        if (event instanceof HeartbeatMetaEvent) {
+            return;
+        }
         try {
             listener.onAnyEvent(botQQ, event);
         } catch (Exception e) {
