@@ -645,11 +645,11 @@ public class EventDispatcher {
     /**
      * 安全调用 {@link OneBotEventListener#onAnyEvent}，异常不影响后续监听器。
      * <p>
-     * 心跳事件直接跳过，避免调试日志被高频心跳淹没。
+     * 心跳事件和 WebSocket 连接事件直接跳过，避免高频/连接类事件淹没调试日志。
      */
     private void invokeOnAnyEventSafely(OneBotEventListener listener, Long botQQ,
                                         BaseEvent event, List<Class<? extends BaseEvent>> triggeredTypes) {
-        if (event instanceof HeartbeatMetaEvent) {
+        if (event instanceof HeartbeatMetaEvent || event instanceof LifecycleConnectMetaEvent) {
             return;
         }
         try {
