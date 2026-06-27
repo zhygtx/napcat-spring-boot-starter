@@ -592,15 +592,15 @@ public class EventDispatcher {
     private void dispatchToOneBotEventListener(Long botQQ, BaseEvent event) {
         if (listeners.isEmpty()) return;
 
-        // 提前收集当前事件会触发的回调类型列表，供 onAnyEvent 使用
-        List<Class<? extends BaseEvent>> triggeredTypes = collectTriggeredTypes(event);
+        // 收集回调类型列表并填充到事件对象上，供 onAnyEvent 通过 event.getTriggeredTypes() 获取
+        event.setTriggeredTypes(collectTriggeredTypes(event));
 
         EventHandler handler = findEventHandler(event.getClass());
         if (handler == null) {
             log.warn("未注册的事件类型: {}", event.getClass().getSimpleName());
             // 即使没有特定处理器，仍然触发 onAnyEvent
             for (OneBotEventListener listener : listeners) {
-                invokeOnAnyEventSafely(listener, botQQ, event, triggeredTypes);
+                invokeOnAnyEventSafely(listener, botQQ, event);
             }
             return;
         }
@@ -612,7 +612,7 @@ public class EventDispatcher {
                 log.error("OneBotEventListener 分发异常, listener: {}, event: {}",
                         listener.getClass().getSimpleName(), event.getClass().getSimpleName(), e);
             }
-            invokeOnAnyEventSafely(listener, botQQ, event, triggeredTypes);
+            invokeOnAnyEventSafely(listener, botQQ, event);
         }
     }
 
@@ -626,7 +626,7 @@ public class EventDispatcher {
      * 对应回调链 {@code onGroupNormalMessage → onGroupMessage}。
      *
      * @param event 事件对象
-     * @return 触发类型列表（不可变，至少包含事件自身类型）
+     * @return 触发类型列表（至少包含事件自身对应类型）
      */
     @SuppressWarnings("unchecked")
     private List<Class<? extends BaseEvent>> collectTriggeredTypes(BaseEvent event) {
@@ -648,12 +648,12 @@ public class EventDispatcher {
      * 心跳事件和 WebSocket 连接事件直接跳过，避免高频/连接类事件淹没调试日志。
      */
     private void invokeOnAnyEventSafely(OneBotEventListener listener, Long botQQ,
-                                        BaseEvent event, List<Class<? extends BaseEvent>> triggeredTypes) {
+                                        BaseEvent event) {
         if (event instanceof HeartbeatMetaEvent || event instanceof LifecycleConnectMetaEvent) {
             return;
         }
         try {
-            listener.onAnyEvent(botQQ, event, triggeredTypes);
+            listener.onAnyEvent(botQQ, event);
         } catch (Exception e) {
             log.error("OneBotEventListener.onAnyEvent 异常, listener: {}, event: {}",
                     listener.getClass().getSimpleName(), event.getClass().getSimpleName(), e);
